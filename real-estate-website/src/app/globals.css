@@ -4,7 +4,7 @@
 
 @layer base {
   * {
-    @apply border-border;
+    @apply border-background-tertiary;
   }
   
   body {
@@ -37,7 +37,7 @@
   }
   
   .property-image.sold {
-    @apply grayscale-80 opacity-75;
+    @apply grayscale opacity-75;
   }
   
   .property-image:hover {

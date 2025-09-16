@@ -50,8 +50,8 @@ module.exports = {
           '100%': { transform: 'translateY(0)', opacity: '1' },
         },
       },
-      filter: {
-        'grayscale-80': 'grayscale(80%)',
+      grayscale: {
+        '80': '80%',
       },
     },
   },

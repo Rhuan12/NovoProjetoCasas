@@ -1,5 +1,5 @@
 import { createClient } from '@supabase/supabase-js'
-import { createClientComponentClient, createServerComponentClient } from '@supabase/ssr'
+import { createBrowserClient, createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
@@ -10,11 +10,21 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
 // Cliente para componentes do cliente
 export const createSupabaseClient = () => 
-  createClientComponentClient()
+  createBrowserClient(supabaseUrl, supabaseAnonKey)
 
 // Cliente para componentes do servidor
 export const createSupabaseServerClient = () =>
-  createServerComponentClient({ cookies })
+  createServerClient(
+    supabaseUrl,
+    supabaseAnonKey,
+    {
+      cookies: {
+        get(name: string) {
+          return cookies().get(name)?.value
+        },
+      },
+    }
+  )
 
 // Cliente com service role (para operações administrativas)
 export const createSupabaseServiceClient = () => 
@@ -159,3 +169,10 @@ export type Tables = {
     }
   }
 }
+
+// Tipos de conveniência
+export type Property = Tables['properties']['Row']
+export type PropertyInsert = Tables['properties']['Insert']
+export type PropertyUpdate = Tables['properties']['Update']
+export type Lead = Tables['leads']['Row']
+export type Profile = Tables['profiles']['Row']
