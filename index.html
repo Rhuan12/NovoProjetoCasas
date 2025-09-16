@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Imóveis Premium - Sua Casa dos Sonhos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .property-card {
+            transition: all 0.3s ease;
+        }
+        .property-card:hover {
+            transform: translateY(-8px);
+        }
+        .sold-property {
+            filter: grayscale(100%);
+            opacity: 0.6;
+        }
+        .testimonial-card {
+            backdrop-filter: blur(10px);
+        }
+        .hero-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="bg-white shadow-lg fixed w-full z-50">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="text-2xl font-bold text-gray-800">
+                <i class="fas fa-home text-blue-600 mr-2"></i>
+                Imóveis Premium
+            </div>
+            <div class="hidden md:flex space-x-8">
+                <a href="#inicio" class="text-gray-600 hover:text-blue-600 transition">Início</a>
+                <a href="#imoveis" class="text-gray-600 hover:text-blue-600 transition">Imóveis</a>
+                <a href="#sobre" class="text-gray-600 hover:text-blue-600 transition">Sobre</a>
+                <a href="#testemunhos" class="text-gray-600 hover:text-blue-600 transition">Testemunhos</a>
+                <a href="#contato" class="text-gray-600 hover:text-blue-600 transition">Contato</a>
+            </div>
+            <button class="md:hidden text-gray-600" id="menu-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </nav>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white shadow-lg">
+            <div class="px-6 py-4 space-y-2">
+                <a href="#inicio" class="block text-gray-600 hover:text-blue-600">Início</a>
+                <a href="#imoveis" class="block text-gray-600 hover:text-blue-600">Imóveis</a>
+                <a href="#sobre" class="block text-gray-600 hover:text-blue-600">Sobre</a>
+                <a href="#testemunhos" class="block text-gray-600 hover:text-blue-600">Testemunhos</a>
+                <a href="#contato" class="block text-gray-600 hover:text-blue-600">Contato</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="inicio" class="hero-section text-white pt-24 pb-16">
+        <div class="container mx-auto px-6 text-center">
+            <h1 class="text-5xl font-bold mb-6">Encontre Sua Casa dos Sonhos</h1>
+            <p class="text-xl mb-8 max-w-2xl mx-auto">Especialistas em imóveis premium com mais de 10 anos de experiência no mercado</p>
+            
+            <!-- Search Form -->
+            <div class="bg-white rounded-lg shadow-xl p-6 max-w-4xl mx-auto">
+                <div class="grid md:grid-cols-4 gap-4">
+                    <div>
+                        <label class="block text-gray-700 text-sm font-medium mb-2">Quartos</label>
+                        <select id="quartos" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                            <option value="">Qualquer</option>
+                            <option value="1">1+</option>
+                            <option value="2">2+</option>
+                            <option value="3">3+</option>
+                            <option value="4">4+</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 text-sm font-medium mb-2">Banheiros</label>
+                        <select id="banheiros" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                            <option value="">Qualquer</option>
+                            <option value="1">1+</option>
+                            <option value="2">2+</option>
+                            <option value="3">3+</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 text-sm font-medium mb-2">Faixa de Preço</label>
+                        <select id="preco" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                            <option value="">Qualquer</option>
+                            <option value="0-300000">Até R$ 300.000</option>
+                            <option value="300000-500000">R$ 300.000 - R$ 500.000</option>
+                            <option value="500000-1000000">R$ 500.000 - R$ 1.000.000</option>
+                            <option value="1000000+">Acima de R$ 1.000.000</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 text-sm font-medium mb-2">Região</label>
+                        <select id="regiao" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                            <option value="">Todas</option>
+                            <option value="centro">Centro</option>
+                            <option value="zona-sul">Zona Sul</option>
+                            <option value="zona-norte">Zona Norte</option>
+                            <option value="zona-oeste">Zona Oeste</option>
+                        </select>
+                    </div>
+                </div>
+                <button onclick="filtrarImoveis()" class="mt-6 bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition w-full md:w-auto">
+                    <i class="fas fa-search mr-2"></i>Buscar Imóveis
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Properties Section -->
+    <section id="imoveis" class="py-16">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl font-bold text-center text-gray-800 mb-12">Imóveis Disponíveis</h2>
+            
+            <div id="properties-container" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Properties will be loaded dynamically -->
+            </div>
+            
+            <!-- Waitlist Modal -->
+            <div id="waitlist-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">
+                <div class="flex items-center justify-center min-h-screen p-4">
+                    <div class="bg-white rounded-lg max-w-md w-full p-6">
+                        <h3 class="text-2xl font-bold mb-4">Lista de Espera</h3>
+                        <p class="text-gray-600 mb-6">O site está sendo finalizado. Deixe seus dados para ser notificado quando estivermos prontos!</p>
+                        <form id="waitlist-form">
+                            <div class="mb-4">
+                                <input type="text" id="nome" placeholder="Nome completo" class="w-full p-3 border border-gray-300 rounded-lg" required>
+                            </div>
+                            <div class="mb-4">
+                                <input type="email" id="email" placeholder="E-mail" class="w-full p-3 border border-gray-300 rounded-lg" required>
+                            </div>
+                            <div class="mb-4">
+                                <input type="tel" id="telefone" placeholder="Telefone" class="w-full p-3 border border-gray-300 rounded-lg" required>
+                            </div>
+                            <div class="flex justify-end space-x-4">
+                                <button type="button" onclick="closeWaitlistModal()" class="px-6 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-100">
+                                    Cancelar
+                                </button>
+                                <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                                    Entrar na Lista
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="sobre" class="py-16 bg-white">
+        <div class="container mx-auto px-6">
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div>
+                    <h2 class="text-4xl font-bold text-gray-800 mb-6">Conheça Nossa Equipe</h2>
+                    <p class="text-gray-600 mb-6 leading-relaxed">
+                        Com mais de uma década de experiência no mercado imobiliário, nossa equipe tem o compromisso de encontrar a propriedade perfeita para cada cliente. Especializamo-nos em imóveis premium e oferecemos um atendimento personalizado e profissional.
+                    </p>
+                    <div class="grid grid-cols-2 gap-6">
+                        <div class="text-center">
+                            <div class="text-3xl font-bold text-blue-600">200+</div>
+                            <div class="text-gray-600">Imóveis Vendidos</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-3xl font-bold text-blue-600">15</div>
+                            <div class="text-gray-600">Dias Médios de Venda</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-4" id="team-photos">
+                    <!-- Team photos will be loaded here -->
+                    <div class="bg-gray-200 rounded-lg h-48 flex items-center justify-center">
+                        <i class="fas fa-user text-4xl text-gray-400"></i>
+                    </div>
+                    <div class="bg-gray-200 rounded-lg h-48 flex items-center justify-center">
+                        <i class="fas fa-user text-4xl text-gray-400"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section id="testemunhos" class="py-16 bg-gray-100">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl font-bold text-center text-gray-800 mb-12">O Que Nossos Clientes Dizem</h2>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8" id="testimonials-container">
+                <!-- Testimonials will be loaded dynamically -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Sold Properties Section -->
+    <section class="py-16 bg-white">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl font-bold text-center text-gray-800 mb-12">Imóveis Vendidos Recentemente</h2>
+            <div id="sold-properties-container" class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Sold properties will be loaded dynamically -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contato" class="py-16 bg-blue-600 text-white">
+        <div class="container mx-auto px-6 text-center">
+            <h2 class="text-4xl font-bold mb-8">Entre em Contato</h2>
+            <div class="grid md:grid-cols-3 gap-8 mb-8">
+                <div>
+                    <i class="fas fa-phone text-3xl mb-4"></i>
+                    <h3 class="text-xl font-semibold mb-2">Telefone</h3>
+                    <p>(11) 9999-9999</p>
+                </div>
+                <div>
+                    <i class="fas fa-envelope text-3xl mb-4"></i>
+                    <h3 class="text-xl font-semibold mb-2">E-mail</h3>
+                    <p>contato@imoveispremium.com</p>
+                </div>
+                <div>
+                    <i class="fas fa-map-marker-alt text-3xl mb-4"></i>
+                    <h3 class="text-xl font-semibold mb-2">Endereço</h3>
+                    <p>Av. Principal, 123<br>São Paulo - SP</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-6 text-center">
+            <div class="mb-6">
+                <div class="text-2xl font-bold mb-2">Imóveis Premium</div>
+                <p class="text-gray-400">Sua casa dos sonhos está aqui</p>
+            </div>
+            <div class="flex justify-center space-x-6 mb-6">
+                <a href="#" class="text-gray-400 hover:text-white transition">
+                    <i class="fab fa-facebook text-2xl"></i>
+                </a>
+                <a href="#" class="text-gray-400 hover:text-white transition">
+                    <i class="fab fa-instagram text-2xl"></i>
+                </a>
+                <a href="#" class="text-gray-400 hover:text-white transition">
+                    <i class="fab fa-whatsapp text-2xl"></i>
+                </a>
+            </div>
+            <p class="text-gray-400">&copy; 2024 Imóveis Premium. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile Menu Toggle
+        document.getElementById('menu-toggle').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Sample data (in production, this would come from Supabase)
+        const sampleProperties = [
+            {
+                id: 1,
+                title: "Casa Moderna na Zona Sul",
+                price: 850000,
+                quartos: 3,
+                banheiros: 2,
+                regiao: "zona-sul",
+                image: "https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=400",
+                sold: false,
+                daysOnMarket: 12
+            },
+            {
+                id: 2,
+                title: "Apartamento Luxuoso Centro",
+                price: 650000,
+                quartos: 2,
+                banheiros: 2,
+                regiao: "centro",
+                image: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=400",
+                sold: false,
+                daysOnMarket: 8
+            },
+            {
+                id: 3,
+                title: "Casa Colonial Vendida",
+                price: 1200000,
+                quartos: 4,
+                banheiros: 3,
+                regiao: "zona-oeste",
+                image: "https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=400",
+                sold: true,
+                soldIn: 5
+            }
+        ];
+
+        const sampleTestimonials = [
+            {
+                name: "Maria Silva",
+                text: "Excelente atendimento! Encontraram a casa perfeita para minha família em apenas 2 semanas.",
+                rating: 5,
+                source: "Google Reviews"
+            },
+            {
+                name: "João Santos",
+                text: "Profissionais competentes e dedicados. Recomendo para quem busca qualidade.",
+                rating: 5,
+                source: "Google Reviews"
+            }
+        ];
+
+        // Load properties
+        function loadProperties() {
+            const container = document.getElementById('properties-container');
+            const soldContainer = document.getElementById('sold-properties-container');
+            
+            sampleProperties.forEach(property => {
+                const propertyCard = createPropertyCard(property);
+                
+                if (property.sold) {
+                    soldContainer.appendChild(propertyCard);
+                } else {
+                    container.appendChild(propertyCard);
+                }
+            });
+        }
+
+        // Create property card
+        function createPropertyCard(property) {
+            const card = document.createElement('div');
+            card.className = `property-card bg-white rounded-lg shadow-lg overflow-hidden ${property.sold ? 'sold-property' : ''}`;
+            
+            card.innerHTML = `
+                <img src="${property.image}" alt="${property.title}" class="w-full h-48 object-cover">
+                <div class="p-6">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-2">${property.title}</h3>
+                    <p class="text-2xl font-bold text-blue-600 mb-3">R$ ${property.price.toLocaleString('pt-BR')}</p>
+                    <div class="flex items-center text-gray-600 mb-4">
+                        <i class="fas fa-bed mr-2"></i>
+                        <span class="mr-4">${property.quartos} quartos</span>
+                        <i class="fas fa-bath mr-2"></i>
+                        <span>${property.banheiros} banheiros</span>
+                    </div>
+                    ${property.sold ? 
+                        `<div class="text-green-600 font-semibold">
+                            <i class="fas fa-check-circle mr-2"></i>Vendido em ${property.soldIn} dias
+                        </div>` :
+                        `<div class="text-gray-500 text-sm mb-3">
+                            <i class="fas fa-clock mr-1"></i>${property.daysOnMarket} dias no mercado
+                        </div>
+                        <button onclick="showInterest(${property.id})" class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition">
+                            Tenho Interesse
+                        </button>`
+                    }
+                </div>
+            `;
+            
+            return card;
+        }
+
+        // Load testimonials
+        function loadTestimonials() {
+            const container = document.getElementById('testimonials-container');
+            
+            sampleTestimonials.forEach(testimonial => {
+                const testimonialCard = document.createElement('div');
+                testimonialCard.className = 'testimonial-card bg-white rounded-lg shadow-lg p-6';
+                
+                testimonialCard.innerHTML = `
+                    <div class="flex items-center mb-4">
+                        ${Array(testimonial.rating).fill('').map(() => '<i class="fas fa-star text-yellow-400"></i>').join('')}
+                    </div>
+                    <p class="text-gray-600 mb-4 italic">"${testimonial.text}"</p>
+                    <div class="flex items-center">
+                        <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-semibold mr-3">
+                            ${testimonial.name[0]}
+                        </div>
+                        <div>
+                            <div class="font-semibold text-gray-800">${testimonial.name}</div>
+                            <div class="text-sm text-gray-500">${testimonial.source}</div>
+                        </div>
+                    </div>
+                `;
+                
+                container.appendChild(testimonialCard);
+            });
+        }
+
+        // Filter properties
+        function filtrarImoveis() {
+            // Implementation for filtering would go here
+            // This would integrate with Supabase queries
+            console.log('Filtering properties...');
+        }
+
+        // Show interest modal
+        function showInterest(propertyId) {
+            const modal = document.getElementById('waitlist-modal');
+            modal.classList.remove('hidden');
+        }
+
+        // Close waitlist modal
+        function closeWaitlistModal() {
+            const modal = document.getElementById('waitlist-modal');
+            modal.classList.add('hidden');
+        }
+
+        // Handle waitlist form submission
+        document.getElementById('waitlist-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const nome = document.getElementById('nome').value;
+            const email = document.getElementById('email').value;
+            const telefone = document.getElementById('telefone').value;
+            
+            // Here you would save to Supabase
+            console.log('Saving to waitlist:', { nome, email, telefone });
+            
+            alert('Obrigado! Você foi adicionado à nossa lista de espera.');
+            closeWaitlistModal();
+            this.reset();
+        });
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            loadProperties();
+            loadTestimonials();
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
