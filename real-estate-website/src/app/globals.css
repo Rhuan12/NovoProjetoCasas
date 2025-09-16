@@ -3,10 +3,6 @@
 @tailwind utilities;
 
 @layer base {
-  * {
-    @apply border-background-tertiary;
-  }
-  
   body {
     @apply bg-background-primary text-text-primary;
     font-feature-settings: "rlig" 1, "calt" 1;
@@ -53,16 +49,6 @@
     @apply animate-pulse bg-background-tertiary rounded;
   }
   
-  /* Custom focus styles */
-  .focus-ring {
-    @apply focus:outline-none focus:ring-2 focus:ring-accent-primary focus:ring-offset-2 focus:ring-offset-background-primary;
-  }
-  
-  /* Gradient overlays for cards */
-  .card-gradient {
-    background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(59, 130, 246, 0.05) 100%);
-  }
-  
   /* Text gradients */
   .text-gradient {
     @apply bg-gradient-to-r from-accent-primary to-accent-light bg-clip-text text-transparent;
@@ -73,14 +59,5 @@
   /* Custom filters for sold properties */
   .filter-sold {
     filter: grayscale(80%) opacity(0.7);
-  }
-  
-  /* Safe area for mobile */
-  .safe-area-top {
-    padding-top: env(safe-area-inset-top);
-  }
-  
-  .safe-area-bottom {
-    padding-bottom: env(safe-area-inset-bottom);
   }
 }
