@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Card, Input, Button } from '@/components/ui/Button'
-import { Mail, Phone, DollarSign, Home } from 'lucide-react'
+import { Mail } from 'lucide-react'
 
 interface ContactFormProps {
   propertyId: string
@@ -130,65 +130,6 @@ export function ContactForm({ propertyId, propertyTitle, onSuccess }: ContactFor
             onChange={handleChange}
             placeholder="(11) 99999-9999"
           />
-        </div>
-
-        {/* Preferências */}
-        <div className="border-t border-background-tertiary pt-4 space-y-3">
-          <h4 className="font-medium text-text-primary text-sm">Suas preferências</h4>
-          
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="block text-sm text-text-muted mb-1">Orçamento máximo</label>
-              <select
-                name="max_budget"
-                value={formData.max_budget}
-                onChange={handleChange}
-                className="block w-full px-3 py-2 bg-background-secondary border border-background-tertiary rounded-lg text-text-primary focus:outline-none focus:ring-2 focus:ring-accent-primary text-sm"
-              >
-                <option value="">Qualquer valor</option>
-                <option value="300000">Até R$ 300.000</option>
-                <option value="500000">Até R$ 500.000</option>
-                <option value="800000">Até R$ 800.000</option>
-                <option value="1000000">Até R$ 1.000.000</option>
-                <option value="1500000">Até R$ 1.500.000</option>
-                <option value="2000000">Até R$ 2.000.000</option>
-                <option value="3000000">Até R$ 3.000.000</option>
-              </select>
-            </div>
-            
-            <div>
-              <label className="block text-sm text-text-muted mb-1">Quartos</label>
-              <select
-                name="desired_bedrooms"
-                value={formData.desired_bedrooms}
-                onChange={handleChange}
-                className="block w-full px-3 py-2 bg-background-secondary border border-background-tertiary rounded-lg text-text-primary focus:outline-none focus:ring-2 focus:ring-accent-primary text-sm"
-              >
-                <option value="">Qualquer</option>
-                <option value="1">1+</option>
-                <option value="2">2+</option>
-                <option value="3">3+</option>
-                <option value="4">4+</option>
-                <option value="5">5+</option>
-              </select>
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-sm text-text-muted mb-1">Banheiros</label>
-            <select
-              name="desired_bathrooms"
-              value={formData.desired_bathrooms}
-              onChange={handleChange}
-              className="block w-full px-3 py-2 bg-background-secondary border border-background-tertiary rounded-lg text-text-primary focus:outline-none focus:ring-2 focus:ring-accent-primary text-sm"
-            >
-              <option value="">Qualquer</option>
-              <option value="1">1+</option>
-              <option value="2">2+</option>
-              <option value="3">3+</option>
-              <option value="4">4+</option>
-            </select>
-          </div>
         </div>
 
         {/* Mensagem */}

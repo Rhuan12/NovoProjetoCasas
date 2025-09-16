@@ -66,28 +66,14 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// GET - Listar leads (apenas para admins)
+// GET - Listar leads (temporário: sem autenticação para desenvolvimento)
 export async function GET(request: NextRequest) {
   try {
     const supabase = createSupabaseServerClient()
     const { searchParams } = new URL(request.url)
 
-    // Verificar autenticação
-    const { data: { user }, error: authError } = await supabase.auth.getUser()
-    if (authError || !user) {
-      return NextResponse.json({ error: 'Não autorizado' }, { status: 401 })
-    }
-
-    // Verificar se é admin
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('role')
-      .eq('id', user.id)
-      .single()
-
-    if (!profile || profile.role !== 'admin') {
-      return NextResponse.json({ error: 'Acesso negado' }, { status: 403 })
-    }
+    // TODO: Reativar autenticação quando implementarmos login
+    // Temporariamente removendo verificação de auth para desenvolvimento
 
     // Parâmetros de filtro
     const status = searchParams.get('status')
