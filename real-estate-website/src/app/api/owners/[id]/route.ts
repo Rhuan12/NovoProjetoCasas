@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createSupabaseServerClient } from '@/lib/supabase-server'
 
-// GET - Buscar imóvel por ID
+// GET - Buscar dono por ID
 export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }
@@ -9,17 +9,17 @@ export async function GET(
   try {
     const supabase = createSupabaseServerClient()
     
-    const { data: property, error } = await supabase
-      .from('properties')
+    const { data: owner, error } = await supabase
+      .from('owners')
       .select('*')
       .eq('id', params.id)
       .single()
 
     if (error) {
-      return NextResponse.json({ error: 'Imóvel não encontrado' }, { status: 404 })
+      return NextResponse.json({ error: 'Dono não encontrado' }, { status: 404 })
     }
 
-    return NextResponse.json({ property })
+    return NextResponse.json({ owner })
   } catch (error) {
     return NextResponse.json(
       { error: 'Erro interno do servidor' },
@@ -28,7 +28,7 @@ export async function GET(
   }
 }
 
-// PUT - Atualizar imóvel
+// PUT - Atualizar dono
 export async function PUT(
   request: NextRequest,
   { params }: { params: { id: string } }
@@ -43,20 +43,43 @@ export async function PUT(
       return NextResponse.json({ error: 'Não autorizado' }, { status: 401 })
     }
 
-    // Verificar se é admin ou photographer
+    // Verificar se é admin
     const { data: profile } = await supabase
       .from('profiles')
       .select('role')
       .eq('id', user.id)
       .single()
 
-    if (!profile || !['admin', 'photographer'].includes(profile.role)) {
+    if (!profile || profile.role !== 'admin') {
       return NextResponse.json({ error: 'Permissão negada' }, { status: 403 })
     }
 
-    // Atualizar imóvel
-    const { data: property, error } = await supabase
-      .from('properties')
+    // Se estiver ativando um dono, verificar limite
+    if (body.is_active === true) {
+      const { data: currentOwner } = await supabase
+        .from('owners')
+        .select('is_active')
+        .eq('id', params.id)
+        .single()
+
+      if (currentOwner && !currentOwner.is_active) {
+        const { data: activeOwners } = await supabase
+          .from('owners')
+          .select('id')
+          .eq('is_active', true)
+
+        if (activeOwners && activeOwners.length >= 3) {
+          return NextResponse.json(
+            { error: 'Máximo de 3 donos ativos permitido' },
+            { status: 400 }
+          )
+        }
+      }
+    }
+
+    // Atualizar dono
+    const { data: owner, error } = await supabase
+      .from('owners')
       .update({
         ...body,
         updated_at: new Date().toISOString()
@@ -69,7 +92,7 @@ export async function PUT(
       return NextResponse.json({ error: error.message }, { status: 400 })
     }
 
-    return NextResponse.json({ property })
+    return NextResponse.json({ owner })
   } catch (error) {
     return NextResponse.json(
       { error: 'Erro interno do servidor' },
@@ -78,7 +101,7 @@ export async function PUT(
   }
 }
 
-// DELETE - Deletar imóvel
+// DELETE - Deletar dono
 export async function DELETE(
   request: NextRequest,
   { params }: { params: { id: string } }
@@ -103,9 +126,9 @@ export async function DELETE(
       return NextResponse.json({ error: 'Apenas admins podem deletar' }, { status: 403 })
     }
 
-    // Deletar imóvel
+    // Deletar dono
     const { error } = await supabase
-      .from('properties')
+      .from('owners')
       .delete()
       .eq('id', params.id)
 
@@ -113,7 +136,7 @@ export async function DELETE(
       return NextResponse.json({ error: error.message }, { status: 400 })
     }
 
-    return NextResponse.json({ message: 'Imóvel deletado com sucesso' })
+    return NextResponse.json({ message: 'Dono deletado com sucesso' })
   } catch (error) {
     return NextResponse.json(
       { error: 'Erro interno do servidor' },

@@ -13,8 +13,7 @@ import {
   Home,
   Search,
   TrendingUp,
-  Mail,
-  User
+  Mail
 } from 'lucide-react'
 
 export function Header() {
@@ -132,7 +131,6 @@ export function Header() {
               </Button>
               
               <Button 
-                variant="outline" 
                 size="sm" 
                 className="gap-2"
                 onClick={() => window.open('tel:+5511999999999', '_self')}
@@ -140,13 +138,6 @@ export function Header() {
                 <Phone size={16} />
                 (11) 99999-9999
               </Button>
-              
-              <Link href="/admin">
-                <Button variant="primary" size="sm" className="gap-2">
-                  <User size={16} />
-                  Área do Cliente
-                </Button>
-              </Link>
             </div>
 
             {/* Mobile Menu Button */}
@@ -208,7 +199,6 @@ export function Header() {
                 </Button>
                 
                 <Button 
-                  variant="outline" 
                   className="justify-start gap-3"
                   onClick={() => {
                     window.open('tel:+5511999999999', '_self')
@@ -218,13 +208,6 @@ export function Header() {
                   <Phone size={16} />
                   Ligar: (11) 99999-9999
                 </Button>
-                
-                <Link href="/admin" onClick={() => setIsMenuOpen(false)}>
-                  <Button variant="primary" className="w-full justify-start gap-3">
-                    <User size={16} />
-                    Área do Cliente
-                  </Button>
-                </Link>
               </div>
             </div>
           )}

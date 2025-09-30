@@ -4,17 +4,19 @@ import { useState, ReactNode } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Button } from '@/components/ui/Button'
+import { useAuth } from '@/hooks/useAuth'
 import { 
   Home, 
   Building, 
-  Users, 
+  Users as UsersIcon, 
   Camera, 
   Settings, 
   Menu, 
   X,
   LogOut,
   BarChart3,
-  Plus
+  Plus,
+  User
 } from 'lucide-react'
 
 interface AdminLayoutProps {
@@ -24,6 +26,7 @@ interface AdminLayoutProps {
 export function AdminLayout({ children }: AdminLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const pathname = usePathname()
+  const { user, profile, signOut, loading } = useAuth()
 
   const navigationItems = [
     { 
@@ -41,7 +44,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
     { 
       href: '/admin/leads', 
       label: 'Leads', 
-      icon: Users,
+      icon: UsersIcon,
       description: 'Interessados'
     },
     { 
@@ -49,6 +52,12 @@ export function AdminLayout({ children }: AdminLayoutProps) {
       label: 'Fotos', 
       icon: Camera,
       description: 'Upload de imagens'
+    },
+    { 
+      href: '/admin/donos', 
+      label: 'Donos', 
+      icon: User,
+      description: 'Proprietários'
     },
     { 
       href: '/admin/configuracoes', 
@@ -63,6 +72,24 @@ export function AdminLayout({ children }: AdminLayoutProps) {
       return pathname === '/admin'
     }
     return pathname.startsWith(href)
+  }
+
+  const handleLogout = async () => {
+    if (confirm('Tem certeza que deseja sair?')) {
+      await signOut()
+    }
+  }
+
+  // Loading state
+  if (loading) {
+    return (
+      <div className="h-screen bg-background-primary flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-2 border-accent-primary border-t-transparent mx-auto mb-4"></div>
+          <p className="text-text-secondary">Carregando...</p>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -156,16 +183,28 @@ export function AdminLayout({ children }: AdminLayoutProps) {
           {/* User info */}
           <div className="p-4 border-t border-background-tertiary flex-shrink-0">
             <div className="flex items-center gap-3 mb-3">
-              <div className="w-8 h-8 bg-accent-primary rounded-full flex items-center justify-center">
-                <span className="text-sm font-semibold text-white">A</span>
+              <div className="w-10 h-10 bg-accent-primary rounded-full flex items-center justify-center">
+                <span className="text-sm font-semibold text-white">
+                  {profile?.full_name?.charAt(0) || user?.email?.charAt(0).toUpperCase() || 'U'}
+                </span>
               </div>
-              <div className="flex-1">
-                <div className="text-sm font-medium text-text-primary">Admin</div>
-                <div className="text-xs text-text-muted">Administrador</div>
+              <div className="flex-1 min-w-0">
+                <div className="text-sm font-medium text-text-primary truncate">
+                  {profile?.full_name || user?.email || 'Usuário'}
+                </div>
+                <div className="text-xs text-text-muted capitalize">
+                  {profile?.role === 'admin' ? 'Administrador' : 
+                   profile?.role === 'photographer' ? 'Fotógrafo' : 'Usuário'}
+                </div>
               </div>
             </div>
             
-            <Button variant="ghost" className="w-full justify-start gap-3 text-text-muted hover:text-danger" size="sm">
+            <Button 
+              variant="ghost" 
+              className="w-full justify-start gap-3 text-text-muted hover:text-danger hover:bg-danger/10" 
+              size="sm"
+              onClick={handleLogout}
+            >
               <LogOut size={16} />
               Sair
             </Button>

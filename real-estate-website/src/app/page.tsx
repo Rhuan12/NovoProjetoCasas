@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { useProperties } from '@/hooks/useProperties'
 import { Header } from '@/components/Header'
 import { PropertyCard } from '@/components/PropertyCard'
+import { AboutOwners } from '@/components/AboutOwners'
 import { Button, Card, Badge } from '@/components/ui/Button'
 import { 
   Search, 
@@ -352,6 +353,8 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      <AboutOwners />
 
       {/* CTA Final */}
       <section className="py-20 bg-gradient-to-r from-accent-primary to-accent-light">

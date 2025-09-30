@@ -1,6 +1,5 @@
 import { createClient } from '@supabase/supabase-js'
-import { createBrowserClient, createServerClient } from '@supabase/ssr'
-import { cookies } from 'next/headers'
+import { createBrowserClient } from '@supabase/ssr'
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
@@ -8,38 +7,11 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 // Cliente para uso geral (client-side)
 export const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
-// Cliente para componentes do cliente
+// Cliente para componentes do cliente (browser)
 export const createSupabaseClient = () => 
   createBrowserClient(supabaseUrl, supabaseAnonKey)
 
-// Cliente para componentes do servidor
-export const createSupabaseServerClient = () =>
-  createServerClient(
-    supabaseUrl,
-    supabaseAnonKey,
-    {
-      cookies: {
-        get(name: string) {
-          return cookies().get(name)?.value
-        },
-      },
-    }
-  )
-
-// Cliente com service role (para operações administrativas)
-export const createSupabaseServiceClient = () => 
-  createClient(
-    supabaseUrl, 
-    process.env.SUPABASE_SERVICE_ROLE_KEY!,
-    {
-      auth: {
-        autoRefreshToken: false,
-        persistSession: false
-      }
-    }
-  )
-
-// Tipos das tabelas (serão atualizados com os tipos gerados)
+// Tipos das tabelas
 export type Tables = {
   properties: {
     Row: {
@@ -168,6 +140,47 @@ export type Tables = {
       updated_at?: string
     }
   }
+  owners: {
+    Row: {
+      id: string
+      name: string
+      role: string
+      creci: string | null
+      bio: string | null
+      photo_url: string | null
+      achievements: string[]
+      display_order: number
+      is_active: boolean
+      created_at: string
+      updated_at: string
+      created_by: string | null
+    }
+    Insert: {
+      id?: string
+      name: string
+      role: string
+      creci?: string | null
+      bio?: string | null
+      photo_url?: string | null
+      achievements?: string[]
+      display_order?: number
+      is_active?: boolean
+      created_by?: string | null
+    }
+    Update: {
+      id?: string
+      name?: string
+      role?: string
+      creci?: string | null
+      bio?: string | null
+      photo_url?: string | null
+      achievements?: string[]
+      display_order?: number
+      is_active?: boolean
+      updated_at?: string
+      created_by?: string | null
+    }
+  }
 }
 
 // Tipos de conveniência
@@ -176,3 +189,6 @@ export type PropertyInsert = Tables['properties']['Insert']
 export type PropertyUpdate = Tables['properties']['Update']
 export type Lead = Tables['leads']['Row']
 export type Profile = Tables['profiles']['Row']
+export type Owner = Tables['owners']['Row']
+export type OwnerInsert = Tables['owners']['Insert']
+export type OwnerUpdate = Tables['owners']['Update']
