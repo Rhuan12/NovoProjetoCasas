@@ -7,6 +7,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   size?: 'sm' | 'md' | 'lg'
   loading?: boolean
   children: React.ReactNode
+  className?: string
 }
 
 export const Button = ({ 
@@ -60,6 +61,7 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string
   error?: string
   helper?: string
+  className?: string
 }
 
 export const Input = ({ 
@@ -102,13 +104,13 @@ export const Input = ({
 }
 
 // Card Component
-interface CardProps {
+interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode
   className?: string
   hover?: boolean
 }
 
-export const Card = ({ children, className, hover = false }: CardProps) => {
+export const Card = ({ children, className, hover = false, ...props }: CardProps) => {
   return (
     <div 
       className={clsx(
@@ -116,6 +118,7 @@ export const Card = ({ children, className, hover = false }: CardProps) => {
         hover && 'transition-all duration-200 hover:bg-background-tertiary hover:scale-[1.02]',
         className
       )}
+      {...props}
     >
       {children}
     </div>
@@ -127,9 +130,10 @@ interface BadgeProps {
   children: React.ReactNode
   variant?: 'default' | 'success' | 'warning' | 'danger' | 'sold'
   size?: 'sm' | 'md'
+  className?: string
 }
 
-export const Badge = ({ children, variant = 'default', size = 'md' }: BadgeProps) => {
+export const Badge = ({ children, variant = 'default', size = 'md', className }: BadgeProps) => {
   const variants = {
     default: 'bg-background-tertiary text-text-primary',
     success: 'bg-success/20 text-success',
@@ -148,7 +152,8 @@ export const Badge = ({ children, variant = 'default', size = 'md' }: BadgeProps
       className={clsx(
         'inline-flex items-center font-medium rounded-full',
         variants[variant],
-        sizes[size]
+        sizes[size],
+        className
       )}
     >
       {children}
