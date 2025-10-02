@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Input, Button, Card } from '@/components/ui/Button'
-import { Search, Filter, X, Plus } from 'lucide-react'
+import { Search, Filter, X, Plus, ChevronDown } from 'lucide-react'
 import Link from 'next/link'
 
 interface AdminPropertyFiltersProps {
@@ -22,6 +22,9 @@ export function AdminPropertyFilters({
     maxPrice: '',
     bedrooms: ''
   })
+  
+  // ✅ NOVO: Estado para mostrar/esconder filtros avançados em mobile
+  const [showAdvancedFilters, setShowAdvancedFilters] = useState(false)
 
   const handleFilterChange = (key: string, value: string) => {
     const newFilters = { ...filters, [key]: value }
@@ -51,9 +54,9 @@ export function AdminPropertyFilters({
   const hasActiveFilters = Object.values(filters).some(value => value !== '')
 
   return (
-    <Card className="p-6">
+    <Card className="p-4 lg:p-6">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6">
         <div className="flex items-center gap-4">
           <h2 className="text-xl font-semibold text-text-primary">
             Gerenciar Imóveis ({totalProperties})
@@ -66,72 +69,103 @@ export function AdminPropertyFilters({
               className="text-text-muted hover:text-text-primary"
             >
               <X size={16} className="mr-1" />
-              Limpar filtros
+              Limpar
             </Button>
           )}
         </div>
         
         <Link href="/admin/imoveis/novo">
-          <Button className="gap-2">
+          <Button className="gap-2 w-full lg:w-auto">
             <Plus size={16} />
             Novo Imóvel
           </Button>
         </Link>
       </div>
 
-      {/* Filtros */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
-        {/* Busca */}
-        <div className="lg:col-span-2 relative">
-          <Search size={16} className="absolute left-3 top-3 text-text-muted" />
-          <Input
-            placeholder="Buscar por título, cidade, bairro..."
-            value={filters.search}
-            onChange={(e) => handleFilterChange('search', e.target.value)}
-            className="pl-10"
-          />
+      {/* Filtros Principais */}
+      <div className="space-y-4">
+        {/* Busca e Status - Sempre visíveis */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          {/* Busca */}
+          <div className="lg:col-span-2 relative">
+            <Search size={16} className="absolute left-3 top-3 text-text-muted pointer-events-none" />
+            <Input
+              placeholder="Buscar por título, cidade, bairro..."
+              value={filters.search}
+              onChange={(e) => handleFilterChange('search', e.target.value)}
+              className="pl-10"
+            />
+          </div>
+
+          {/* Status */}
+          <select
+            value={filters.status}
+            onChange={(e) => handleFilterChange('status', e.target.value)}
+            className="block w-full px-3 py-2 bg-background-secondary border border-background-tertiary rounded-lg text-text-primary focus:outline-none focus:ring-2 focus:ring-accent-primary focus:border-transparent"
+          >
+            <option value="">Todos os Status</option>
+            <option value="available">Disponíveis</option>
+            <option value="sold">Vendidos</option>
+            <option value="reserved">Reservados</option>
+          </select>
         </div>
 
-        {/* Status */}
-        <select
-          value={filters.status}
-          onChange={(e) => handleFilterChange('status', e.target.value)}
-          className="block w-full px-3 py-2 bg-background-secondary border border-background-tertiary rounded-lg text-text-primary focus:outline-none focus:ring-2 focus:ring-accent-primary focus:border-transparent"
+        {/* ✅ Botão Toggle Filtros Avançados (Mobile) */}
+        <Button
+          variant="outline"
+          className="w-full lg:hidden gap-2"
+          onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
         >
-          <option value="">Todos os Status</option>
-          <option value="available">Disponíveis</option>
-          <option value="sold">Vendidos</option>
-          <option value="reserved">Reservados</option>
-        </select>
+          <Filter size={16} />
+          {showAdvancedFilters ? 'Esconder' : 'Mostrar'} Filtros Avançados
+          <ChevronDown 
+            size={16} 
+            className={`ml-auto transition-transform ${showAdvancedFilters ? 'rotate-180' : ''}`}
+          />
+        </Button>
 
-        {/* Cidade */}
-        <Input
-          placeholder="Cidade"
-          value={filters.city}
-          onChange={(e) => handleFilterChange('city', e.target.value)}
-        />
+        {/* Filtros Avançados */}
+        <div className={`
+          grid grid-cols-1 lg:grid-cols-4 gap-4
+          ${showAdvancedFilters ? 'block' : 'hidden lg:grid'}
+        `}>
+          {/* Cidade */}
+          <Input
+            placeholder="Cidade"
+            value={filters.city}
+            onChange={(e) => handleFilterChange('city', e.target.value)}
+          />
 
-        {/* Preço mínimo */}
-        <Input
-          type="number"
-          placeholder="Preço mín."
-          value={filters.minPrice}
-          onChange={(e) => handleFilterChange('minPrice', e.target.value)}
-        />
+          {/* Preço mínimo */}
+          <Input
+            type="number"
+            placeholder="Preço mín."
+            value={filters.minPrice}
+            onChange={(e) => handleFilterChange('minPrice', e.target.value)}
+          />
 
-        {/* Quartos */}
-        <select
-          value={filters.bedrooms}
-          onChange={(e) => handleFilterChange('bedrooms', e.target.value)}
-          className="block w-full px-3 py-2 bg-background-secondary border border-background-tertiary rounded-lg text-text-primary focus:outline-none focus:ring-2 focus:ring-accent-primary focus:border-transparent"
-        >
-          <option value="">Quartos</option>
-          <option value="1">1+</option>
-          <option value="2">2+</option>
-          <option value="3">3+</option>
-          <option value="4">4+</option>
-          <option value="5">5+</option>
-        </select>
+          {/* Preço máximo */}
+          <Input
+            type="number"
+            placeholder="Preço máx."
+            value={filters.maxPrice}
+            onChange={(e) => handleFilterChange('maxPrice', e.target.value)}
+          />
+
+          {/* Quartos */}
+          <select
+            value={filters.bedrooms}
+            onChange={(e) => handleFilterChange('bedrooms', e.target.value)}
+            className="block w-full px-3 py-2 bg-background-secondary border border-background-tertiary rounded-lg text-text-primary focus:outline-none focus:ring-2 focus:ring-accent-primary focus:border-transparent"
+          >
+            <option value="">Quartos</option>
+            <option value="1">1+</option>
+            <option value="2">2+</option>
+            <option value="3">3+</option>
+            <option value="4">4+</option>
+            <option value="5">5+</option>
+          </select>
+        </div>
       </div>
 
       {/* Loading indicator */}

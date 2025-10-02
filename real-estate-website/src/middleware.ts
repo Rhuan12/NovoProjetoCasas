@@ -54,41 +54,109 @@ export async function middleware(request: NextRequest) {
     }
   )
 
-  // Verificar autenticação
+  // Verificar autenticação apenas para rotas protegidas
+  const isAdminRoute = request.nextUrl.pathname.startsWith('/admin')
+  const isLoginRoute = request.nextUrl.pathname === '/login'
+
+  // Se não for rota protegida, continuar sem verificação
+  if (!isAdminRoute && !isLoginRoute) {
+    return response
+  }
+
+  // Verificar sessão do usuário
   const {
     data: { user },
+    error: authError,
   } = await supabase.auth.getUser()
 
-  // Se estiver tentando acessar /admin sem estar logado
-  if (request.nextUrl.pathname.startsWith('/admin')) {
-    if (!user) {
-      // Redirecionar para login
+  // === ROTA /login ===
+  if (isLoginRoute) {
+    // Se estiver logado e tentar acessar /login, redirecionar para /admin
+    if (user && !authError) {
+      const redirectUrl = request.nextUrl.clone()
+      redirectUrl.pathname = '/admin'
+      return NextResponse.redirect(redirectUrl)
+    }
+    // Se não estiver logado, permitir acesso ao login
+    return response
+  }
+
+  // === ROTAS /admin ===
+  if (isAdminRoute) {
+    // Se não estiver autenticado, redirecionar para login
+    if (!user || authError) {
       const redirectUrl = request.nextUrl.clone()
       redirectUrl.pathname = '/login'
       redirectUrl.searchParams.set('redirect', request.nextUrl.pathname)
       return NextResponse.redirect(redirectUrl)
     }
 
-    // Verificar se o usuário tem permissão (admin ou photographer)
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('role')
-      .eq('id', user.id)
-      .single()
+    // Verificar role do usuário (admin ou photographer)
+    // OTIMIZAÇÃO: Cache do perfil em header para evitar query dupla
+    const cachedProfile = request.headers.get('x-user-profile')
+    
+    let userRole: string | null = null
 
-    if (!profile || !['admin', 'photographer'].includes(profile.role)) {
+    if (cachedProfile) {
+      // Usar perfil do cache se disponível
+      try {
+        const profile = JSON.parse(cachedProfile)
+        userRole = profile.role
+      } catch (e) {
+        console.error('Erro ao parsear perfil cacheado:', e)
+      }
+    }
+
+    // Se não houver cache, buscar do banco
+    if (!userRole) {
+      const { data: profile, error: profileError } = await supabase
+        .from('profiles')
+        .select('role, full_name, id')
+        .eq('id', user.id)
+        .single()
+
+      if (profileError) {
+        console.error('Erro ao buscar perfil:', profileError)
+        
+        // Se erro ao buscar perfil, redirecionar para home
+        const redirectUrl = request.nextUrl.clone()
+        redirectUrl.pathname = '/'
+        redirectUrl.searchParams.set('error', 'profile_not_found')
+        return NextResponse.redirect(redirectUrl)
+      }
+
+      if (!profile) {
+        // Perfil não encontrado, redirecionar para home
+        const redirectUrl = request.nextUrl.clone()
+        redirectUrl.pathname = '/'
+        redirectUrl.searchParams.set('error', 'no_profile')
+        return NextResponse.redirect(redirectUrl)
+      }
+
+      userRole = profile.role
+
+      // Adicionar perfil ao header para uso posterior (evitar query dupla)
+      response.headers.set('x-user-profile', JSON.stringify(profile))
+      response.headers.set('x-user-role', profile.role)
+      response.headers.set('x-user-id', profile.id)
+      if (profile.full_name) {
+        response.headers.set('x-user-name', profile.full_name)
+      }
+    }
+
+    // ✅ CORREÇÃO: Verificar se userRole não é null antes de usar includes
+    if (!userRole || !['admin', 'photographer'].includes(userRole)) {
+      console.warn(`Acesso negado para usuário ${user.id} com role: ${userRole || 'null'}`)
+      
       // Usuário não tem permissão, redirecionar para home
       const redirectUrl = request.nextUrl.clone()
       redirectUrl.pathname = '/'
+      redirectUrl.searchParams.set('error', 'unauthorized')
       return NextResponse.redirect(redirectUrl)
     }
-  }
 
-  // Se estiver logado e tentar acessar /login, redirecionar para /admin
-  if (request.nextUrl.pathname === '/login' && user) {
-    const redirectUrl = request.nextUrl.clone()
-    redirectUrl.pathname = '/admin'
-    return NextResponse.redirect(redirectUrl)
+    // Usuário autenticado e autorizado, permitir acesso
+    return response
   }
 
   return response
@@ -96,15 +164,19 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
+    /*
+     * Match apenas rotas que precisam de autenticação:
+     * - /admin (todas as sub-rotas)
+     * - /login
+     * 
+     * Excluir:
+     * - /api (handled separately)
+     * - /_next/static (static files)
+     * - /_next/image (image optimization files)
+     * - /favicon.ico (favicon file)
+     * - arquivos públicos (svg, png, jpg, jpeg, gif, webp)
+     */
     '/admin/:path*',
     '/login',
-    /*
-     * Match all request paths except for the ones starting with:
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * - public folder
-     */
-    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
   ],
 }

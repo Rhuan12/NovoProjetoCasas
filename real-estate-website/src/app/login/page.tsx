@@ -22,7 +22,8 @@ export default function LoginPage() {
     try {
       const supabase = createSupabaseClient()
       
-      const { data, error: signInError } = await supabase.auth.signInWithPassword({
+      // 1. Fazer login
+      const { data: authData, error: signInError } = await supabase.auth.signInWithPassword({
         email,
         password,
       })
@@ -31,28 +32,67 @@ export default function LoginPage() {
         throw signInError
       }
 
-      if (!data.user) {
+      if (!authData.user) {
         throw new Error('Erro ao fazer login')
       }
 
-      // Verificar se o usuário tem perfil de admin ou photographer
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('role')
-        .eq('id', data.user.id)
-        .single()
+      console.log('✅ Login bem-sucedido. User ID:', authData.user.id)
 
-      if (!profile || !['admin', 'photographer'].includes(profile.role)) {
+      // 2. Buscar perfil do usuário
+      // ✅ CORREÇÃO: Usar sintaxe correta do Supabase
+      const { data: profile, error: profileError } = await supabase
+        .from('profiles')
+        .select('role, full_name')
+        .eq('id', authData.user.id)
+        .maybeSingle() // ← Mudança: usar maybeSingle() ao invés de single()
+
+      // Log para debug
+      console.log('Profile query result:', { profile, profileError })
+
+      if (profileError) {
+        console.error('Erro ao buscar perfil:', profileError)
+        throw new Error(`Erro ao buscar perfil: ${profileError.message}`)
+      }
+
+      if (!profile) {
+        // Perfil não existe - criar automaticamente ou negar acesso
+        console.error('Perfil não encontrado para o usuário:', authData.user.id)
+        await supabase.auth.signOut()
+        throw new Error('Perfil não encontrado. Entre em contato com o administrador.')
+      }
+
+      // 3. Verificar se tem permissão (admin ou photographer)
+      if (!['admin', 'photographer'].includes(profile.role)) {
+        console.warn('Usuário sem permissão. Role:', profile.role)
         await supabase.auth.signOut()
         throw new Error('Você não tem permissão para acessar o painel administrativo')
       }
 
-      // Redirecionar para o admin
+      console.log('✅ Autenticação completa. Role:', profile.role)
+
+      // 4. Redirecionar para o admin
       router.push('/admin')
       router.refresh()
+      
     } catch (err: any) {
       console.error('Erro no login:', err)
-      setError(err.message || 'Email ou senha incorretos')
+      
+      // Mensagens de erro mais amigáveis
+      let errorMessage = 'Email ou senha incorretos'
+      
+      if (err.message.includes('Invalid login credentials')) {
+        errorMessage = 'Email ou senha incorretos'
+      } else if (err.message.includes('Email not confirmed')) {
+        errorMessage = 'Por favor, confirme seu email antes de fazer login'
+      } else if (err.message.includes('perfil')) {
+        errorMessage = err.message
+      } else if (err.message.includes('permissão')) {
+        errorMessage = err.message
+      } else if (err.message) {
+        errorMessage = err.message
+      }
+      
+      setError(errorMessage)
     } finally {
       setLoading(false)
     }
@@ -154,7 +194,10 @@ export default function LoginPage() {
           <div className="mt-6 text-center">
             <p className="text-text-muted text-sm">
               Esqueceu sua senha?{' '}
-              <button className="text-accent-primary hover:text-accent-hover transition-colors">
+              <button 
+                className="text-accent-primary hover:text-accent-hover transition-colors"
+                onClick={() => alert('Funcionalidade em desenvolvimento')}
+              >
                 Recuperar acesso
               </button>
             </p>

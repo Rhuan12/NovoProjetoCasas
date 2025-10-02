@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Property } from '@/lib/supabase'
@@ -11,7 +11,8 @@ import {
   CheckCircle, 
   AlertCircle,
   Clock,
-  Building
+  Building,
+  X
 } from 'lucide-react'
 
 interface PropertiesTableProps {
@@ -31,6 +32,39 @@ export function PropertiesTable({
 }: PropertiesTableProps) {
   const [actionLoading, setActionLoading] = useState<string | null>(null)
   const [showActions, setShowActions] = useState<string | null>(null)
+  const dropdownRef = useRef<HTMLDivElement>(null)
+
+  // ✅ CORREÇÃO 1: Fechar dropdown ao clicar fora
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setShowActions(null)
+      }
+    }
+
+    if (showActions) {
+      document.addEventListener('mousedown', handleClickOutside)
+      return () => {
+        document.removeEventListener('mousedown', handleClickOutside)
+      }
+    }
+  }, [showActions])
+
+  // ✅ CORREÇÃO 2: Fechar dropdown ao pressionar ESC
+  useEffect(() => {
+    function handleEscKey(event: KeyboardEvent) {
+      if (event.key === 'Escape') {
+        setShowActions(null)
+      }
+    }
+
+    if (showActions) {
+      document.addEventListener('keydown', handleEscKey)
+      return () => {
+        document.removeEventListener('keydown', handleEscKey)
+      }
+    }
+  }, [showActions])
 
   const formatPrice = (price: number | null) => {
     if (!price) return 'Sob consulta'
@@ -137,9 +171,9 @@ export function PropertiesTable({
 
   return (
     <Card className="overflow-hidden">
-      {/* Header da tabela */}
-      <div className="bg-background-tertiary/50 px-6 py-3 border-b border-background-tertiary">
-        <div className="hidden md:grid md:grid-cols-12 gap-4 text-sm font-medium text-text-muted">
+      {/* Header da tabela - Desktop Only */}
+      <div className="hidden lg:block bg-background-tertiary/50 px-6 py-3 border-b border-background-tertiary">
+        <div className="grid grid-cols-12 gap-4 text-sm font-medium text-text-muted">
           <div className="col-span-4">Imóvel</div>
           <div className="col-span-2">Localização</div>
           <div className="col-span-2">Preço</div>
@@ -154,11 +188,13 @@ export function PropertiesTable({
         {properties.map((property) => (
           <div 
             key={property.id} 
-            className="p-6 hover:bg-background-tertiary/30 transition-colors"
+            className="p-4 lg:p-6 hover:bg-background-tertiary/30 transition-colors"
           >
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
+            {/* ✅ LAYOUT RESPONSIVO */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-center">
+              
               {/* Imóvel info */}
-              <div className="md:col-span-4 flex items-center gap-4">
+              <div className="lg:col-span-4 flex items-center gap-4">
                 <div className="w-16 h-16 rounded-lg overflow-hidden bg-background-tertiary flex-shrink-0">
                   {property.main_photo_url ? (
                     <Image
@@ -191,8 +227,8 @@ export function PropertiesTable({
               </div>
 
               {/* Localização */}
-              <div className="md:col-span-2">
-                <p className="text-text-primary text-sm">
+              <div className="lg:col-span-2">
+                <p className="text-text-primary text-sm font-medium lg:font-normal">
                   {property.city}
                 </p>
                 <p className="text-text-secondary text-xs">
@@ -201,7 +237,7 @@ export function PropertiesTable({
               </div>
 
               {/* Preço */}
-              <div className="md:col-span-2">
+              <div className="lg:col-span-2">
                 <p className={`font-semibold ${
                   property.status === 'sold' ? 'text-sold' : 'text-text-primary'
                 }`}>
@@ -215,59 +251,96 @@ export function PropertiesTable({
               </div>
 
               {/* Status */}
-              <div className="md:col-span-1">
+              <div className="lg:col-span-1">
                 {getStatusBadge(property.status)}
               </div>
 
               {/* Data criação */}
-              <div className="md:col-span-2">
+              <div className="lg:col-span-2 hidden lg:block">
                 <p className="text-text-secondary text-sm">
                   {formatDate(property.created_at)}
                 </p>
               </div>
 
               {/* Ações */}
-              <div className="md:col-span-1">
-                <div className="relative">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setShowActions(
-                      showActions === property.id ? null : property.id
-                    )}
-                    disabled={actionLoading === property.id}
-                  >
-                    <MoreHorizontal size={16} />
-                  </Button>
+              <div className="lg:col-span-1 relative" ref={showActions === property.id ? dropdownRef : null}>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowActions(
+                    showActions === property.id ? null : property.id
+                  )}
+                  disabled={actionLoading === property.id}
+                  className="w-full lg:w-auto"
+                >
+                  <MoreHorizontal size={16} />
+                  <span className="lg:hidden ml-2">Opções</span>
+                </Button>
 
-                  {/* Menu de ações */}
-                  {showActions === property.id && (
-                    <div className="absolute right-0 top-full mt-1 bg-background-secondary border border-background-tertiary rounded-lg shadow-lg z-10 min-w-48">
-                      <div className="py-1">
+                {/* ✅ CORREÇÃO 3: Menu Dropdown Melhorado */}
+                {showActions === property.id && (
+                  <>
+                    {/* Overlay para mobile */}
+                    <div 
+                      className="fixed inset-0 bg-black/20 z-40 lg:hidden"
+                      onClick={() => setShowActions(null)}
+                    />
+
+                    {/* Menu */}
+                    <div className="
+                      fixed bottom-0 left-0 right-0 lg:absolute lg:right-0 lg:top-full lg:left-auto lg:bottom-auto
+                      lg:mt-1 bg-background-secondary border border-background-tertiary 
+                      rounded-t-2xl lg:rounded-lg shadow-2xl z-50 
+                      lg:min-w-[220px] max-h-[80vh] overflow-y-auto
+                    ">
+                      {/* Header Mobile */}
+                      <div className="lg:hidden flex items-center justify-between p-4 border-b border-background-tertiary sticky top-0 bg-background-secondary">
+                        <h3 className="font-semibold text-text-primary">Opções</h3>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => setShowActions(null)}
+                        >
+                          <X size={20} />
+                        </Button>
+                      </div>
+
+                      <div className="py-2">
+                        {/* Ver no site */}
                         <Link 
                           href={`/imoveis/${property.id}`}
-                          className="flex items-center gap-2 px-4 py-2 text-sm text-text-primary hover:bg-background-tertiary"
+                          target="_blank"
+                          className="flex items-center gap-3 px-4 py-3 text-sm text-text-primary hover:bg-background-tertiary transition-colors"
+                          onClick={() => setShowActions(null)}
                         >
-                          <Eye size={14} />
+                          <Eye size={16} />
                           Ver no site
                         </Link>
                         
+                        {/* Editar */}
                         <Link 
                           href={`/admin/imoveis/${property.id}/editar`}
-                          className="flex items-center gap-2 px-4 py-2 text-sm text-text-primary hover:bg-background-tertiary"
+                          className="flex items-center gap-3 px-4 py-3 text-sm text-text-primary hover:bg-background-tertiary transition-colors"
+                          onClick={() => setShowActions(null)}
                         >
-                          <Edit size={14} />
+                          <Edit size={16} />
                           Editar
                         </Link>
 
-                        <hr className="border-background-tertiary my-1" />
+                        <hr className="border-background-tertiary my-2" />
+
+                        {/* Atualizar Status */}
+                        <div className="px-4 py-2">
+                          <p className="text-xs font-semibold text-text-muted mb-2">MUDAR STATUS</p>
+                        </div>
 
                         {property.status !== 'available' && (
                           <button
                             onClick={() => handleStatusUpdate(property.id, 'available')}
-                            className="w-full flex items-center gap-2 px-4 py-2 text-sm text-success hover:bg-background-tertiary"
+                            className="w-full flex items-center gap-3 px-4 py-3 text-sm text-success hover:bg-background-tertiary transition-colors"
+                            disabled={actionLoading === property.id}
                           >
-                            <CheckCircle size={14} />
+                            <CheckCircle size={16} />
                             Marcar como Disponível
                           </button>
                         )}
@@ -275,9 +348,10 @@ export function PropertiesTable({
                         {property.status !== 'reserved' && (
                           <button
                             onClick={() => handleStatusUpdate(property.id, 'reserved')}
-                            className="w-full flex items-center gap-2 px-4 py-2 text-sm text-warning hover:bg-background-tertiary"
+                            className="w-full flex items-center gap-3 px-4 py-3 text-sm text-warning hover:bg-background-tertiary transition-colors"
+                            disabled={actionLoading === property.id}
                           >
-                            <Clock size={14} />
+                            <Clock size={16} />
                             Marcar como Reservado
                           </button>
                         )}
@@ -285,27 +359,35 @@ export function PropertiesTable({
                         {property.status !== 'sold' && (
                           <button
                             onClick={() => handleStatusUpdate(property.id, 'sold')}
-                            className="w-full flex items-center gap-2 px-4 py-2 text-sm text-text-primary hover:bg-background-tertiary"
+                            className="w-full flex items-center gap-3 px-4 py-3 text-sm text-text-primary hover:bg-background-tertiary transition-colors"
+                            disabled={actionLoading === property.id}
                           >
-                            <CheckCircle size={14} />
+                            <CheckCircle size={16} />
                             Marcar como Vendido
                           </button>
                         )}
 
-                        <hr className="border-background-tertiary my-1" />
+                        <hr className="border-background-tertiary my-2" />
 
+                        {/* Deletar */}
                         <button
                           onClick={() => handleDelete(property.id, property.title)}
-                          className="w-full flex items-center gap-2 px-4 py-2 text-sm text-danger hover:bg-danger/10"
+                          className="w-full flex items-center gap-3 px-4 py-3 text-sm text-danger hover:bg-danger/10 transition-colors"
+                          disabled={actionLoading === property.id}
                         >
-                          <Trash2 size={14} />
-                          Deletar
+                          <Trash2 size={16} />
+                          Deletar Imóvel
                         </button>
                       </div>
                     </div>
-                  )}
-                </div>
+                  </>
+                )}
               </div>
+            </div>
+
+            {/* Info adicional mobile */}
+            <div className="lg:hidden mt-3 pt-3 border-t border-background-tertiary flex items-center justify-between text-xs text-text-muted">
+              <span>Criado em {formatDate(property.created_at)}</span>
             </div>
           </div>
         ))}
