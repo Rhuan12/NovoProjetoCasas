@@ -1,4 +1,6 @@
-import { createSupabaseServerClient } from './supabase'
+// src/lib/auth.ts - VERSÃO CORRIGIDA
+
+import { createSupabaseServerClient } from './supabase-server' // ← CORREÇÃO AQUI
 import { redirect } from 'next/navigation'
 
 export async function getCurrentUser() {
