@@ -124,7 +124,7 @@ export function Header() {
                 variant="outline" 
                 size="sm" 
                 className="gap-2"
-                onClick={() => window.open('https://wa.me/5511999999999', '_blank')}
+                onClick={() => window.open('https://wa.me/5585991288998', '_blank')}
               >
                 <MessageCircle size={16} />
                 WhatsApp

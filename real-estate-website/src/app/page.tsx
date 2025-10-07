@@ -367,9 +367,9 @@ export default function Home() {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Button size="lg" className="bg-white text-accent-primary hover:bg-white/90 gap-2">
+            <Button size="lg" className="">
               <MessageCircle size={20} />
-              WhatsApp: (11) 99999-9999
+              WhatsApp: (85) 99128-8998
             </Button>
             
             <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10 gap-2">
