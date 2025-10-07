@@ -1,3 +1,5 @@
+// src/app/imoveis/[id]/page.tsx - VERSÃO CORRIGIDA
+
 'use client'
 
 import { useProperty } from '@/hooks/useProperties'
@@ -12,10 +14,10 @@ import {
   Maximize, 
   Calendar,
   Phone,
-  Mail,
+  MessageCircle,
   Share2,
-  Heart,
-  ArrowLeft
+  ArrowLeft,
+  X
 } from 'lucide-react'
 import Link from 'next/link'
 import { useState } from 'react'
@@ -107,6 +109,35 @@ export default function PropertyPage({ params }: PropertyPageProps) {
 
   const statusInfo = getStatusInfo()
 
+  // Função para compartilhar
+  const handleShare = async () => {
+    const shareData = {
+      title: property.title,
+      text: `Confira este imóvel: ${property.title}`,
+      url: window.location.href
+    }
+
+    if (navigator.share) {
+      try {
+        await navigator.share(shareData)
+      } catch (err) {
+        console.log('Compartilhamento cancelado')
+      }
+    } else {
+      // Fallback: copiar link
+      navigator.clipboard.writeText(window.location.href)
+      alert('Link copiado para área de transferência!')
+    }
+  }
+
+  // WhatsApp direto (sem formulário)
+  const handleQuickWhatsApp = () => {
+    const message = `Olá! Tenho interesse no imóvel "${property.title}". Link: ${window.location.href}`
+    const encodedMessage = encodeURIComponent(message)
+    const whatsappUrl = `https://wa.me/5585991288998?text=${encodedMessage}`
+    window.open(whatsappUrl, '_blank')
+  }
+
   return (
     <div className="min-h-screen bg-background-primary">
       <Header />
@@ -118,7 +149,7 @@ export default function PropertyPage({ params }: PropertyPageProps) {
           <span>/</span>
           <Link href="/imoveis" className="hover:text-text-primary">Imóveis</Link>
           <span>/</span>
-          <span className="text-text-primary">{property.title}</span>
+          <span className="text-text-primary truncate">{property.title}</span>
         </nav>
 
         {/* Botão voltar */}
@@ -140,15 +171,15 @@ export default function PropertyPage({ params }: PropertyPageProps) {
               {/* Header do imóvel */}
               <div>
                 <div className="flex items-start justify-between mb-4">
-                  <div>
+                  <div className="flex-1 min-w-0">
                     <h1 className={`text-3xl font-bold mb-2 ${isSold ? 'text-sold' : 'text-text-primary'}`}>
                       {property.title}
                     </h1>
                     
                     {(property.neighborhood || property.city) && (
                       <div className="flex items-center text-text-secondary mb-3">
-                        <MapPin size={18} className="mr-2" />
-                        <span>
+                        <MapPin size={18} className="mr-2 flex-shrink-0" />
+                        <span className="truncate">
                           {property.address && `${property.address}, `}
                           {property.neighborhood && `${property.neighborhood}, `}
                           {property.city}
@@ -158,19 +189,16 @@ export default function PropertyPage({ params }: PropertyPageProps) {
                     )}
                   </div>
 
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 ml-4">
                     {statusInfo.badge}
-                    <Button variant="ghost" size="sm">
+                    <Button variant="ghost" size="sm" onClick={handleShare}>
                       <Share2 size={16} />
-                    </Button>
-                    <Button variant="ghost" size="sm">
-                      <Heart size={16} />
                     </Button>
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between">
-                  <div className={`text-4xl font-bold ${isSold ? 'text-sold' : 'text-text-primary'}`}>
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                  <div className={`text-3xl sm:text-4xl font-bold ${isSold ? 'text-sold' : 'text-text-primary'}`}>
                     {formatPrice(property.price)}
                   </div>
                   
@@ -188,7 +216,7 @@ export default function PropertyPage({ params }: PropertyPageProps) {
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   {property.bedrooms && (
                     <div className="flex items-center gap-3">
-                      <BedDouble size={20} className="text-accent-primary" />
+                      <BedDouble size={20} className="text-accent-primary flex-shrink-0" />
                       <div>
                         <div className="font-semibold text-text-primary">{property.bedrooms}</div>
                         <div className="text-sm text-text-muted">Quartos</div>
@@ -198,7 +226,7 @@ export default function PropertyPage({ params }: PropertyPageProps) {
                   
                   {property.bathrooms && (
                     <div className="flex items-center gap-3">
-                      <Bath size={20} className="text-accent-primary" />
+                      <Bath size={20} className="text-accent-primary flex-shrink-0" />
                       <div>
                         <div className="font-semibold text-text-primary">{property.bathrooms}</div>
                         <div className="text-sm text-text-muted">Banheiros</div>
@@ -208,7 +236,7 @@ export default function PropertyPage({ params }: PropertyPageProps) {
                   
                   {property.area_sqm && (
                     <div className="flex items-center gap-3">
-                      <Maximize size={20} className="text-accent-primary" />
+                      <Maximize size={20} className="text-accent-primary flex-shrink-0" />
                       <div>
                         <div className="font-semibold text-text-primary">{property.area_sqm}m²</div>
                         <div className="text-sm text-text-muted">Área total</div>
@@ -218,7 +246,7 @@ export default function PropertyPage({ params }: PropertyPageProps) {
                   
                   {property.created_at && (
                     <div className="flex items-center gap-3">
-                      <Calendar size={20} className="text-accent-primary" />
+                      <Calendar size={20} className="text-accent-primary flex-shrink-0" />
                       <div>
                         <div className="font-semibold text-text-primary">
                           {new Date(property.created_at).getFullYear()}
@@ -244,18 +272,33 @@ export default function PropertyPage({ params }: PropertyPageProps) {
 
           {/* Sidebar - Contato */}
           <div className="space-y-6">
-            {/* Card de contato */}
-            <Card className="p-6 sticky top-24">
-              <h3 className="text-lg font-semibold text-text-primary mb-4">
-                {isSold ? 'Imóvel Vendido' : 'Interesse neste imóvel?'}
-              </h3>
+            {/* Card de contato rápido - Sticky apenas em desktop quando formulário fechado */}
+            <Card className={`p-6 ${!showContactForm ? 'lg:sticky lg:top-24' : ''}`}>
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold text-text-primary">
+                  {isSold ? 'Imóvel Vendido' : 'Interesse neste imóvel?'}
+                </h3>
+                
+                {/* Botão fechar (mobile) */}
+                {showContactForm && (
+                  <Button 
+                    variant="ghost" 
+                    size="sm"
+                    onClick={() => setShowContactForm(false)}
+                    className="lg:hidden"
+                  >
+                    <X size={20} />
+                  </Button>
+                )}
+              </div>
               
               {isSold ? (
                 <div className="text-center py-4">
                   <p className="text-text-secondary mb-4">
                     Este imóvel já foi vendido, mas temos outras opções similares.
                   </p>
-                  <Button className="w-full">
+                  <Button className="w-full" onClick={handleQuickWhatsApp}>
+                    <MessageCircle size={16} className="mr-2" />
                     Ver Imóveis Similares
                   </Button>
                 </div>
@@ -264,28 +307,45 @@ export default function PropertyPage({ params }: PropertyPageProps) {
                   <p className="text-text-secondary mb-4">
                     Este imóvel está reservado. Entre na lista de espera caso a negociação não se concretize.
                   </p>
-                  <Button className="w-full" variant="outline">
+                  <Button className="w-full" variant="outline" onClick={handleQuickWhatsApp}>
+                    <MessageCircle size={16} className="mr-2" />
                     Lista de Espera
                   </Button>
                 </div>
               ) : (
-                <div className="space-y-4">
+                <div className="space-y-3">
+                  {/* Botão principal - Abre/fecha formulário */}
                   <Button 
                     className="w-full" 
                     onClick={() => setShowContactForm(!showContactForm)}
                   >
-                    <Mail size={16} className="mr-2" />
-                    Tenho Interesse
+                    <MessageCircle size={16} className="mr-2" />
+                    {showContactForm ? 'Esconder Formulário' : 'Tenho Interesse'}
                   </Button>
                   
-                  <Button variant="outline" className="w-full">
+                  {/* Botão WhatsApp direto */}
+                  <Button 
+                    variant="outline" 
+                    className="w-full"
+                    onClick={handleQuickWhatsApp}
+                  >
+                    <MessageCircle size={16} className="mr-2" />
+                    WhatsApp Direto
+                  </Button>
+                  
+                  {/* Botão telefone */}
+                  <Button 
+                    variant="outline" 
+                    className="w-full"
+                    onClick={() => window.open('tel:+5585991288998', '_self')}
+                  >
                     <Phone size={16} className="mr-2" />
-                    (11) 99999-9999
+                    (85) 99128-8998
                   </Button>
                   
-                  <div className="text-center">
+                  <div className="text-center pt-2">
                     <p className="text-sm text-text-muted">
-                      Resposta em até 2 horas
+                      ⚡ Resposta em até 2 horas
                     </p>
                   </div>
                 </div>
@@ -297,6 +357,12 @@ export default function PropertyPage({ params }: PropertyPageProps) {
               <ContactForm 
                 propertyId={property.id}
                 propertyTitle={property.title}
+                propertyPrice={property.price}
+                propertyCity={property.city}
+                propertyNeighborhood={property.neighborhood}
+                propertyBedrooms={property.bedrooms}
+                propertyBathrooms={property.bathrooms}
+                propertyAreaSqm={property.area_sqm}
                 onSuccess={() => setShowContactForm(false)}
               />
             )}
