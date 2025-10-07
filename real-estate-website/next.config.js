@@ -11,9 +11,9 @@ const nextConfig = {
     ],
     formats: ['image/webp', 'image/avif'],
   },
-  experimental: {
-    serverActions: true,
-  },
+  // experimental: {
+  //   serverActions: true,
+  // },
 }
 
 module.exports = nextConfig
