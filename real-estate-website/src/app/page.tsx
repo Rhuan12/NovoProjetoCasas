@@ -395,26 +395,7 @@ export default function Home() {
                 Especialistas em imóveis de alto padrão. Realizamos sonhos e construímos futuros há mais de 10 anos.
               </p>
               <div className="flex items-center gap-4">
-                <Badge>CRECI: 12345-J</Badge>
                 <Badge>Desde 2014</Badge>
-              </div>
-            </div>
-
-            <div>
-              <h4 className="font-semibold text-text-primary mb-4">Links Rápidos</h4>
-              <div className="space-y-2">
-                <Link href="/imoveis" className="block text-text-secondary hover:text-text-primary">
-                  Imóveis Disponíveis
-                </Link>
-                <Link href="/vendidos" className="block text-text-secondary hover:text-text-primary">
-                  Imóveis Vendidos
-                </Link>
-                <Link href="/contato" className="block text-text-secondary hover:text-text-primary">
-                  Contato
-                </Link>
-                <Link href="/sobre" className="block text-text-secondary hover:text-text-primary">
-                  Sobre Nós
-                </Link>
               </div>
             </div>
 
@@ -423,15 +404,15 @@ export default function Home() {
               <div className="space-y-3">
                 <div className="flex items-center gap-2 text-text-secondary">
                   <Phone size={16} />
-                  <span>(11) 99999-9999</span>
+                  <span>(85) 99128-8998</span>
                 </div>
                 <div className="flex items-center gap-2 text-text-secondary">
                   <Mail size={16} />
-                  <span>contato@imoveispremium.com.br</span>
+                  <span>rhuan.m.filgueira@gmail.com</span>
                 </div>
                 <div className="flex items-center gap-2 text-text-secondary">
                   <MapPin size={16} />
-                  <span>Rio de Janeiro, RJ</span>
+                  <span>Fortaleza, CE</span>
                 </div>
               </div>
             </div>
