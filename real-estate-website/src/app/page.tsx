@@ -90,7 +90,7 @@ export default function Home() {
             
             {/* Título principal */}
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-text-primary mb-6 leading-tight">
-              {settings?.company_name || 'Encontre sua'}
+              {settings?.company_name || 'Real Estate McSilva & Wiggit'}
               <span className="text-gradient block">Casa dos Sonhos</span>
             </h1>
             
