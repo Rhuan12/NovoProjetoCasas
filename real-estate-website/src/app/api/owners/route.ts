@@ -72,7 +72,6 @@ export async function POST(request: NextRequest) {
       .insert({
         name: body.name,
         role: body.role,
-        creci: body.creci || null,
         bio: body.bio || null,
         photo_url: body.photo_url || null,
         achievements: body.achievements || [],

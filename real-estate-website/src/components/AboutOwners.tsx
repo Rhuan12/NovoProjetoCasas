@@ -9,7 +9,6 @@ interface Owner {
   id: string
   name: string
   role: string
-  creci: string | null
   bio: string | null
   photo_url: string | null
   achievements: string[]
@@ -138,7 +137,6 @@ export function AboutOwners({ className = '' }: AboutOwnersProps) {
                   </h3>
                   <div className="flex flex-wrap items-center gap-2 mb-4">
                     <Badge variant="success" size="sm">{owner.role}</Badge>
-                    {owner.creci && <Badge size="sm">CRECI {owner.creci}</Badge>}
                   </div>
                   
                   {owner.bio && (

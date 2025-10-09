@@ -10,7 +10,6 @@ interface Owner {
   id: string
   name: string
   role: string
-  creci: string | null
   bio: string | null
   photo_url: string | null
   achievements: string[]
@@ -28,7 +27,6 @@ export default function AdminOwnersPage() {
   const [formData, setFormData] = useState({
     name: '',
     role: '',
-    creci: '',
     bio: '',
     photo_url: '',
     achievements: [''],
@@ -59,7 +57,6 @@ export default function AdminOwnersPage() {
       setFormData({
         name: owner.name,
         role: owner.role,
-        creci: owner.creci || '',
         bio: owner.bio || '',
         photo_url: owner.photo_url || '',
         achievements: owner.achievements.length > 0 ? owner.achievements : [''],
@@ -71,7 +68,6 @@ export default function AdminOwnersPage() {
       setFormData({
         name: '',
         role: '',
-        creci: '',
         bio: '',
         photo_url: '',
         achievements: [''],
@@ -267,7 +263,6 @@ export default function AdminOwnersPage() {
                   <p className="text-text-secondary text-sm mb-2">{owner.role}</p>
                   
                   <div className="flex items-center justify-center gap-2 mb-3">
-                    {owner.creci && <Badge size="sm">CRECI {owner.creci}</Badge>}
                     <Badge variant={owner.is_active ? 'success' : 'default'} size="sm">
                       {owner.is_active ? 'Ativo' : 'Inativo'}
                     </Badge>
@@ -409,13 +404,6 @@ export default function AdminOwnersPage() {
                       placeholder="Ex: CEO & Fundador"
                     />
                   </div>
-
-                  <Input
-                    label="CRECI"
-                    value={formData.creci}
-                    onChange={(e) => setFormData(prev => ({ ...prev, creci: e.target.value }))}
-                    placeholder="Ex: 12345-F"
-                  />
 
                   <div>
                     <label className="block text-sm font-medium text-text-primary mb-1">
