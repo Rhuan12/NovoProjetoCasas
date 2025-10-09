@@ -24,10 +24,45 @@ import {
   Building
 } from 'lucide-react'
 import Link from 'next/link'
+import Image from 'next/image'
+
+interface SiteSettings {
+  owner_name: string
+  owner_photo_url: string
+  owner_bio: string
+  company_name: string
+  company_logo_url: string
+  contact_phone: string
+  contact_email: string
+  contact_address: string
+  google_reviews_link: string
+}
 
 export default function Home() {
   const [searchTerm, setSearchTerm] = useState('')
   const { properties, loading } = useProperties({ status: 'available' })
+
+  const [settings, setSettings] = useState<SiteSettings | null>(null)
+  const [settingsLoading, setSettingsLoading] = useState(true)
+
+  // Buscar configurações do site
+  useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        const response = await fetch('/api/settings')
+        if (response.ok) {
+          const data = await response.json()
+          setSettings(data)
+        }
+      } catch (error) {
+        console.error('Erro ao carregar configurações:', error)
+      } finally {
+        setSettingsLoading(false)
+      }
+    }
+    
+    fetchSettings()
+  }, [])
   
   // Pegar imóveis em destaque (primeiros 6 disponíveis)
   const featuredProperties = properties.slice(0, 6)
@@ -55,7 +90,7 @@ export default function Home() {
             
             {/* Título principal */}
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-text-primary mb-6 leading-tight">
-              Encontre sua
+              {settings?.company_name || 'Encontre sua'}
               <span className="text-gradient block">Casa dos Sonhos</span>
             </h1>
             
@@ -367,12 +402,27 @@ export default function Home() {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Button size="lg" className="">
+            <Button 
+              size="lg" 
+              className=""
+              onClick={() => {
+                const phone = settings?.contact_phone?.replace(/\D/g, '') || '5585991288998'
+                window.open(`https://wa.me/${phone}`, '_blank')
+              }}
+            >
               <MessageCircle size={20} />
-              WhatsApp: (85) 99128-8998
+              WhatsApp: {settings?.contact_phone || '(85) 99128-8998'}
             </Button>
             
-            <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10 gap-2">
+            <Button 
+              size="lg" 
+              variant="outline" 
+              className="border-white text-white hover:bg-white/10 gap-2"
+              onClick={() => {
+                const phone = settings?.contact_phone?.replace(/\D/g, '') || '5585991288998'
+                window.open(`tel:+${phone}`, '_self')
+              }}
+            >
               <Phone size={20} />
               Ligar Agora
             </Button>
@@ -386,10 +436,23 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div className="md:col-span-2">
               <div className="flex items-center gap-3 mb-6">
-                <div className="w-10 h-10 bg-gradient-to-br from-accent-primary to-accent-light rounded-lg flex items-center justify-center">
-                  <Building size={24} className="text-white" />
-                </div>
-                <span className="text-2xl font-bold text-gradient">Imóveis Premium</span>
+                {settings?.company_logo_url ? (
+                  <div className="relative w-12 h-12 rounded-lg overflow-hidden">
+                    <Image
+                      src={settings.company_logo_url}
+                      alt={settings.company_name || 'Logo'}
+                      fill
+                      className="object-contain"
+                    />
+                  </div>
+                ) : (
+                  <div className="w-10 h-10 bg-gradient-to-br from-accent-primary to-accent-light rounded-lg flex items-center justify-center">
+                    <Building size={24} className="text-white" />
+                  </div>
+                )}
+                <span className="text-2xl font-bold text-gradient">
+                  {settings?.company_name || 'Imóveis Premium'}
+                </span>
               </div>
               <p className="text-text-secondary mb-6 max-w-md">
                 Especialistas em imóveis de alto padrão. Realizamos sonhos e construímos futuros há mais de 10 anos.
@@ -404,22 +467,22 @@ export default function Home() {
               <div className="space-y-3">
                 <div className="flex items-center gap-2 text-text-secondary">
                   <Phone size={16} />
-                  <span>(85) 99128-8998</span>
+                  <span>{settings?.contact_phone || '(85) 99128-8998'}</span>
                 </div>
                 <div className="flex items-center gap-2 text-text-secondary">
                   <Mail size={16} />
-                  <span>rhuan.m.filgueira@gmail.com</span>
+                  <span>{settings?.contact_email || 'contato@imoveis.com'}</span>
                 </div>
                 <div className="flex items-center gap-2 text-text-secondary">
                   <MapPin size={16} />
-                  <span>Fortaleza, CE</span>
+                  <span>{settings?.contact_address || 'Fortaleza, CE'}</span>
                 </div>
               </div>
             </div>
           </div>
 
           <div className="border-t border-background-tertiary mt-12 pt-8 text-center text-text-muted">
-            <p>&copy; 2024 Imóveis Premium. Todos os direitos reservados.</p>
+            <p>&copy; 2024 {settings?.company_name || 'Imóveis Premium'}. Todos os direitos reservados.</p>
           </div>
         </div>
       </footer>
