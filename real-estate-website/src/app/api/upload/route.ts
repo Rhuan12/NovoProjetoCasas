@@ -85,11 +85,11 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // 6. VALIDAR TAMANHO (máximo 5MB)
-    const MAX_SIZE = 5 * 1024 * 1024 // 5MB
+    // 6. VALIDAR TAMANHO (máximo 10MB)
+    const MAX_SIZE = 10 * 1024 * 1024 // 10MB
     if (file.size > MAX_SIZE) {
       return NextResponse.json(
-        { error: `Arquivo muito grande (${(file.size / 1024 / 1024).toFixed(2)}MB). Máximo 5MB` },
+        { error: `Arquivo muito grande (${(file.size / 1024 / 1024).toFixed(2)}MB). Máximo 10MB` },
         { status: 400 }
       )
     }
@@ -157,8 +157,7 @@ export async function POST(request: NextRequest) {
 
     // 11. ATUALIZAR BANCO DE DADOS (se for upload de imóvel)
     if (propertyId && photoType) {
-      const updateField = photoType === 'main' ? 'main_photo_url' :
-                         photoType === 'photo_2' ? 'photo_2_url' : 'photo_3_url'
+      const updateField = photoType === 'main' ? 'main_photo_url' : `${photoType}_url`
 
       console.log(`💾 Atualizando campo ${updateField} do imóvel ${propertyId}...`)
 

@@ -142,9 +142,9 @@ export function PropertiesTable({
 
   const formatPrice = (price: number | null) => {
     if (!price) return 'Sob consulta'
-    return new Intl.NumberFormat('pt-BR', {
+    return new Intl.NumberFormat('en-US', {
       style: 'currency',
-      currency: 'BRL',
+      currency: 'USD',
       minimumFractionDigits: 0
     }).format(price)
   }

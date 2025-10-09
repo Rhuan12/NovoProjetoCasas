@@ -12,7 +12,7 @@ interface PropertyPhotosManagerProps {
 }
 
 interface PhotoSlot {
-  type: 'main' | 'photo_2' | 'photo_3'
+  type: 'main' | 'photo_2' | 'photo_3' | 'photo_4' | 'photo_5' | 'photo_6' | 'photo_7' | 'photo_8' | 'photo_9' | 'photo_10'
   label: string
   currentUrl: string | null
 }
@@ -25,7 +25,14 @@ export function PropertyPhotosManager({ property, onPhotosUpdate }: PropertyPhot
   const fileInputRefs = {
     main: useRef<HTMLInputElement>(null),
     photo_2: useRef<HTMLInputElement>(null),
-    photo_3: useRef<HTMLInputElement>(null)
+    photo_3: useRef<HTMLInputElement>(null),
+    photo_4: useRef<HTMLInputElement>(null),
+    photo_5: useRef<HTMLInputElement>(null),
+    photo_6: useRef<HTMLInputElement>(null),
+    photo_7: useRef<HTMLInputElement>(null),
+    photo_8: useRef<HTMLInputElement>(null),
+    photo_9: useRef<HTMLInputElement>(null),
+    photo_10: useRef<HTMLInputElement>(null)
   }
 
   const photoSlots: PhotoSlot[] = [
@@ -43,10 +50,45 @@ export function PropertyPhotosManager({ property, onPhotosUpdate }: PropertyPhot
       type: 'photo_3',
       label: 'Foto 3',
       currentUrl: property.photo_3_url
+    },
+    {
+      type: 'photo_4',
+      label: 'Foto 4',
+      currentUrl: property.photo_4_url
+    },
+    {
+      type: 'photo_5',
+      label: 'Foto 5',
+      currentUrl: property.photo_5_url
+    },
+    {
+      type: 'photo_6',
+      label: 'Foto 6',
+      currentUrl: property.photo_6_url
+    },
+    {
+      type: 'photo_7',
+      label: 'Foto 7',
+      currentUrl: property.photo_7_url
+    },
+    {
+      type: 'photo_8',
+      label: 'Foto 8',
+      currentUrl: property.photo_8_url
+    },
+    {
+      type: 'photo_9',
+      label: 'Foto 9',
+      currentUrl: property.photo_9_url
+    },
+    {
+      type: 'photo_10',
+      label: 'Foto 10',
+      currentUrl: property.photo_10_url
     }
   ]
 
-  const handleFileSelect = (photoType: 'main' | 'photo_2' | 'photo_3', file: File) => {
+  const handleFileSelect = (photoType: 'main' | 'photo_2' | 'photo_3' | 'photo_4' | 'photo_5' | 'photo_6' | 'photo_7' | 'photo_8' | 'photo_9' | 'photo_10', file: File) => {
     if (!file) return
 
     // Validar tipo de arquivo
@@ -56,16 +98,16 @@ export function PropertyPhotosManager({ property, onPhotosUpdate }: PropertyPhot
       return
     }
 
-    // Validar tamanho (máximo 5MB)
-    if (file.size > 5 * 1024 * 1024) {
-      setUploadError('Arquivo muito grande. Máximo 5MB.')
+    // Validar tamanho (máximo 10MB)
+    if (file.size > 10 * 1024 * 1024) {
+      setUploadError('Arquivo muito grande. Máximo 10MB.')
       return
     }
 
     uploadPhoto(photoType, file)
   }
 
-  const uploadPhoto = async (photoType: 'main' | 'photo_2' | 'photo_3', file: File) => {
+  const uploadPhoto = async (photoType: 'main' | 'photo_2' | 'photo_3' | 'photo_4' | 'photo_5' | 'photo_6' | 'photo_7' | 'photo_8' | 'photo_9' | 'photo_10', file: File) => {
     try {
       setUploading(photoType)
       setUploadError(null)
@@ -102,7 +144,7 @@ export function PropertyPhotosManager({ property, onPhotosUpdate }: PropertyPhot
     }
   }
 
-  const handleDrop = (e: React.DragEvent, photoType: 'main' | 'photo_2' | 'photo_3') => {
+  const handleDrop = (e: React.DragEvent, photoType: 'main' | 'photo_2' | 'photo_3' | 'photo_4' | 'photo_5' | 'photo_6' | 'photo_7' | 'photo_8' | 'photo_9' | 'photo_10') => {
     e.preventDefault()
     const files = e.dataTransfer.files
     if (files.length > 0) {
@@ -114,12 +156,11 @@ export function PropertyPhotosManager({ property, onPhotosUpdate }: PropertyPhot
     e.preventDefault()
   }
 
-  const removePhoto = async (photoType: 'main' | 'photo_2' | 'photo_3') => {
+  const removePhoto = async (photoType: 'main' | 'photo_2' | 'photo_3' | 'photo_4' | 'photo_5' | 'photo_6' | 'photo_7' | 'photo_8' | 'photo_9' | 'photo_10') => {
     try {
       setUploading(photoType)
       
-      const updateField = photoType === 'main' ? 'main_photo_url' : 
-                         photoType === 'photo_2' ? 'photo_2_url' : 'photo_3_url'
+      const updateField = photoType === 'main' ? 'main_photo_url' : `${photoType}_url`
 
       const response = await fetch(`/api/properties/${property.id}`, {
         method: 'PUT',
@@ -152,7 +193,7 @@ export function PropertyPhotosManager({ property, onPhotosUpdate }: PropertyPhot
           Gerenciamento de Fotos
         </h3>
         <p className="text-text-secondary text-sm">
-          Adicione até 3 fotos para este imóvel. A primeira será a foto principal que aparece nas listagens.
+          Adicione até 10 fotos para este imóvel. A primeira será a foto principal que aparece nas listagens.
         </p>
       </Card>
 
@@ -179,7 +220,7 @@ export function PropertyPhotosManager({ property, onPhotosUpdate }: PropertyPhot
       )}
 
       {/* Photo Slots */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {photoSlots.map((slot) => (
           <Card key={slot.type} className="p-6">
             <h4 className="font-semibold text-text-primary mb-4 text-center">
@@ -252,7 +293,7 @@ export function PropertyPhotosManager({ property, onPhotosUpdate }: PropertyPhot
                     <div className="text-center">
                       <Upload size={32} className="mx-auto text-text-muted mb-2" />
                       <p className="text-text-primary font-medium mb-1">Clique ou arraste uma foto</p>
-                      <p className="text-text-muted text-sm">JPEG, PNG ou WebP até 5MB</p>
+                      <p className="text-text-muted text-sm">JPEG, PNG ou WebP até 10MB</p>
                     </div>
                   )}
                 </div>
@@ -305,13 +346,12 @@ export function PropertyPhotosManager({ property, onPhotosUpdate }: PropertyPhot
         <div className="flex items-center justify-between">
           <div>
             <p className="text-text-primary font-medium">
-              Status das Fotos: {photoSlots.filter(slot => slot.currentUrl).length}/3 enviadas
+              Status das Fotos: {photoSlots.filter(slot => slot.currentUrl).length}/10 enviadas
             </p>
             <p className="text-text-secondary text-sm">
               {photoSlots.filter(slot => slot.currentUrl).length === 0 && 'Nenhuma foto enviada ainda'}
-              {photoSlots.filter(slot => slot.currentUrl).length === 1 && 'Adicione mais 2 fotos para completar'}
-              {photoSlots.filter(slot => slot.currentUrl).length === 2 && 'Adicione mais 1 foto para completar'}
-              {photoSlots.filter(slot => slot.currentUrl).length === 3 && 'Todas as fotos foram enviadas! ✅'}
+              {photoSlots.filter(slot => slot.currentUrl).length > 0 && photoSlots.filter(slot => slot.currentUrl).length < 10 && `Adicione mais ${10 - photoSlots.filter(slot => slot.currentUrl).length} foto${10 - photoSlots.filter(slot => slot.currentUrl).length > 1 ? 's' : ''} para completar`}
+              {photoSlots.filter(slot => slot.currentUrl).length === 10 && 'Todas as fotos foram enviadas! ✅'}
             </p>
           </div>
           

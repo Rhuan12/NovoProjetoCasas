@@ -83,9 +83,9 @@ export default function PropertyPage({ params }: PropertyPageProps) {
 
   const formatPrice = (price: number | null) => {
     if (!price) return 'Preço sob consulta'
-    return new Intl.NumberFormat('pt-BR', {
+    return new Intl.NumberFormat('en-US', {
       style: 'currency',
-      currency: 'BRL',
+      currency: 'USD',
       minimumFractionDigits: 0
     }).format(price)
   }

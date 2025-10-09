@@ -13,7 +13,7 @@ interface PhotoUploadInterfaceProps {
 }
 
 interface UploadSlot {
-  type: 'main' | 'photo_2' | 'photo_3'
+  type: 'main' | 'photo_2' | 'photo_3' | 'photo_4' | 'photo_5' | 'photo_6' | 'photo_7' | 'photo_8' | 'photo_9' | 'photo_10'
   label: string
   priority: number
   currentUrl: string | null
@@ -27,7 +27,14 @@ export function PhotoUploadInterface({ property, onPhotosUpdate }: PhotoUploadIn
   const fileInputRefs = {
     main: useRef<HTMLInputElement>(null),
     photo_2: useRef<HTMLInputElement>(null),
-    photo_3: useRef<HTMLInputElement>(null)
+    photo_3: useRef<HTMLInputElement>(null),
+    photo_4: useRef<HTMLInputElement>(null),
+    photo_5: useRef<HTMLInputElement>(null),
+    photo_6: useRef<HTMLInputElement>(null),
+    photo_7: useRef<HTMLInputElement>(null),
+    photo_8: useRef<HTMLInputElement>(null),
+    photo_9: useRef<HTMLInputElement>(null),
+    photo_10: useRef<HTMLInputElement>(null)
   }
 
   const uploadSlots: UploadSlot[] = [
@@ -48,10 +55,52 @@ export function PhotoUploadInterface({ property, onPhotosUpdate }: PhotoUploadIn
       label: 'Terceira Foto',
       priority: 3,
       currentUrl: property.photo_3_url
+    },
+    {
+      type: 'photo_4',
+      label: 'Quarta Foto',
+      priority: 4,
+      currentUrl: property.photo_4_url
+    },
+    {
+      type: 'photo_5',
+      label: 'Quinta Foto',
+      priority: 5,
+      currentUrl: property.photo_5_url
+    },
+    {
+      type: 'photo_6',
+      label: 'Sexta Foto',
+      priority: 6,
+      currentUrl: property.photo_6_url
+    },
+    {
+      type: 'photo_7',
+      label: 'Sétima Foto',
+      priority: 7,
+      currentUrl: property.photo_7_url
+    },
+    {
+      type: 'photo_8',
+      label: 'Oitava Foto',
+      priority: 8,
+      currentUrl: property.photo_8_url
+    },
+    {
+      type: 'photo_9',
+      label: 'Nona Foto',
+      priority: 9,
+      currentUrl: property.photo_9_url
+    },
+    {
+      type: 'photo_10',
+      label: 'Décima Foto',
+      priority: 10,
+      currentUrl: property.photo_10_url
     }
   ]
 
-  const uploadPhoto = async (photoType: 'main' | 'photo_2' | 'photo_3', file: File) => {
+  const uploadPhoto = async (photoType: 'main' | 'photo_2' | 'photo_3' | 'photo_4' | 'photo_5' | 'photo_6' | 'photo_7' | 'photo_8' | 'photo_9' | 'photo_10', file: File) => {
     try {
       setUploading(photoType)
       setUploadError(null)
@@ -85,7 +134,7 @@ export function PhotoUploadInterface({ property, onPhotosUpdate }: PhotoUploadIn
     }
   }
 
-  const handleFileSelect = (photoType: 'main' | 'photo_2' | 'photo_3', files: FileList | null) => {
+  const handleFileSelect = (photoType: 'main' | 'photo_2' | 'photo_3' | 'photo_4' | 'photo_5' | 'photo_6' | 'photo_7' | 'photo_8' | 'photo_9' | 'photo_10', files: FileList | null) => {
     if (!files || files.length === 0) return
 
     const file = files[0]
@@ -97,15 +146,15 @@ export function PhotoUploadInterface({ property, onPhotosUpdate }: PhotoUploadIn
       return
     }
 
-    if (file.size > 5 * 1024 * 1024) {
-      setUploadError('Arquivo muito grande. Máximo 5MB.')
+    if (file.size > 10 * 1024 * 1024) {
+      setUploadError('Arquivo muito grande. Máximo 10MB.')
       return
     }
 
     uploadPhoto(photoType, file)
   }
 
-  const handleDrop = (e: React.DragEvent, photoType: 'main' | 'photo_2' | 'photo_3') => {
+  const handleDrop = (e: React.DragEvent, photoType: 'main' | 'photo_2' | 'photo_3' | 'photo_4' | 'photo_5' | 'photo_6' | 'photo_7' | 'photo_8' | 'photo_9' | 'photo_10') => {
     e.preventDefault()
     handleFileSelect(photoType, e.dataTransfer.files)
   }
@@ -129,9 +178,9 @@ export function PhotoUploadInterface({ property, onPhotosUpdate }: PhotoUploadIn
 
   const formatPrice = (price: number | null) => {
     if (!price) return 'Sob consulta'
-    return new Intl.NumberFormat('pt-BR', {
+    return new Intl.NumberFormat('en-US', {
       style: 'currency',
-      currency: 'BRL',
+      currency: 'USD',
       minimumFractionDigits: 0
     }).format(price)
   }
@@ -323,7 +372,7 @@ export function PhotoUploadInterface({ property, onPhotosUpdate }: PhotoUploadIn
                           Clique ou arraste a foto
                         </p>
                         <p className="text-text-muted text-sm">
-                          JPEG, PNG ou WebP • Máx. 5MB
+                          JPEG, PNG ou WebP • Máx. 10MB
                         </p>
                       </div>
                     )}
@@ -362,17 +411,17 @@ export function PhotoUploadInterface({ property, onPhotosUpdate }: PhotoUploadIn
         <div className="flex items-center justify-between">
           <div>
             <h3 className="font-semibold text-text-primary mb-1">
-              Status do Upload: {completedPhotos}/3 fotos enviadas
+              Status do Upload: {completedPhotos}/10 fotos enviadas
             </h3>
             <p className="text-text-secondary text-sm">
               {completedPhotos === 0 && 'Envie a primeira foto para começar'}
-              {completedPhotos === 1 && 'Ótimo! Adicione mais 2 fotos'}
-              {completedPhotos === 2 && 'Quase lá! Falta apenas 1 foto'}
-              {completedPhotos === 3 && 'Perfeito! Todas as fotos foram enviadas ✅'}
+              {completedPhotos > 0 && completedPhotos < 5 && `Bom começo! Adicione mais ${10 - completedPhotos} fotos`}
+              {completedPhotos >= 5 && completedPhotos < 10 && `Quase lá! Faltam ${10 - completedPhotos} fotos`}
+              {completedPhotos === 10 && 'Perfeito! Todas as fotos foram enviadas ✅'}
             </p>
           </div>
           
-          {completedPhotos === 3 && (
+          {completedPhotos === 10 && (
             <div className="text-center">
               <CheckCircle size={32} className="text-success mx-auto mb-1" />
               <p className="text-success text-sm font-medium">Completo!</p>
@@ -380,18 +429,18 @@ export function PhotoUploadInterface({ property, onPhotosUpdate }: PhotoUploadIn
           )}
         </div>
 
-        {completedPhotos < 3 && (
+        {completedPhotos < 10 && (
           <div className="mt-4 p-4 bg-white/50 rounded-lg">
             <h4 className="font-medium text-text-primary mb-2">🎯 Próximos passos:</h4>
             <ul className="text-text-secondary text-sm space-y-1">
               {!property.main_photo_url && (
                 <li>• <strong>Foto Principal:</strong> Fachada ou melhor ângulo do imóvel</li>
               )}
-              {!property.photo_2_url && property.main_photo_url && (
-                <li>• <strong>Segunda Foto:</strong> Ambiente interno ou área externa</li>
+              {property.main_photo_url && completedPhotos < 10 && (
+                <li>• Continue adicionando fotos de diferentes ângulos e ambientes</li>
               )}
-              {!property.photo_3_url && property.photo_2_url && (
-                <li>• <strong>Terceira Foto:</strong> Detalhes importantes ou outro ângulo</li>
+              {completedPhotos >= 1 && completedPhotos < 10 && (
+                <li>• Faltam {10 - completedPhotos} foto{10 - completedPhotos > 1 ? 's' : ''} para completar</li>
               )}
             </ul>
           </div>

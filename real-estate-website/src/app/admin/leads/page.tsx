@@ -165,9 +165,9 @@ export default function AdminLeadsPage() {
 
   const formatPrice = (price: number | null) => {
     if (!price) return 'Não informado'
-    return new Intl.NumberFormat('pt-BR', {
+    return new Intl.NumberFormat('en-US', {
       style: 'currency',
-      currency: 'BRL',
+      currency: 'USD',
       minimumFractionDigits: 0
     }).format(price)
   }

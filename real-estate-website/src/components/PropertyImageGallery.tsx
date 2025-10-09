@@ -16,7 +16,14 @@ export function PropertyImageGallery({ property }: PropertyImageGalleryProps) {
   const images = [
     property.main_photo_url,
     property.photo_2_url,
-    property.photo_3_url
+    property.photo_3_url,
+    property.photo_4_url,
+    property.photo_5_url,
+    property.photo_6_url,
+    property.photo_7_url,
+    property.photo_8_url,
+    property.photo_9_url,
+    property.photo_10_url
   ].filter(Boolean) as string[]
 
   const isSold = property.status === 'sold'

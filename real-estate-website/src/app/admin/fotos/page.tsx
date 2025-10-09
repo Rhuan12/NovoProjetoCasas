@@ -21,18 +21,29 @@ export default function PhotosUploadPage() {
 
   // Estatísticas das fotos
   const propertiesWithPhotos = properties.filter(p => 
-    p.main_photo_url || p.photo_2_url || p.photo_3_url
+    p.main_photo_url || p.photo_2_url || p.photo_3_url || p.photo_4_url || 
+    p.photo_5_url || p.photo_6_url || p.photo_7_url || p.photo_8_url || 
+    p.photo_9_url || p.photo_10_url
   ).length
 
   const totalPhotos = properties.reduce((count, p) => {
     return count + 
       (p.main_photo_url ? 1 : 0) + 
       (p.photo_2_url ? 1 : 0) + 
-      (p.photo_3_url ? 1 : 0)
+      (p.photo_3_url ? 1 : 0) +
+      (p.photo_4_url ? 1 : 0) +
+      (p.photo_5_url ? 1 : 0) +
+      (p.photo_6_url ? 1 : 0) +
+      (p.photo_7_url ? 1 : 0) +
+      (p.photo_8_url ? 1 : 0) +
+      (p.photo_9_url ? 1 : 0) +
+      (p.photo_10_url ? 1 : 0)
   }, 0)
 
   const propertiesNeedingPhotos = properties.filter(p => 
-    !p.main_photo_url && !p.photo_2_url && !p.photo_3_url
+    !p.main_photo_url && !p.photo_2_url && !p.photo_3_url && !p.photo_4_url &&
+    !p.photo_5_url && !p.photo_6_url && !p.photo_7_url && !p.photo_8_url &&
+    !p.photo_9_url && !p.photo_10_url
   ).length
 
   const selectedPropertyData = properties.find(p => p.id === selectedProperty)
@@ -137,7 +148,14 @@ export default function PhotosUploadPage() {
                     const photoCount = [
                       property.main_photo_url,
                       property.photo_2_url,
-                      property.photo_3_url
+                      property.photo_3_url,
+                      property.photo_4_url,
+                      property.photo_5_url,
+                      property.photo_6_url,
+                      property.photo_7_url,
+                      property.photo_8_url,
+                      property.photo_9_url,
+                      property.photo_10_url
                     ].filter(Boolean).length
 
                     return (
@@ -168,13 +186,13 @@ export default function PhotosUploadPage() {
                             <span className={`text-xs px-2 py-1 rounded-full ${
                               selectedProperty === property.id 
                                 ? 'bg-white/20 text-white'
-                                : photoCount === 3 
+                                : photoCount === 10 
                                   ? 'bg-success/10 text-success'
                                   : photoCount > 0
                                     ? 'bg-warning/10 text-warning'
                                     : 'bg-background-tertiary text-text-muted'
                             }`}>
-                              {photoCount}/3
+                              {photoCount}/10
                             </span>
                           </div>
                         </div>
@@ -251,7 +269,7 @@ export default function PhotosUploadPage() {
               <h4 className="font-semibold text-text-primary mb-2">⚡ Dicas Técnicas</h4>
               <ul className="text-text-secondary text-sm space-y-1">
                 <li>• JPEG, PNG ou WebP</li>
-                <li>• Máximo 5MB por foto</li>
+                <li>• Máximo 10MB por foto</li>
                 <li>• Upload automático</li>
                 <li>• Drag & drop funcional</li>
               </ul>
