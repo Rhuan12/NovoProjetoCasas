@@ -43,18 +43,6 @@ export function Header() {
       label: 'Imóveis', 
       icon: Search,
       description: 'Ver todos os imóveis'
-    },
-    { 
-      href: '/vendidos', 
-      label: 'Vendidos', 
-      icon: TrendingUp,
-      description: 'Nosso histórico'
-    },
-    { 
-      href: '/contato', 
-      label: 'Contato', 
-      icon: Mail,
-      description: 'Entre em contato'
     }
   ]
 
