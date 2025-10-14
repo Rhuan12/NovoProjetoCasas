@@ -112,7 +112,7 @@ export function Header() {
                 variant="outline" 
                 size="sm" 
                 className="gap-2"
-                onClick={() => window.open('https://wa.me/5585991288998', '_blank')}
+                onClick={() => window.open('https://wa.me/18168901804', '_blank')}
               >
                 <MessageCircle size={16} />
                 WhatsApp
@@ -121,10 +121,10 @@ export function Header() {
               <Button 
                 size="sm" 
                 className="gap-2"
-                onClick={() => window.open('tel:+5511999999999', '_self')}
+                onClick={() => window.open('tel:+18168901804', '_self')}
               >
                 <Phone size={16} />
-                (11) 99999-9999
+                +1 (816) 890-1804
               </Button>
             </div>
 

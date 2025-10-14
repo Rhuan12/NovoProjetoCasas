@@ -134,7 +134,7 @@ export default function PropertyPage({ params }: PropertyPageProps) {
   const handleQuickWhatsApp = () => {
     const message = `Olá! Tenho interesse no imóvel "${property.title}". Link: ${window.location.href}`
     const encodedMessage = encodeURIComponent(message)
-    const whatsappUrl = `https://wa.me/5585991288998?text=${encodedMessage}`
+    const whatsappUrl = `https://wa.me/18168901804?text=${encodedMessage}`
     window.open(whatsappUrl, '_blank')
   }
 
@@ -337,10 +337,10 @@ export default function PropertyPage({ params }: PropertyPageProps) {
                   <Button 
                     variant="outline" 
                     className="w-full"
-                    onClick={() => window.open('tel:+5585991288998', '_self')}
+                    onClick={() => window.open('tel:+18168901804', '_self')}
                   >
                     <Phone size={16} className="mr-2" />
-                    (85) 99128-8998
+                    +1 (816) 890-1804
                   </Button>
                   
                   <div className="text-center pt-2">

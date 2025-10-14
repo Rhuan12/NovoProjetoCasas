@@ -405,12 +405,12 @@ export default function Home() {
               size="lg" 
               className=""
               onClick={() => {
-                const phone = settings?.contact_phone?.replace(/\D/g, '') || '5585991288998'
+                const phone = settings?.contact_phone?.replace(/\D/g, '') || '18168901804'
                 window.open(`https://wa.me/${phone}`, '_blank')
               }}
             >
               <MessageCircle size={20} />
-              WhatsApp: {settings?.contact_phone || '(85) 99128-8998'}
+              WhatsApp: {settings?.contact_phone || '+1 (816) 890-1804'}
             </Button>
             
             <Button 
@@ -418,7 +418,7 @@ export default function Home() {
               variant="outline" 
               className="border-white text-white hover:bg-white/10 gap-2"
               onClick={() => {
-                const phone = settings?.contact_phone?.replace(/\D/g, '') || '5585991288998'
+                const phone = settings?.contact_phone?.replace(/\D/g, '') || '18168901804'
                 window.open(`tel:+${phone}`, '_self')
               }}
             >
@@ -466,7 +466,7 @@ export default function Home() {
               <div className="space-y-3">
                 <div className="flex items-center gap-2 text-text-secondary">
                   <Phone size={16} />
-                  <span>{settings?.contact_phone || '(85) 99128-8998'}</span>
+                  <span>{settings?.contact_phone || '+1 (816) 890-1804'}</span>
                 </div>
                 <div className="flex items-center gap-2 text-text-secondary">
                   <Mail size={16} />
