@@ -67,7 +67,7 @@ export function Header() {
               </div>
               <div>
                 <span className="text-xl font-bold text-gradient">
-                  Imóveis Premium
+                  McSilva & Wiggit
                 </span>
                 <div className="text-xs text-text-muted hidden sm:block">
                   Realizando sonhos desde 2014
