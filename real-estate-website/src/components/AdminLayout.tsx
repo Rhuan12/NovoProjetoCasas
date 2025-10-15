@@ -16,6 +16,7 @@ import {
   LogOut,
   BarChart3,
   Plus,
+  MessageSquare,
   User
 } from 'lucide-react'
 
@@ -52,6 +53,12 @@ export function AdminLayout({ children }: AdminLayoutProps) {
       label: 'Fotos', 
       icon: Camera,
       description: 'Upload de imagens'
+    },
+    { 
+      href: '/admin/depoimentos', 
+      label: 'Depoimentos', 
+      icon: MessageSquare,
+      description: 'Avaliações de clientes'
     },
     { 
       href: '/admin/donos', 

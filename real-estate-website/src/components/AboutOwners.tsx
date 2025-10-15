@@ -91,7 +91,7 @@ export function AboutOwners({ className = '' }: AboutOwnersProps) {
   }
 
   return (
-    <section className={`py-20 bg-background-secondary ${className}`}>
+    <section className={`py-20 ${className}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-16">
@@ -198,7 +198,7 @@ export function AboutOwners({ className = '' }: AboutOwnersProps) {
         </div>
 
         {/* Our Story */}
-        <Card className="p-8 md:p-12 bg-gradient-to-r from-accent-primary/10 to-accent-light/10 border-accent-primary/20">
+        {/* <Card className="p-8 md:p-12 bg-gradient-to-r from-accent-primary/10 to-accent-light/10 border-accent-primary/20">
           <div className="max-w-4xl mx-auto">
             <h3 className="text-2xl md:text-3xl font-bold text-text-primary mb-6 text-center">
               Nossa História
@@ -230,10 +230,10 @@ export function AboutOwners({ className = '' }: AboutOwnersProps) {
               </p>
             </div>
           </div>
-        </Card>
+        </Card> */}
 
         {/* Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mt-16">
+        {/* <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mt-16">
           <div className="text-center">
             <div className="text-4xl font-bold text-accent-primary mb-2">10+</div>
             <div className="text-text-secondary text-sm">Anos de Experiência</div>
@@ -253,7 +253,7 @@ export function AboutOwners({ className = '' }: AboutOwnersProps) {
             <div className="text-4xl font-bold text-purple-400 mb-2">15</div>
             <div className="text-text-secondary text-sm">Dias Tempo Médio</div>
           </div>
-        </div>
+        </div> */}
       </div>
     </section>
   )
