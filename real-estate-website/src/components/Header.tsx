@@ -21,7 +21,7 @@ export function Header() {
   const [isScrolled, setIsScrolled] = useState(false)
   const pathname = usePathname()
 
-  // Detectar scroll para mudar aparência do header
+  // Detect scroll to change header appearance
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10)
@@ -34,15 +34,15 @@ export function Header() {
   const navigationItems = [
     { 
       href: '/', 
-      label: 'Início', 
+      label: 'Home', 
       icon: Home,
-      description: 'Página inicial'
+      description: 'Homepage'
     },
     { 
       href: '/imoveis', 
-      label: 'Imóveis', 
+      label: 'Properties', 
       icon: Search,
-      description: 'Ver todos os imóveis'
+      description: 'View all properties'
     }
   ]
 
@@ -70,7 +70,7 @@ export function Header() {
                   McSilva & Wiggit
                 </span>
                 <div className="text-xs text-text-muted hidden sm:block">
-                  Realizando sonhos desde 2014
+                  Making dreams come true since 2014
                 </div>
               </div>
             </Link>
@@ -124,7 +124,7 @@ export function Header() {
                 onClick={() => window.open('tel:+18168901804', '_self')}
               >
                 <Phone size={16} />
-                +1 (816) 890-1804
+                +1 (816) 890-1804
               </Button>
             </div>
 
@@ -178,23 +178,23 @@ export function Header() {
                   variant="outline" 
                   className="justify-start gap-3"
                   onClick={() => {
-                    window.open('https://wa.me/5511999999999', '_blank')
+                    window.open('https://wa.me/18168901804', '_blank')
                     setIsMenuOpen(false)
                   }}
                 >
                   <MessageCircle size={16} />
-                  Falar no WhatsApp
+                  Chat on WhatsApp
                 </Button>
                 
                 <Button 
                   className="justify-start gap-3"
                   onClick={() => {
-                    window.open('tel:+5511999999999', '_self')
+                    window.open('tel:+18168901804', '_self')
                     setIsMenuOpen(false)
                   }}
                 >
                   <Phone size={16} />
-                  Ligar: (11) 99999-9999
+                  Call: +1 (816) 890-1804
                 </Button>
               </div>
             </div>
@@ -202,7 +202,7 @@ export function Header() {
         </div>
       </header>
 
-      {/* Spacer para o header sticky */}
+      {/* Spacer for sticky header */}
       {isScrolled && <div className="h-0"></div>}
     </>
   )

@@ -6,10 +6,10 @@ import { Star, Quote } from 'lucide-react'
 import { useState, useEffect } from 'react'
 
 export function TestimonialsSection() {
-  const { testimonials, loading } = useTestimonials(true) // Apenas ativos
+  const { testimonials, loading } = useTestimonials(true) // Only active
   const [currentIndex, setCurrentIndex] = useState(0)
 
-  // Auto-avançar carrossel a cada 5 segundos
+  // Auto-advance carousel every 5 seconds
   useEffect(() => {
     if (testimonials.length <= 1) return
 
@@ -33,7 +33,7 @@ export function TestimonialsSection() {
   }
 
   if (testimonials.length === 0) {
-    return null // Não mostrar seção se não houver depoimentos
+    return null // Don't show section if there are no testimonials
   }
 
   return (
@@ -42,25 +42,25 @@ export function TestimonialsSection() {
         {/* Header */}
         <div className="text-center mb-12">
           <h2 className="text-4xl font-bold text-text-primary mb-4">
-            O que nossos clientes dizem
+            What Our Clients Say
           </h2>
           <p className="text-text-secondary text-lg max-w-2xl mx-auto">
-            Confira a experiência de quem já realizou o sonho da casa própria com a gente
+            Check out the experience of those who have already achieved the dream of homeownership with us
           </p>
         </div>
 
-        {/* Carrossel de Depoimentos */}
+        {/* Testimonials Carousel */}
         <div className="max-w-4xl mx-auto relative">
-          {/* Depoimento Atual */}
+          {/* Current Testimonial */}
           <Card className="p-8 md:p-12 relative overflow-hidden">
-            {/* Ícone de Aspas */}
+            {/* Quote Icon */}
             <Quote 
               size={80} 
               className="absolute top-4 left-4 text-accent-primary/10" 
             />
 
             <div className="relative z-10">
-              {/* Estrelas */}
+              {/* Stars */}
               <div className="flex items-center justify-center gap-1 mb-6">
                 {[...Array(5)].map((_, i) => (
                   <Star
@@ -75,14 +75,14 @@ export function TestimonialsSection() {
                 ))}
               </div>
 
-              {/* Depoimento */}
+              {/* Testimonial */}
               <blockquote className="text-center mb-8">
                 <p className="text-xl md:text-2xl text-text-primary italic leading-relaxed">
                   "{testimonials[currentIndex].testimonial}"
                 </p>
               </blockquote>
 
-              {/* Cliente */}
+              {/* Client */}
               <div className="flex items-center justify-center gap-4">
                 {testimonials[currentIndex].client_photo_url ? (
                   <img
@@ -103,14 +103,14 @@ export function TestimonialsSection() {
                     {testimonials[currentIndex].client_name}
                   </p>
                   <p className="text-text-secondary text-sm">
-                    Cliente satisfeito
+                    Satisfied Customer
                   </p>
                 </div>
               </div>
             </div>
           </Card>
 
-          {/* Indicadores (dots) */}
+          {/* Indicators (dots) */}
           {testimonials.length > 1 && (
             <div className="flex items-center justify-center gap-2 mt-8">
               {testimonials.map((_, index) => (
@@ -122,13 +122,13 @@ export function TestimonialsSection() {
                       ? 'w-8 bg-accent-primary'
                       : 'w-2 bg-text-muted/30 hover:bg-text-muted/50'
                   }`}
-                  aria-label={`Ir para depoimento ${index + 1}`}
+                  aria-label={`Go to testimonial ${index + 1}`}
                 />
               ))}
             </div>
           )}
 
-          {/* Navegação (setas) - apenas se tiver mais de 1 depoimento */}
+          {/* Navigation (arrows) - only if there's more than 1 testimonial */}
           {testimonials.length > 1 && (
             <>
               <button
@@ -136,7 +136,7 @@ export function TestimonialsSection() {
                   setCurrentIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length)
                 }
                 className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 md:-translate-x-12 bg-background-primary hover:bg-accent-primary text-text-primary hover:text-white p-3 rounded-full shadow-lg transition-all"
-                aria-label="Depoimento anterior"
+                aria-label="Previous testimonial"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -156,7 +156,7 @@ export function TestimonialsSection() {
               <button
                 onClick={() => setCurrentIndex((prev) => (prev + 1) % testimonials.length)}
                 className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 md:translate-x-12 bg-background-primary hover:bg-accent-primary text-text-primary hover:text-white p-3 rounded-full shadow-lg transition-all"
-                aria-label="Próximo depoimento"
+                aria-label="Next testimonial"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -176,7 +176,7 @@ export function TestimonialsSection() {
           )}
         </div>
 
-        {/* Resumo de Avaliações */}
+        {/* Reviews Summary */}
         <div className="mt-12 text-center">
           <div className="inline-flex items-center gap-4 bg-background-primary px-8 py-4 rounded-full">
             <div className="text-center">
@@ -184,7 +184,7 @@ export function TestimonialsSection() {
                 {testimonials.length}
               </p>
               <p className="text-sm text-text-secondary">
-                Depoimento{testimonials.length !== 1 ? 's' : ''}
+                Testimonial{testimonials.length !== 1 ? 's' : ''}
               </p>
             </div>
 
@@ -197,7 +197,7 @@ export function TestimonialsSection() {
                 </p>
                 <Star size={24} className="fill-warning text-warning" />
               </div>
-              <p className="text-sm text-text-secondary">Média de Avaliação</p>
+              <p className="text-sm text-text-secondary">Average Rating</p>
             </div>
           </div>
         </div>

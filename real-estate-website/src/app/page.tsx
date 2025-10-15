@@ -46,7 +46,7 @@ export default function Home() {
   const [settings, setSettings] = useState<SiteSettings | null>(null)
   const [settingsLoading, setSettingsLoading] = useState(true)
 
-  // Buscar configurações do site
+  // Fetch site settings
   useEffect(() => {
     const fetchSettings = async () => {
       try {
@@ -56,7 +56,7 @@ export default function Home() {
           setSettings(data)
         }
       } catch (error) {
-        console.error('Erro ao carregar configurações:', error)
+        console.error('Error loading settings:', error)
       } finally {
         setSettingsLoading(false)
       }
@@ -65,10 +65,10 @@ export default function Home() {
     fetchSettings()
   }, [])
   
-  // Pegar imóveis em destaque (primeiros 6 disponíveis)
+  // Get featured properties (first 6 available)
   const featuredProperties = properties.slice(0, 6)
   
-  // Estatísticas
+  // Statistics
   const availableCount = properties.filter(p => p.status === 'available').length
   const soldCount = properties.filter(p => p.status === 'sold').length
   
@@ -83,23 +83,22 @@ export default function Home() {
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-32">
           <div className="text-center">
-            {/* Badge de credibilidade */}
+            {/* Credibility badge */}
             <div className="inline-flex items-center gap-2 bg-success/10 text-success px-4 py-2 rounded-full text-sm font-medium mb-8">
               <Award size={16} />
-              <span>Especialistas em Imóveis</span>
+              <span>Real Estate Specialists</span>
             </div>
             
-            {/* Título principal */}
+            {/* Main title */}
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-text-primary mb-6 leading-tight">
               {settings?.company_name || 'McSilva & Wiggit'}
             </h1>
             
             <p className="text-xl md:text-2xl text-text-secondary max-w-4xl mx-auto mb-12 leading-relaxed">
-              Garantimos sua aprovação somente com a identificação 
-              do seu país de origem.
+              We guarantee your approval with just your country of origin identification.
             </p>
             
-            {/* Busca rápida */}
+            {/* Quick search */}
             <div className="max-w-2xl mx-auto mb-12">
               <Card className="p-2">
                 <div className="flex gap-2">
@@ -107,7 +106,7 @@ export default function Home() {
                     <Search size={20} className="absolute left-4 top-1/2 -translate-y-1/2 text-text-muted" />
                     <input
                       type="text"
-                      placeholder="Busque por cidade, bairro ou características..."
+                      placeholder="Search by city, neighborhood or features..."
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
                       className="w-full pl-12 pr-4 py-4 bg-transparent border-none text-text-primary placeholder-text-muted focus:outline-none text-lg"
@@ -115,21 +114,21 @@ export default function Home() {
                   </div>
                   <Link href={`/imoveis${searchTerm ? `?search=${searchTerm}` : ''}`}>
                     <Button size="lg" className="px-8">
-                      Buscar
+                      Search
                     </Button>
                   </Link>
                 </div>
               </Card>
             </div>
             
-            {/* Estatísticas rápidas */}
+            {/* Quick statistics */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto">
               <div className="text-center">
                 <div className="text-3xl md:text-4xl font-bold text-text-primary mb-1">
                   {availableCount}
                 </div>
                 <div className="text-text-secondary text-sm md:text-base">
-                  Imóveis Disponíveis
+                  Available Properties
                 </div>
               </div>
               
@@ -138,7 +137,7 @@ export default function Home() {
                   {soldCount}
                 </div>
                 <div className="text-text-secondary text-sm md:text-base">
-                  Imóveis Vendidos
+                  Sold Properties
                 </div>
               </div>
               
@@ -147,7 +146,7 @@ export default function Home() {
                   15
                 </div>
                 <div className="text-text-secondary text-sm md:text-base">
-                  Dias em Média
+                  Days Average
                 </div>
               </div>
               
@@ -156,7 +155,7 @@ export default function Home() {
                   98%
                 </div>
                 <div className="text-text-secondary text-sm md:text-base">
-                  Satisfação
+                  Satisfaction
                 </div>
               </div>
             </div>
@@ -164,16 +163,16 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Imóveis em Destaque */}
+      {/* Featured Properties */}
       <section className="py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <Badge className="mb-4">Oportunidades Únicas</Badge>
+            <Badge className="mb-4">Unique Opportunities</Badge>
             <h2 className="text-3xl md:text-4xl font-bold text-text-primary mb-4">
-              Imóveis em Destaque
+              Featured Properties
             </h2>
             <p className="text-xl text-text-secondary max-w-3xl mx-auto">
-              Imagine poder comprar sua própria casa com apenas US$ 5.000 de entrada.
+              Imagine being able to buy your own home with just $5,000 down payment.
             </p>
           </div>
 
@@ -203,7 +202,7 @@ export default function Home() {
               <div className="text-center">
                 <Link href="/imoveis">
                   <Button size="lg" variant="outline" className="gap-2">
-                    Ver Todos os Imóveis
+                    View All Properties
                     <ArrowRight size={16} />
                   </Button>
                 </Link>
@@ -213,19 +212,19 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Depoimentos */}
+      {/* Testimonials */}
       <TestimonialsSection />
 
       <AboutOwners />
 
-      {/* CTA Final */}
+      {/* Final CTA */}
       <section className="py-20 bg-gradient-to-r from-accent-primary to-accent-light">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-            Pronto Para Encontrar Sua Casa dos Sonhos?
+            Ready to Find Your Dream Home?
           </h2>
           <p className="text-xl text-white/90 mb-10">
-            Entre em contato agora e descubra como podemos ajudar você a realizar o sonho da casa própria.
+            Contact us now and discover how we can help you achieve the dream of homeownership.
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
@@ -238,7 +237,7 @@ export default function Home() {
               }}
             >
               <MessageCircle size={20} />
-              WhatsApp: {settings?.contact_phone || '+1 (816) 890-1804'}
+              WhatsApp: {settings?.contact_phone || '+1 (816) 890-1804'}
             </Button>
             
             <Button 
@@ -251,7 +250,7 @@ export default function Home() {
               }}
             >
               <Phone size={20} />
-              Ligar Agora
+              Call Now
             </Button>
           </div>
         </div>
@@ -261,44 +260,16 @@ export default function Home() {
       <footer className="bg-background-secondary border-t border-background-tertiary py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            {/* <div className="md:col-span-2">
-              <div className="flex items-center gap-3 mb-6">
-                {settings?.company_logo_url ? (
-                  <div className="relative w-12 h-12 rounded-lg overflow-hidden">
-                    <Image
-                      src={settings.company_logo_url}
-                      alt={settings.company_name || 'Logo'}
-                      fill
-                      className="object-contain"
-                    />
-                  </div>
-                ) : (
-                  <div className="w-10 h-10 bg-gradient-to-br from-accent-primary to-accent-light rounded-lg flex items-center justify-center">
-                    <Building size={24} className="text-white" />
-                  </div>
-                )}
-                <span className="text-2xl font-bold text-gradient">
-                  {settings?.company_name || 'Imóveis Premium'}
-                </span>
-              </div>
-              <p className="text-text-secondary mb-6 max-w-md">
-                Especialistas em imóveis de alto padrão. Realizamos sonhos e construímos futuros há mais de 10 anos.
-              </p>
-              <div className="flex items-center gap-4">
-                <Badge>Desde 2014</Badge>
-              </div>
-            </div> */}
-
             <div>
-              <h4 className="font-semibold text-text-primary mb-4">Contato</h4>
+              <h4 className="font-semibold text-text-primary mb-4">Contact</h4>
               <div className="space-y-3">
                 <div className="flex items-center gap-2 text-text-secondary">
                   <Phone size={16} />
-                  <span>{settings?.contact_phone || '+1 (816) 890-1804'}</span>
+                  <span>{settings?.contact_phone || '+1 (816) 890-1804'}</span>
                 </div>
                 <div className="flex items-center gap-2 text-text-secondary">
                   <Mail size={16} />
-                  <span>{settings?.contact_email || 'contato@imoveis.com'}</span>
+                  <span>{settings?.contact_email || 'contact@realestate.com'}</span>
                 </div>
                 <div className="flex items-center gap-2 text-text-secondary">
                   <MapPin size={16} />
@@ -309,7 +280,7 @@ export default function Home() {
           </div>
 
           <div className="border-t border-background-tertiary mt-12 pt-8 text-center text-text-muted">
-            <p>&copy; 2024 {settings?.company_name || 'Imóveis Premium'}. Todos os direitos reservados.</p>
+            <p>&copy; 2024 {settings?.company_name || 'Premium Real Estate'}. All rights reserved.</p>
           </div>
         </div>
       </footer>

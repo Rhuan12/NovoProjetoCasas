@@ -20,7 +20,7 @@ export function PropertyCard({
   const isSold = property.status === 'sold'
   
   const formatPrice = (price: number | null) => {
-    if (!price) return 'Preço sob consulta'
+    if (!price) return 'Price upon request'
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: 'USD',
@@ -31,11 +31,11 @@ export function PropertyCard({
   const getStatusBadge = () => {
     switch (property.status) {
       case 'available':
-        return <Badge variant="success">Disponível</Badge>
+        return <Badge variant="success">Available</Badge>
       case 'sold':
-        return <Badge variant="sold">Vendido</Badge>
+        return <Badge variant="sold">Sold</Badge>
       case 'reserved':
-        return <Badge variant="warning">Reservado</Badge>
+        return <Badge variant="warning">Reserved</Badge>
       default:
         return <Badge>-</Badge>
     }
@@ -55,7 +55,7 @@ export function PropertyCard({
           />
         ) : (
           <div className={`w-full h-full bg-background-tertiary flex items-center justify-center ${isSold ? 'filter-sold' : ''}`}>
-            <span className="text-text-muted">Sem foto</span>
+            <span className="text-text-muted">No photo</span>
           </div>
         )}
         
@@ -68,7 +68,7 @@ export function PropertyCard({
         {isSold && property.days_to_sell && (
           <div className="absolute top-4 right-4">
             <Badge variant="sold" size="sm">
-              Vendido em {property.days_to_sell} dias
+              Sold in {property.days_to_sell} days
             </Badge>
           </div>
         )}
@@ -106,14 +106,14 @@ export function PropertyCard({
           {property.bedrooms && (
             <div className="flex items-center">
               <BedDouble size={16} className="mr-1" />
-              <span>{property.bedrooms} quartos</span>
+              <span>{property.bedrooms} bedrooms</span>
             </div>
           )}
           
           {property.bathrooms && (
             <div className="flex items-center">
               <Bath size={16} className="mr-1" />
-              <span>{property.bathrooms} banheiros</span>
+              <span>{property.bathrooms} bathrooms</span>
             </div>
           )}
           
@@ -137,18 +137,18 @@ export function PropertyCard({
           {!isSold && (
             <Link href={`/imoveis/${property.id}`} className="flex-1">
               <Button className="w-full" variant="outline">
-                Ver Detalhes
+                View Details
               </Button>
             </Link>
           )}
           
           {isSold && (
             <Button className="flex-1" variant="ghost" disabled>
-              Imóvel Vendido
+              Property Sold
             </Button>
           )}
 
-          {/* Controles administrativos */}
+          {/* Administrative controls */}
           {showAdminControls && (
             <>
               <Button
@@ -156,7 +156,7 @@ export function PropertyCard({
                 size="sm"
                 onClick={() => onEdit?.(property)}
               >
-                Editar
+                Edit
               </Button>
               <Button
                 variant="outline"
@@ -164,7 +164,7 @@ export function PropertyCard({
                 onClick={() => onDelete?.(property)}
                 className="text-danger hover:bg-danger/10"
               >
-                Excluir
+                Delete
               </Button>
             </>
           )}

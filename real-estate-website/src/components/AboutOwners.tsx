@@ -34,13 +34,13 @@ export function AboutOwners({ className = '' }: AboutOwnersProps) {
       const data = await response.json()
       setOwners(data.owners || [])
     } catch (error) {
-      console.error('Erro ao carregar donos:', error)
+      console.error('Error loading owners:', error)
     } finally {
       setLoading(false)
     }
   }
 
-  // Cores de gradiente para cada dono
+  // Gradient colors for each owner
   const gradientColors = [
     'from-accent-primary to-accent-light',
     'from-success to-success/70',
@@ -53,7 +53,7 @@ export function AboutOwners({ className = '' }: AboutOwnersProps) {
     'text-warning'
   ]
 
-  // Determinar grid layout baseado no número de donos
+  // Determine grid layout based on number of owners
   const getGridCols = () => {
     if (owners.length === 1) return 'grid-cols-1 max-w-2xl mx-auto'
     if (owners.length === 2) return 'grid-cols-1 lg:grid-cols-2'
@@ -85,7 +85,7 @@ export function AboutOwners({ className = '' }: AboutOwnersProps) {
     )
   }
 
-  // Se não houver donos, não renderizar a seção
+  // If there are no owners, don't render the section
   if (owners.length === 0) {
     return null
   }
@@ -96,17 +96,17 @@ export function AboutOwners({ className = '' }: AboutOwnersProps) {
         {/* Header */}
         <div className="text-center mb-16">
           <div className="mb-4">
-            <Badge>Conheça Nossa História</Badge>
+            <Badge>Meet Our Story</Badge>
           </div>
           <h2 className="text-3xl md:text-4xl font-bold text-text-primary mb-4">
-            Quem Somos
+            Who We Are
           </h2>
           <p className="text-xl text-text-secondary max-w-3xl mx-auto">
-            Uma história de dedicação, profissionalismo e compromisso em realizar sonhos.
+            A story of dedication, professionalism and commitment to making dreams come true.
           </p>
         </div>
 
-        {/* Owners Grid - Responsivo baseado no número */}
+        {/* Owners Grid - Responsive based on number */}
         <div className={`grid ${getGridCols()} gap-8 mb-16`}>
           {owners.map((owner, index) => (
             <Card key={owner.id} className="p-8">
@@ -167,10 +167,10 @@ export function AboutOwners({ className = '' }: AboutOwnersProps) {
             <div className="w-12 h-12 bg-accent-primary/10 rounded-xl flex items-center justify-center mx-auto mb-4">
               <Heart size={24} className="text-accent-primary" />
             </div>
-            <h4 className="text-lg font-bold text-text-primary mb-2">Paixão</h4>
+            <h4 className="text-lg font-bold text-text-primary mb-2">Passion</h4>
             <p className="text-text-secondary text-sm">
-              Amamos o que fazemos e isso se reflete em cada atendimento, 
-              cada negociação e cada sonho realizado.
+              We love what we do and it shows in every service, 
+              every negotiation and every dream fulfilled.
             </p>
           </Card>
 
@@ -178,10 +178,10 @@ export function AboutOwners({ className = '' }: AboutOwnersProps) {
             <div className="w-12 h-12 bg-success/10 rounded-xl flex items-center justify-center mx-auto mb-4">
               <Shield size={24} className="text-success" />
             </div>
-            <h4 className="text-lg font-bold text-text-primary mb-2">Transparência</h4>
+            <h4 className="text-lg font-bold text-text-primary mb-2">Transparency</h4>
             <p className="text-text-secondary text-sm">
-              Acreditamos em relacionamentos baseados em honestidade e clareza. 
-              Sem surpresas, apenas confiança mútua.
+              We believe in relationships based on honesty and clarity. 
+              No surprises, just mutual trust.
             </p>
           </Card>
 
@@ -189,71 +189,13 @@ export function AboutOwners({ className = '' }: AboutOwnersProps) {
             <div className="w-12 h-12 bg-warning/10 rounded-xl flex items-center justify-center mx-auto mb-4">
               <Award size={24} className="text-warning" />
             </div>
-            <h4 className="text-lg font-bold text-text-primary mb-2">Excelência</h4>
+            <h4 className="text-lg font-bold text-text-primary mb-2">Excellence</h4>
             <p className="text-text-secondary text-sm">
-              Buscamos sempre superar expectativas, entregar mais do que prometemos 
-              e criar experiências memoráveis.
+              We always seek to exceed expectations, deliver more than we promise 
+              and create memorable experiences.
             </p>
           </Card>
         </div>
-
-        {/* Our Story */}
-        {/* <Card className="p-8 md:p-12 bg-gradient-to-r from-accent-primary/10 to-accent-light/10 border-accent-primary/20">
-          <div className="max-w-4xl mx-auto">
-            <h3 className="text-2xl md:text-3xl font-bold text-text-primary mb-6 text-center">
-              Nossa História
-            </h3>
-            
-            <div className="space-y-4 text-text-secondary leading-relaxed">
-              <p>
-                Fundada em 2014, a <span className="font-semibold text-text-primary">Imóveis Premium</span> nasceu 
-                do sonho de transformar o mercado imobiliário, oferecendo um atendimento diferenciado 
-                e focado nas reais necessidades de cada cliente.
-              </p>
-              
-              <p>
-                O que começou como uma pequena corretora com grandes ambições, hoje é referência 
-                em imóveis de alto padrão na região, com mais de <span className="font-semibold text-text-primary">500 famílias atendidas</span> e 
-                um índice de <span className="font-semibold text-text-primary">98% de satisfação</span>.
-              </p>
-              
-              <p>
-                Nossa missão é simples: <span className="font-semibold text-text-primary">conectar pessoas aos seus lares perfeitos</span>, 
-                oferecendo não apenas imóveis, mas experiências completas de realização de sonhos. 
-                Cada cliente é único, cada história é especial, e cada negócio é tratado com o máximo cuidado e dedicação.
-              </p>
-              
-              <p className="text-center pt-6">
-                <span className="text-accent-primary font-bold text-xl">
-                  "Não vendemos imóveis. Realizamos sonhos."
-                </span>
-              </p>
-            </div>
-          </div>
-        </Card> */}
-
-        {/* Stats */}
-        {/* <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mt-16">
-          <div className="text-center">
-            <div className="text-4xl font-bold text-accent-primary mb-2">10+</div>
-            <div className="text-text-secondary text-sm">Anos de Experiência</div>
-          </div>
-          
-          <div className="text-center">
-            <div className="text-4xl font-bold text-success mb-2">500+</div>
-            <div className="text-text-secondary text-sm">Famílias Atendidas</div>
-          </div>
-          
-          <div className="text-center">
-            <div className="text-4xl font-bold text-warning mb-2">98%</div>
-            <div className="text-text-secondary text-sm">Satisfação</div>
-          </div>
-          
-          <div className="text-center">
-            <div className="text-4xl font-bold text-purple-400 mb-2">15</div>
-            <div className="text-text-secondary text-sm">Dias Tempo Médio</div>
-          </div>
-        </div> */}
       </div>
     </section>
   )
