@@ -39,6 +39,16 @@ export type Tables = {
       photo_8_url: string | null
       photo_9_url: string | null
       photo_10_url: string | null
+      photo_11_url: string | null
+      photo_12_url: string | null
+      photo_13_url: string | null
+      photo_14_url: string | null
+      photo_15_url: string | null
+      photo_16_url: string | null
+      photo_17_url: string | null
+      photo_18_url: string | null
+      photo_19_url: string | null
+      photo_20_url: string | null
       created_at: string
       updated_at: string
       created_by: string | null
@@ -68,6 +78,16 @@ export type Tables = {
       photo_8_url?: string | null
       photo_9_url?: string | null
       photo_10_url?: string | null
+      photo_11_url?: string | null
+      photo_12_url?: string | null
+      photo_13_url?: string | null
+      photo_14_url?: string | null
+      photo_15_url?: string | null
+      photo_16_url?: string | null
+      photo_17_url?: string | null
+      photo_18_url?: string | null
+      photo_19_url?: string | null
+      photo_20_url?: string | null
       created_by?: string | null
     }
     Update: {
@@ -95,6 +115,16 @@ export type Tables = {
       photo_8_url?: string | null
       photo_9_url?: string | null
       photo_10_url?: string | null
+      photo_11_url?: string | null
+      photo_12_url?: string | null
+      photo_13_url?: string | null
+      photo_14_url?: string | null
+      photo_15_url?: string | null
+      photo_16_url?: string | null
+      photo_17_url?: string | null
+      photo_18_url?: string | null
+      photo_19_url?: string | null
+      photo_20_url?: string | null
       updated_at?: string
       created_by?: string | null
     }

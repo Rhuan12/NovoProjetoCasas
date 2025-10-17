@@ -95,7 +95,7 @@ export default function NewPropertyPage() {
           </h3>
           <p className="text-text-secondary">
             Após criar o imóvel, você será redirecionado para a página de edição 
-            onde poderá fazer upload de até 10 fotos para o imóvel.
+            onde poderá fazer upload de até 20 fotos para o imóvel.
           </p>
         </Card>
       </div>

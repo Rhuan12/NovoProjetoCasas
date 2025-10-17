@@ -13,7 +13,7 @@ interface PhotoUploadInterfaceProps {
 }
 
 interface UploadSlot {
-  type: 'main' | 'photo_2' | 'photo_3' | 'photo_4' | 'photo_5' | 'photo_6' | 'photo_7' | 'photo_8' | 'photo_9' | 'photo_10'
+  type: 'main' | 'photo_2' | 'photo_3' | 'photo_4' | 'photo_5' | 'photo_6' | 'photo_7' | 'photo_8' | 'photo_9' | 'photo_10' | 'photo_11' | 'photo_12' | 'photo_13' | 'photo_14' | 'photo_15' | 'photo_16' | 'photo_17' | 'photo_18' | 'photo_19' | 'photo_20'
   label: string
   priority: number
   currentUrl: string | null
@@ -34,7 +34,17 @@ export function PhotoUploadInterface({ property, onPhotosUpdate }: PhotoUploadIn
     photo_7: useRef<HTMLInputElement>(null),
     photo_8: useRef<HTMLInputElement>(null),
     photo_9: useRef<HTMLInputElement>(null),
-    photo_10: useRef<HTMLInputElement>(null)
+    photo_10: useRef<HTMLInputElement>(null),
+    photo_11: useRef<HTMLInputElement>(null),
+    photo_12: useRef<HTMLInputElement>(null),
+    photo_13: useRef<HTMLInputElement>(null),
+    photo_14: useRef<HTMLInputElement>(null),
+    photo_15: useRef<HTMLInputElement>(null),
+    photo_16: useRef<HTMLInputElement>(null),
+    photo_17: useRef<HTMLInputElement>(null),
+    photo_18: useRef<HTMLInputElement>(null),
+    photo_19: useRef<HTMLInputElement>(null),
+    photo_20: useRef<HTMLInputElement>(null)
   }
 
   const uploadSlots: UploadSlot[] = [
@@ -97,10 +107,70 @@ export function PhotoUploadInterface({ property, onPhotosUpdate }: PhotoUploadIn
       label: 'Décima Foto',
       priority: 10,
       currentUrl: property.photo_10_url
+    },
+    {
+      type: 'photo_11',
+      label: 'Décima Primeira Foto',
+      priority: 11,
+      currentUrl: property.photo_11_url
+    },
+    {
+      type: 'photo_12',
+      label: 'Décima Segunda Foto',
+      priority: 12,
+      currentUrl: property.photo_12_url
+    },
+    {
+      type: 'photo_13',
+      label: 'Décima Terceira Foto',
+      priority: 13,
+      currentUrl: property.photo_13_url
+    },
+    {
+      type: 'photo_14',
+      label: 'Décima Quarta Foto',
+      priority: 14,
+      currentUrl: property.photo_14_url
+    },
+    {
+      type: 'photo_15',
+      label: 'Décima Quinta Foto',
+      priority: 15,
+      currentUrl: property.photo_15_url
+    },
+    {
+      type: 'photo_16',
+      label: 'Décima Sexta Foto',
+      priority: 16,
+      currentUrl: property.photo_16_url
+    },
+    {
+      type: 'photo_17',
+      label: 'Décima Sétima Foto',
+      priority: 17,
+      currentUrl: property.photo_17_url
+    },
+    {
+      type: 'photo_18',
+      label: 'Décima Oitava Foto',
+      priority: 18,
+      currentUrl: property.photo_18_url
+    },
+    {
+      type: 'photo_19',
+      label: 'Décima Nona Foto',
+      priority: 19,
+      currentUrl: property.photo_19_url
+    },
+    {
+      type: 'photo_20',
+      label: 'Vigésima Foto',
+      priority: 20,
+      currentUrl: property.photo_20_url
     }
   ]
 
-  const uploadPhoto = async (photoType: 'main' | 'photo_2' | 'photo_3' | 'photo_4' | 'photo_5' | 'photo_6' | 'photo_7' | 'photo_8' | 'photo_9' | 'photo_10', file: File) => {
+  const uploadPhoto = async (photoType: 'main' | 'photo_2' | 'photo_3' | 'photo_4' | 'photo_5' | 'photo_6' | 'photo_7' | 'photo_8' | 'photo_9' | 'photo_10' | 'photo_11' | 'photo_12' | 'photo_13' | 'photo_14' | 'photo_15' | 'photo_16' | 'photo_17' | 'photo_18' | 'photo_19' | 'photo_20', file: File) => {
     try {
       setUploading(photoType)
       setUploadError(null)
@@ -134,7 +204,7 @@ export function PhotoUploadInterface({ property, onPhotosUpdate }: PhotoUploadIn
     }
   }
 
-  const handleFileSelect = (photoType: 'main' | 'photo_2' | 'photo_3' | 'photo_4' | 'photo_5' | 'photo_6' | 'photo_7' | 'photo_8' | 'photo_9' | 'photo_10', files: FileList | null) => {
+  const handleFileSelect = (photoType: 'main' | 'photo_2' | 'photo_3' | 'photo_4' | 'photo_5' | 'photo_6' | 'photo_7' | 'photo_8' | 'photo_9' | 'photo_10' | 'photo_11' | 'photo_12' | 'photo_13' | 'photo_14' | 'photo_15' | 'photo_16' | 'photo_17' | 'photo_18' | 'photo_19' | 'photo_20', files: FileList | null) => {
     if (!files || files.length === 0) return
 
     const file = files[0]
@@ -154,7 +224,7 @@ export function PhotoUploadInterface({ property, onPhotosUpdate }: PhotoUploadIn
     uploadPhoto(photoType, file)
   }
 
-  const handleDrop = (e: React.DragEvent, photoType: 'main' | 'photo_2' | 'photo_3' | 'photo_4' | 'photo_5' | 'photo_6' | 'photo_7' | 'photo_8' | 'photo_9' | 'photo_10') => {
+  const handleDrop = (e: React.DragEvent, photoType: 'main' | 'photo_2' | 'photo_3' | 'photo_4' | 'photo_5' | 'photo_6' | 'photo_7' | 'photo_8' | 'photo_9' | 'photo_10' | 'photo_11' | 'photo_12' | 'photo_13' | 'photo_14' | 'photo_15' | 'photo_16' | 'photo_17' | 'photo_18' | 'photo_19' | 'photo_20') => {
     e.preventDefault()
     handleFileSelect(photoType, e.dataTransfer.files)
   }
@@ -411,17 +481,17 @@ export function PhotoUploadInterface({ property, onPhotosUpdate }: PhotoUploadIn
         <div className="flex items-center justify-between">
           <div>
             <h3 className="font-semibold text-text-primary mb-1">
-              Status do Upload: {completedPhotos}/10 fotos enviadas
+              Status do Upload: {completedPhotos}/20 fotos enviadas
             </h3>
             <p className="text-text-secondary text-sm">
               {completedPhotos === 0 && 'Envie a primeira foto para começar'}
-              {completedPhotos > 0 && completedPhotos < 5 && `Bom começo! Adicione mais ${10 - completedPhotos} fotos`}
-              {completedPhotos >= 5 && completedPhotos < 10 && `Quase lá! Faltam ${10 - completedPhotos} fotos`}
-              {completedPhotos === 10 && 'Perfeito! Todas as fotos foram enviadas ✅'}
+              {completedPhotos > 0 && completedPhotos < 10 && `Bom começo! Adicione mais ${20 - completedPhotos} fotos`}
+              {completedPhotos >= 10 && completedPhotos < 20 && `Quase lá! Faltam ${20 - completedPhotos} fotos`}
+              {completedPhotos === 20 && 'Perfeito! Todas as fotos foram enviadas ✅'}
             </p>
           </div>
           
-          {completedPhotos === 10 && (
+          {completedPhotos === 20 && (
             <div className="text-center">
               <CheckCircle size={32} className="text-success mx-auto mb-1" />
               <p className="text-success text-sm font-medium">Completo!</p>
@@ -429,18 +499,18 @@ export function PhotoUploadInterface({ property, onPhotosUpdate }: PhotoUploadIn
           )}
         </div>
 
-        {completedPhotos < 10 && (
+        {completedPhotos < 20 && (
           <div className="mt-4 p-4 bg-white/50 rounded-lg">
             <h4 className="font-medium text-text-primary mb-2">🎯 Próximos passos:</h4>
             <ul className="text-text-secondary text-sm space-y-1">
               {!property.main_photo_url && (
                 <li>• <strong>Foto Principal:</strong> Fachada ou melhor ângulo do imóvel</li>
               )}
-              {property.main_photo_url && completedPhotos < 10 && (
+              {property.main_photo_url && completedPhotos < 20 && (
                 <li>• Continue adicionando fotos de diferentes ângulos e ambientes</li>
               )}
-              {completedPhotos >= 1 && completedPhotos < 10 && (
-                <li>• Faltam {10 - completedPhotos} foto{10 - completedPhotos > 1 ? 's' : ''} para completar</li>
+              {completedPhotos >= 1 && completedPhotos < 20 && (
+                <li>• Faltam {20 - completedPhotos} foto{20 - completedPhotos > 1 ? 's' : ''} para completar</li>
               )}
             </ul>
           </div>

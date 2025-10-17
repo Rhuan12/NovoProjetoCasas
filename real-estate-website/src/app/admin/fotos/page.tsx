@@ -23,7 +23,9 @@ export default function PhotosUploadPage() {
   const propertiesWithPhotos = properties.filter(p => 
     p.main_photo_url || p.photo_2_url || p.photo_3_url || p.photo_4_url || 
     p.photo_5_url || p.photo_6_url || p.photo_7_url || p.photo_8_url || 
-    p.photo_9_url || p.photo_10_url
+    p.photo_9_url || p.photo_10_url || p.photo_11_url || p.photo_12_url ||
+    p.photo_13_url || p.photo_14_url || p.photo_15_url || p.photo_16_url ||
+    p.photo_17_url || p.photo_18_url || p.photo_19_url || p.photo_20_url
   ).length
 
   const totalPhotos = properties.reduce((count, p) => {
@@ -37,13 +39,25 @@ export default function PhotosUploadPage() {
       (p.photo_7_url ? 1 : 0) +
       (p.photo_8_url ? 1 : 0) +
       (p.photo_9_url ? 1 : 0) +
-      (p.photo_10_url ? 1 : 0)
+      (p.photo_10_url ? 1 : 0) +
+      (p.photo_11_url ? 1 : 0) +
+      (p.photo_12_url ? 1 : 0) +
+      (p.photo_13_url ? 1 : 0) +
+      (p.photo_14_url ? 1 : 0) +
+      (p.photo_15_url ? 1 : 0) +
+      (p.photo_16_url ? 1 : 0) +
+      (p.photo_17_url ? 1 : 0) +
+      (p.photo_18_url ? 1 : 0) +
+      (p.photo_19_url ? 1 : 0) +
+      (p.photo_20_url ? 1 : 0)
   }, 0)
 
   const propertiesNeedingPhotos = properties.filter(p => 
     !p.main_photo_url && !p.photo_2_url && !p.photo_3_url && !p.photo_4_url &&
     !p.photo_5_url && !p.photo_6_url && !p.photo_7_url && !p.photo_8_url &&
-    !p.photo_9_url && !p.photo_10_url
+    !p.photo_9_url && !p.photo_10_url && !p.photo_11_url && !p.photo_12_url &&
+    !p.photo_13_url && !p.photo_14_url && !p.photo_15_url && !p.photo_16_url &&
+    !p.photo_17_url && !p.photo_18_url && !p.photo_19_url && !p.photo_20_url
   ).length
 
   const selectedPropertyData = properties.find(p => p.id === selectedProperty)
@@ -155,7 +169,17 @@ export default function PhotosUploadPage() {
                       property.photo_7_url,
                       property.photo_8_url,
                       property.photo_9_url,
-                      property.photo_10_url
+                      property.photo_10_url,
+                      property.photo_11_url,
+                      property.photo_12_url,
+                      property.photo_13_url,
+                      property.photo_14_url,
+                      property.photo_15_url,
+                      property.photo_16_url,
+                      property.photo_17_url,
+                      property.photo_18_url,
+                      property.photo_19_url,
+                      property.photo_20_url
                     ].filter(Boolean).length
 
                     return (
@@ -186,13 +210,13 @@ export default function PhotosUploadPage() {
                             <span className={`text-xs px-2 py-1 rounded-full ${
                               selectedProperty === property.id 
                                 ? 'bg-white/20 text-white'
-                                : photoCount === 10 
+                                : photoCount === 20 
                                   ? 'bg-success/10 text-success'
                                   : photoCount > 0
                                     ? 'bg-warning/10 text-warning'
                                     : 'bg-background-tertiary text-text-muted'
                             }`}>
-                              {photoCount}/10
+                              {photoCount}/20
                             </span>
                           </div>
                         </div>

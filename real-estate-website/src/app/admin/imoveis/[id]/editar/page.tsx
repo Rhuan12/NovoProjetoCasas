@@ -181,8 +181,18 @@ export default function EditPropertyPage({ params }: EditPropertyPageProps) {
                 property.photo_7_url,
                 property.photo_8_url,
                 property.photo_9_url,
-                property.photo_10_url
-              ].filter(Boolean).length}/10)
+                property.photo_10_url,
+                property.photo_11_url,
+                property.photo_12_url,
+                property.photo_13_url,
+                property.photo_14_url,
+                property.photo_15_url,
+                property.photo_16_url,
+                property.photo_17_url,
+                property.photo_18_url,
+                property.photo_19_url,
+                property.photo_20_url
+              ].filter(Boolean).length}/20)
             </button>
           </div>
         </Card>
