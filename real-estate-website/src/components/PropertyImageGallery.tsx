@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import Image from 'next/image'
 import { Property } from '@/lib/supabase'
 import { ChevronLeft, ChevronRight, X, Maximize2 } from 'lucide-react'
@@ -38,15 +38,6 @@ export function PropertyImageGallery({ property }: PropertyImageGalleryProps) {
 
   const isSold = property.status === 'sold'
 
-  // ✨ CARREGAR TODAS AS IMAGENS ASSIM QUE O COMPONENTE MONTA
-  useEffect(() => {
-    // Preload de TODAS as imagens
-    images.forEach((imageUrl) => {
-      const img = new window.Image()
-      img.src = imageUrl
-    })
-  }, [images])
-
   if (images.length === 0) {
     return (
       <div className="w-full h-96 bg-background-tertiary rounded-xl flex items-center justify-center">
@@ -77,7 +68,6 @@ export function PropertyImageGallery({ property }: PropertyImageGalleryProps) {
             }`}
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 70vw"
             priority
-            unoptimized // ✨ DESATIVA otimização do Next.js para carregar mais rápido
           />
           
           {/* Overlay for sold properties */}
@@ -149,7 +139,6 @@ export function PropertyImageGallery({ property }: PropertyImageGalleryProps) {
                   fill
                   className={`object-cover ${isSold ? 'filter-sold' : ''}`}
                   sizes="80px"
-                  unoptimized
                 />
               </button>
             ))}
@@ -169,8 +158,6 @@ export function PropertyImageGallery({ property }: PropertyImageGalleryProps) {
                 fill
                 className={`object-contain ${isSold ? 'filter-sold' : ''}`}
                 sizes="100vw"
-                priority
-                unoptimized
               />
             </div>
 
