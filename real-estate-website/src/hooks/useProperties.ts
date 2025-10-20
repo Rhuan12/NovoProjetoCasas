@@ -32,13 +32,13 @@ export function useProperties(filters: UsePropertiesOptions = {}) {
       const response = await fetch(`/api/properties?${searchParams.toString()}`)
       
       if (!response.ok) {
-        throw new Error('Erro ao carregar imóveis')
+        throw new Error('Error loading properties')
       }
 
       const data = await response.json()
       setProperties(data.properties || [])
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Erro desconhecido')
+      setError(err instanceof Error ? err.message : 'Unknown error')
     } finally {
       setLoading(false)
     }
@@ -79,13 +79,13 @@ export function useProperty(id: string) {
         const response = await fetch(`/api/properties/${id}`)
         
         if (!response.ok) {
-          throw new Error('Imóvel não encontrado')
+          throw new Error('Property not found')
         }
 
         const data = await response.json()
         setProperty(data.property)
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Erro desconhecido')
+        setError(err instanceof Error ? err.message : 'Unknown error')
       } finally {
         setLoading(false)
       }
@@ -97,7 +97,7 @@ export function useProperty(id: string) {
   return { property, loading, error }
 }
 
-// Hook para criar/atualizar imóveis
+// Hook for creating/updating properties
 export function usePropertyMutations() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -117,13 +117,13 @@ export function usePropertyMutations() {
 
       if (!response.ok) {
         const errorData = await response.json()
-        throw new Error(errorData.error || 'Erro ao criar imóvel')
+        throw new Error(errorData.error || 'Error creating property')
       }
 
       const data = await response.json()
       return data.property
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Erro desconhecido')
+      setError(err instanceof Error ? err.message : 'Unknown error')
       throw err
     } finally {
       setLoading(false)
@@ -145,13 +145,13 @@ export function usePropertyMutations() {
 
       if (!response.ok) {
         const errorData = await response.json()
-        throw new Error(errorData.error || 'Erro ao atualizar imóvel')
+        throw new Error(errorData.error || 'Error updating property')
       }
 
       const data = await response.json()
       return data.property
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Erro desconhecido')
+      setError(err instanceof Error ? err.message : 'Unknown error')
       throw err
     } finally {
       setLoading(false)
@@ -169,12 +169,12 @@ export function usePropertyMutations() {
 
       if (!response.ok) {
         const errorData = await response.json()
-        throw new Error(errorData.error || 'Erro ao deletar imóvel')
+        throw new Error(errorData.error || 'Error deleting property')
       }
 
       return true
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Erro desconhecido')
+      setError(err instanceof Error ? err.message : 'Unknown error')
       throw err
     } finally {
       setLoading(false)

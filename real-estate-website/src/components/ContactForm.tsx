@@ -1,4 +1,4 @@
-// src/components/ContactForm.tsx - VERSÃO COMPLETA E CORRIGIDA
+// src/components/ContactForm.tsx - ENGLISH VERSION
 
 'use client'
 
@@ -46,31 +46,31 @@ export function ContactForm({
   const [loading, setLoading] = useState(false)
   const [errors, setErrors] = useState<Record<string, string>>({})
 
-  // Validação básica
+  // Basic validation
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {}
 
     if (!formData.full_name.trim()) {
-      newErrors.full_name = 'Nome é obrigatório'
+      newErrors.full_name = 'Name is required'
     } else if (formData.full_name.trim().length < 3) {
-      newErrors.full_name = 'Nome deve ter pelo menos 3 caracteres'
+      newErrors.full_name = 'Name must be at least 3 characters'
     }
 
     if (!formData.email.trim()) {
-      newErrors.email = 'Email é obrigatório'
+      newErrors.email = 'Email is required'
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = 'Email inválido'
+      newErrors.email = 'Invalid email'
     }
 
     if (!formData.phone.trim()) {
-      newErrors.phone = 'Telefone é obrigatório'
+      newErrors.phone = 'Phone is required'
     }
 
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
   }
 
-  // Salvar lead no banco E redirecionar para WhatsApp
+  // Save lead in database AND redirect to WhatsApp
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
@@ -81,7 +81,7 @@ export function ContactForm({
     setLoading(true)
 
     try {
-      // 1. Salvar lead no banco de dados
+      // 1. Save lead in database
       const response = await fetch('/api/leads', {
         method: 'POST',
         headers: {
@@ -98,10 +98,10 @@ export function ContactForm({
 
       if (!response.ok) {
         const errorData = await response.json()
-        throw new Error(errorData.error || 'Erro ao enviar mensagem')
+        throw new Error(errorData.error || 'Error sending message')
       }
 
-      // 2. Preparar dados para o WhatsApp
+      // 2. Prepare data for WhatsApp
       const propertyData: PropertyData = {
         id: propertyId,
         title: propertyTitle,
@@ -120,14 +120,14 @@ export function ContactForm({
         message: formData.message.trim()
       }
 
-      // 3. Gerar mensagem e abrir WhatsApp
+      // 3. Generate message and open WhatsApp
       const message = createPropertyInterestMessage(propertyData, userData)
       openWhatsApp(message)
 
-      // 4. Callback de sucesso
+      // 4. Success callback
       onSuccess?.()
 
-      // 5. Limpar formulário
+      // 5. Clear form
       setFormData({
         full_name: '',
         email: '',
@@ -135,12 +135,12 @@ export function ContactForm({
         message: ''
       })
 
-      // 6. Feedback ao usuário
-      alert('✅ Seus dados foram salvos! Redirecionando para o WhatsApp...')
+      // 6. User feedback
+      alert('✅ Your information has been saved! Redirecting to WhatsApp...')
 
     } catch (err) {
-      console.error('Erro:', err)
-      alert(err instanceof Error ? err.message : 'Erro ao processar solicitação')
+      console.error('Error:', err)
+      alert(err instanceof Error ? err.message : 'Error processing request')
     } finally {
       setLoading(false)
     }
@@ -150,7 +150,7 @@ export function ContactForm({
     const { name, value } = e.target
     setFormData(prev => ({ ...prev, [name]: value }))
     
-    // Limpar erro do campo quando usuário começar a digitar
+    // Clear field error when user starts typing
     if (errors[name]) {
       setErrors(prev => {
         const newErrors = { ...prev }
@@ -160,7 +160,7 @@ export function ContactForm({
     }
   }
 
-  // Formatar localização para preview
+  // Format location for preview
   const propertyLocation = [propertyNeighborhood, propertyCity].filter(Boolean).join(', ')
 
   return (
@@ -171,19 +171,19 @@ export function ContactForm({
         </div>
         <div>
           <h3 className="text-lg font-semibold text-text-primary">
-            Demonstrar Interesse
+            Show Interest
           </h3>
           <p className="text-text-secondary text-sm">
-            Será redirecionado para o WhatsApp
+            You'll be redirected to WhatsApp
           </p>
         </div>
       </div>
       
       <form onSubmit={handleSubmit} className="space-y-4">
-        {/* Nome completo */}
+        {/* Full name */}
         <div>
           <label className="block text-sm font-medium text-text-primary mb-1">
-            Nome completo *
+            Full name *
           </label>
           <div className="relative">
             <User size={18} className="absolute left-3 top-3 text-text-muted" />
@@ -192,7 +192,7 @@ export function ContactForm({
               name="full_name"
               value={formData.full_name}
               onChange={handleChange}
-              placeholder="Seu nome completo"
+              placeholder="Your full name"
               className={`block w-full pl-10 pr-3 py-2 bg-background-secondary border ${
                 errors.full_name ? 'border-danger' : 'border-background-tertiary'
               } rounded-lg text-text-primary placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-accent-primary`}
@@ -207,7 +207,7 @@ export function ContactForm({
         {/* Email */}
         <div>
           <label className="block text-sm font-medium text-text-primary mb-1">
-            E-mail *
+            Email *
           </label>
           <div className="relative">
             <Mail size={18} className="absolute left-3 top-3 text-text-muted" />
@@ -216,7 +216,7 @@ export function ContactForm({
               name="email"
               value={formData.email}
               onChange={handleChange}
-              placeholder="seu@email.com"
+              placeholder="your@email.com"
               className={`block w-full pl-10 pr-3 py-2 bg-background-secondary border ${
                 errors.email ? 'border-danger' : 'border-background-tertiary'
               } rounded-lg text-text-primary placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-accent-primary`}
@@ -228,10 +228,10 @@ export function ContactForm({
           )}
         </div>
         
-        {/* Telefone */}
+        {/* Phone */}
         <div>
           <label className="block text-sm font-medium text-text-primary mb-1">
-            Telefone/WhatsApp *
+            Phone/WhatsApp *
           </label>
           <div className="relative">
             <Phone size={18} className="absolute left-3 top-3 text-text-muted" />
@@ -240,7 +240,7 @@ export function ContactForm({
               name="phone"
               value={formData.phone}
               onChange={handleChange}
-              placeholder="(85) 99999-9999"
+              placeholder="+1 (816) 890-1804"
               className={`block w-full pl-10 pr-3 py-2 bg-background-secondary border ${
                 errors.phone ? 'border-danger' : 'border-background-tertiary'
               } rounded-lg text-text-primary placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-accent-primary`}
@@ -252,10 +252,10 @@ export function ContactForm({
           )}
         </div>
 
-        {/* Mensagem (opcional) */}
+        {/* Message (optional) */}
         <div>
           <label className="block text-sm font-medium text-text-primary mb-1">
-            Mensagem adicional (opcional)
+            Additional message (optional)
           </label>
           <div className="relative">
             <MessageSquare size={18} className="absolute left-3 top-3 text-text-muted" />
@@ -263,7 +263,7 @@ export function ContactForm({
               name="message"
               value={formData.message}
               onChange={handleChange}
-              placeholder="Ex: Gostaria de agendar uma visita na sexta-feira à tarde..."
+              placeholder="e.g., I'd like to schedule a visit on Friday afternoon..."
               className="block w-full pl-10 pr-3 py-2 bg-background-secondary border border-background-tertiary rounded-lg text-text-primary placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-accent-primary resize-none"
               rows={3}
               disabled={loading}
@@ -271,17 +271,17 @@ export function ContactForm({
           </div>
         </div>
 
-        {/* Informações do imóvel (preview) */}
+        {/* Property information (preview) */}
         <div className="p-3 bg-accent-primary/5 border border-accent-primary/20 rounded-lg">
           <p className="text-xs font-semibold text-accent-primary mb-2">
-            📋 INFORMAÇÕES QUE SERÃO ENVIADAS:
+            📋 INFORMATION TO BE SENT:
           </p>
           <div className="text-xs text-text-secondary space-y-1">
-            <p>• Imóvel: {propertyTitle}</p>
-            {propertyLocation && <p>• Local: {propertyLocation}</p>}
-            {propertyPrice && <p>• Valor: {formatPrice(propertyPrice)}</p>}
-            <p>• Seus dados de contato</p>
-            <p>• Link do imóvel</p>
+            <p>• Property: {propertyTitle}</p>
+            {propertyLocation && <p>• Location: {propertyLocation}</p>}
+            {propertyPrice && <p>• Price: {formatPrice(propertyPrice)}</p>}
+            <p>• Your contact information</p>
+            <p>• Property link</p>
           </div>
         </div>
 
@@ -293,18 +293,18 @@ export function ContactForm({
           disabled={loading || !formData.full_name || !formData.email || !formData.phone}
         >
           {loading ? (
-            'Processando...'
+            'Processing...'
           ) : (
             <>
               <MessageCircle size={18} />
-              Enviar via WhatsApp
+              Send via WhatsApp
             </>
           )}
         </Button>
 
         <p className="text-xs text-text-muted text-center">
-          Ao enviar, você será redirecionado para o WhatsApp com a mensagem preenchida. 
-          Seus dados também serão salvos para que possamos entrar em contato.
+          By submitting, you'll be redirected to WhatsApp with a pre-filled message. 
+          Your information will also be saved so we can contact you.
         </p>
       </form>
     </Card>
@@ -312,7 +312,7 @@ export function ContactForm({
 }
 
 // ============================================
-// BOTÃO WHATSAPP DIRETO (sem formulário)
+// DIRECT WHATSAPP BUTTON (without form)
 // ============================================
 
 import { createSimpleInterestMessage } from '@/lib/whatsapp'
@@ -334,7 +334,7 @@ export function QuickWhatsAppButton({
   return (
     <Button onClick={handleClick} className={`gap-2 ${className}`}>
       <MessageCircle size={18} />
-      WhatsApp Direto
+      Direct WhatsApp
     </Button>
   )
 }

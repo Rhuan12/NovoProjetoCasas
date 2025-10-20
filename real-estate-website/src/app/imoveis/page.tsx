@@ -18,12 +18,12 @@ interface FilterState {
 
 export default function ImoveisPage() {
   const [filters, setFilters] = useState<FilterState>({
-    status: 'available' // Por padrão, mostrar apenas disponíveis
+    status: 'available' // Default: show only available properties
   })
 
   const { properties, loading, error } = useProperties(filters)
 
-  // Estatísticas rápidas
+  // Quick statistics
   const availableCount = properties.filter(p => p.status === 'available').length
   const soldCount = properties.filter(p => p.status === 'sold').length
   const averageDaysToSell = soldCount > 0 
@@ -44,29 +44,29 @@ export default function ImoveisPage() {
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
               <h1 className="text-3xl font-bold text-text-primary mb-2">
-                Nossos Imóveis
+                Our Properties
               </h1>
               <p className="text-text-secondary">
-                Encontre a casa perfeita com nossa seleção exclusiva de imóveis premium
+                Find your perfect home with our exclusive selection of properties
               </p>
             </div>
             
-            {/* Estatísticas rápidas */}
+            {/* Quick statistics */}
             <div className="flex gap-4">
               <div className="text-center">
                 <div className="text-2xl font-bold text-accent-primary">{availableCount}</div>
-                <div className="text-sm text-text-muted">Disponíveis</div>
+                <div className="text-sm text-text-muted">Available</div>
               </div>
               
               <div className="text-center">
                 <div className="text-2xl font-bold text-success">{soldCount}</div>
-                <div className="text-sm text-text-muted">Vendidos</div>
+                <div className="text-sm text-text-muted">Sold</div>
               </div>
               
               {averageDaysToSell > 0 && (
                 <div className="text-center">
                   <div className="text-2xl font-bold text-warning">{averageDaysToSell}</div>
-                  <div className="text-sm text-text-muted">Dias média</div>
+                  <div className="text-sm text-text-muted">Avg. Days</div>
                 </div>
               )}
             </div>
@@ -78,21 +78,21 @@ export default function ImoveisPage() {
           <Badge 
             variant={filters.status === 'available' ? 'success' : 'default'}
           >
-            {availableCount} Disponíveis
+            {availableCount} Available
           </Badge>
           <Badge 
             variant={filters.status === 'sold' ? 'sold' : 'default'}
           >
-            {soldCount} Vendidos
+            {soldCount} Sold
           </Badge>
           <Badge 
             variant={filters.status === 'reserved' ? 'warning' : 'default'}
           >
-            {properties.filter(p => p.status === 'reserved').length} Reservados
+            {properties.filter(p => p.status === 'reserved').length} Reserved
           </Badge>
         </div>
 
-        {/* Filtros */}
+        {/* Filters */}
         <div className="mb-8">
           <PropertyFilters 
             onFiltersChange={setFilters}
@@ -100,7 +100,7 @@ export default function ImoveisPage() {
           />
         </div>
 
-        {/* Grid de Imóveis */}
+        {/* Property Grid */}
         <PropertyGrid 
           properties={properties}
           loading={loading}
@@ -112,18 +112,18 @@ export default function ImoveisPage() {
           <div className="mt-16 text-center">
             <div className="bg-gradient-to-r from-accent-primary/10 to-accent-light/10 rounded-2xl p-8">
               <h3 className="text-2xl font-bold text-text-primary mb-4">
-                Não encontrou o que procura?
+                Didn't find what you're looking for?
               </h3>
               <p className="text-text-secondary mb-6 max-w-2xl mx-auto">
-                Nossa equipe especializada pode ajudar você a encontrar o imóvel ideal. 
-                Entre em contato e deixe-nos saber suas preferências.
+                Our specialized team can help you find the ideal property. 
+                Get in touch and let us know your preferences.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <button className="bg-accent-primary text-white px-6 py-3 rounded-lg hover:bg-accent-hover transition-colors font-medium">
-                  Falar com Especialista
+                  Talk to a Specialist
                 </button>
                 <button className="border border-background-tertiary text-text-primary px-6 py-3 rounded-lg hover:bg-background-secondary transition-colors font-medium">
-                  Lista de Espera
+                  Join Waiting List
                 </button>
               </div>
             </div>
@@ -131,11 +131,11 @@ export default function ImoveisPage() {
         )}
       </main>
 
-      {/* Footer simples */}
+      {/* Simple footer */}
       <footer className="border-t border-background-tertiary mt-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="text-center text-text-muted">
-            <p>&copy; 2024 Imóveis Premium. Todos os direitos reservados.</p>
+            <p>&copy; 2025 McSilva & Wiggit. All rights reserved.</p>
           </div>
         </div>
       </footer>

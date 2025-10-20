@@ -12,7 +12,7 @@ export function PropertyImageGallery({ property }: PropertyImageGalleryProps) {
   const [selectedImage, setSelectedImage] = useState(0)
   const [isModalOpen, setIsModalOpen] = useState(false)
 
-  // Coletar todas as imagens disponíveis
+  // Collect all available images
   const images = [
     property.main_photo_url,
     property.photo_2_url,
@@ -41,7 +41,7 @@ export function PropertyImageGallery({ property }: PropertyImageGalleryProps) {
   if (images.length === 0) {
     return (
       <div className="w-full h-96 bg-background-tertiary rounded-xl flex items-center justify-center">
-        <span className="text-text-muted">Sem fotos disponíveis</span>
+        <span className="text-text-muted">No photos available</span>
       </div>
     )
   }
@@ -57,11 +57,11 @@ export function PropertyImageGallery({ property }: PropertyImageGalleryProps) {
   return (
     <>
       <div className="space-y-4">
-        {/* Imagem principal */}
+        {/* Main image */}
         <div className="relative w-full h-96 md:h-[500px] rounded-xl overflow-hidden group">
           <Image
             src={images[selectedImage]}
-            alt={`${property.title} - Foto ${selectedImage + 1}`}
+            alt={`${property.title} - Photo ${selectedImage + 1}`}
             fill
             className={`object-cover transition-all duration-300 ${
               isSold ? 'filter-sold' : ''
@@ -70,16 +70,16 @@ export function PropertyImageGallery({ property }: PropertyImageGalleryProps) {
             priority
           />
           
-          {/* Overlay para imóveis vendidos */}
+          {/* Overlay for sold properties */}
           {isSold && (
             <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
               <div className="bg-sold/90 text-white px-4 py-2 rounded-lg font-semibold">
-                VENDIDO
+                SOLD
               </div>
             </div>
           )}
 
-          {/* Botões de navegação */}
+          {/* Navigation buttons */}
           {images.length > 1 && (
             <>
               <Button
@@ -102,7 +102,7 @@ export function PropertyImageGallery({ property }: PropertyImageGalleryProps) {
             </>
           )}
 
-          {/* Botão expandir */}
+          {/* Expand button */}
           <Button
             variant="ghost"
             size="sm"
@@ -112,7 +112,7 @@ export function PropertyImageGallery({ property }: PropertyImageGalleryProps) {
             <Maximize2 size={16} />
           </Button>
 
-          {/* Contador de imagens */}
+          {/* Image counter */}
           {images.length > 1 && (
             <div className="absolute bottom-4 right-4 bg-black/50 text-white px-3 py-1 rounded-full text-sm">
               {selectedImage + 1} / {images.length}
@@ -146,22 +146,22 @@ export function PropertyImageGallery({ property }: PropertyImageGalleryProps) {
         )}
       </div>
 
-      {/* Modal de imagem ampliada */}
+      {/* Enlarged image modal */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4">
           <div className="relative max-w-7xl max-h-full w-full h-full flex items-center justify-center">
-            {/* Imagem ampliada */}
+            {/* Enlarged image */}
             <div className="relative w-full h-full max-w-5xl max-h-5xl">
               <Image
                 src={images[selectedImage]}
-                alt={`${property.title} - Foto ${selectedImage + 1}`}
+                alt={`${property.title} - Photo ${selectedImage + 1}`}
                 fill
                 className={`object-contain ${isSold ? 'filter-sold' : ''}`}
                 sizes="100vw"
               />
             </div>
 
-            {/* Botão fechar */}
+            {/* Close button */}
             <Button
               variant="ghost"
               size="sm"
@@ -171,7 +171,7 @@ export function PropertyImageGallery({ property }: PropertyImageGalleryProps) {
               <X size={20} />
             </Button>
 
-            {/* Navegação no modal */}
+            {/* Navigation in modal */}
             {images.length > 1 && (
               <>
                 <Button
@@ -192,7 +192,7 @@ export function PropertyImageGallery({ property }: PropertyImageGalleryProps) {
                   <ChevronRight size={24} />
                 </Button>
 
-                {/* Contador no modal */}
+                {/* Counter in modal */}
                 <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/50 text-white px-4 py-2 rounded-full">
                   {selectedImage + 1} / {images.length}
                 </div>

@@ -40,7 +40,7 @@ export function PropertyGrid({ properties, loading, error }: PropertyGridProps) 
       <div className="flex flex-col items-center justify-center py-16 text-center">
         <AlertCircle size={48} className="text-danger mb-4" />
         <h3 className="text-xl font-semibold text-text-primary mb-2">
-          Erro ao carregar imóveis
+          Error loading properties
         </h3>
         <p className="text-text-secondary mb-4 max-w-md">
           {error}
@@ -49,7 +49,7 @@ export function PropertyGrid({ properties, loading, error }: PropertyGridProps) 
           onClick={() => window.location.reload()}
           className="bg-accent-primary text-white px-4 py-2 rounded-lg hover:bg-accent-hover transition-colors"
         >
-          Tentar novamente
+          Try again
         </button>
       </div>
     )
@@ -61,11 +61,11 @@ export function PropertyGrid({ properties, loading, error }: PropertyGridProps) 
       <div className="flex flex-col items-center justify-center py-16 text-center">
         <Home size={48} className="text-text-muted mb-4" />
         <h3 className="text-xl font-semibold text-text-primary mb-2">
-          Nenhum imóvel encontrado
+          No properties found
         </h3>
         <p className="text-text-secondary mb-4 max-w-md">
-          Não encontramos imóveis que correspondam aos seus filtros. 
-          Tente ajustar os critérios de busca.
+          We couldn't find any properties matching your filters. 
+          Try adjusting your search criteria.
         </p>
       </div>
     )
@@ -74,20 +74,20 @@ export function PropertyGrid({ properties, loading, error }: PropertyGridProps) 
   // Success state with properties
   return (
     <div className="space-y-6">
-      {/* Contador de resultados */}
+      {/* Results counter */}
       <div className="flex items-center justify-between">
         <p className="text-text-secondary">
           <span className="font-semibold text-text-primary">{properties.length}</span> 
-          {properties.length === 1 ? ' imóvel encontrado' : ' imóveis encontrados'}
+          {properties.length === 1 ? ' property found' : ' properties found'}
         </p>
         
         <div className="flex items-center gap-2 text-sm text-text-muted">
-          <span>Ordenado por:</span>
-          <span className="text-text-primary">Mais recentes</span>
+          <span>Sorted by:</span>
+          <span className="text-text-primary">Most recent</span>
         </div>
       </div>
 
-      {/* Grid de imóveis */}
+      {/* Property grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {properties.map((property) => (
           <PropertyCard 
@@ -97,15 +97,15 @@ export function PropertyGrid({ properties, loading, error }: PropertyGridProps) 
         ))}
       </div>
 
-      {/* Separação entre disponíveis e vendidos */}
+      {/* Separation between available and sold */}
       {properties.some(p => p.status === 'sold') && properties.some(p => p.status !== 'sold') && (
         <div className="border-t border-background-tertiary pt-8 mt-8">
           <h3 className="text-lg font-semibold text-text-secondary mb-4 flex items-center gap-2">
             <div className="w-2 h-2 bg-sold rounded-full"></div>
-            Imóveis Vendidos
+            Sold Properties
           </h3>
           <p className="text-sm text-text-muted mb-6">
-            Veja nosso histórico de vendas e o tempo médio para vendas.
+            View our sales history and average time to sell.
           </p>
         </div>
       )}
