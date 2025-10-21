@@ -41,7 +41,8 @@ interface SiteSettings {
 
 export default function Home() {
   const [searchTerm, setSearchTerm] = useState('')
-  const { properties, loading } = useProperties({ status: 'available' })
+  // Buscar TODAS as propriedades (sem filtro de status)
+  const { properties, loading } = useProperties({})
 
   const [settings, setSettings] = useState<SiteSettings | null>(null)
   const [settingsLoading, setSettingsLoading] = useState(true)
@@ -65,10 +66,11 @@ export default function Home() {
     fetchSettings()
   }, [])
   
-  // Get featured properties (first 6 available)
-  const featuredProperties = properties.slice(0, 6)
+  // Filtrar apenas propriedades disponíveis para featured properties
+  const availableProperties = properties.filter(p => p.status === 'available')
+  const featuredProperties = availableProperties.slice(0, 6)
   
-  // Statistics
+  // Statistics - agora vai funcionar corretamente
   const availableCount = properties.filter(p => p.status === 'available').length
   const soldCount = properties.filter(p => p.status === 'sold').length
   
@@ -124,7 +126,7 @@ export default function Home() {
             {/* Quick statistics */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto">
               <div className="text-center">
-                <div className="text-3xl md:text-4xl font-bold text-text-primary mb-1">
+                <div className="text-3xl md:text-4xl font-bold text-green-500 mb-1">
                   {availableCount}
                 </div>
                 <div className="text-text-secondary text-sm md:text-base">
@@ -133,10 +135,10 @@ export default function Home() {
               </div>
               
               <div className="text-center">
-                <div className="text-3xl md:text-4xl font-bold text-success mb-1">
+                <div className="text-3xl md:text-4xl font-bold text-red-500 mb-1">
                   {soldCount}
                 </div>
-                <div className="text-text-secondary text-sm md:text-base">
+                <div className="text-text-secondary text-sm md:text-base font-semibold">
                   Sold Properties
                 </div>
               </div>
