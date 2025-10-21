@@ -2,18 +2,16 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { Button } from '@/components/ui/Button'
 import { 
-  Building, 
   Menu, 
   X, 
   Phone, 
   MessageCircle,
   Home,
-  Search,
-  TrendingUp,
-  Mail
+  Search
 } from 'lucide-react'
 
 export function Header() {
@@ -60,16 +58,22 @@ export function Header() {
       }`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
-            {/* Logo */}
+            {/* Logo - ✨ AUMENTADO */}
             <Link href="/" className="flex items-center gap-3 group">
-              <div className="w-10 h-10 bg-gradient-to-br from-accent-primary to-accent-light rounded-lg flex items-center justify-center group-hover:scale-105 transition-transform">
-                <Building size={24} className="text-white" />
+              <div className="relative w-16 h-16 md:w-20 md:h-20 group-hover:scale-105 transition-transform">
+                <Image
+                  src="/logo.png"
+                  alt="McSilva & Wiggit Logo"
+                  fill
+                  className="object-contain"
+                  priority
+                />
               </div>
-              <div>
+              <div className="hidden sm:block">
                 <span className="text-xl font-bold text-gradient">
                   McSilva & Wiggit
                 </span>
-                <div className="text-xs text-text-muted hidden sm:block">
+                <div className="text-xs text-text-muted">
                   Making dreams come true since 2014
                 </div>
               </div>
