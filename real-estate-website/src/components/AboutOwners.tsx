@@ -44,20 +44,24 @@ export function AboutOwners({ className = '' }: AboutOwnersProps) {
   const gradientColors = [
     'from-accent-primary to-accent-light',
     'from-success to-success/70',
-    'from-warning to-warning/70'
+    'from-warning to-warning/70',
+    'from-purple-500 to-purple-300' // Nova cor para o 4º dono
   ]
 
   const iconColors = [
     'text-accent-primary',
     'text-success',
-    'text-warning'
+    'text-warning',
+    'text-purple-500' // Nova cor para o 4º dono
   ]
 
   // Determine grid layout based on number of owners
   const getGridCols = () => {
     if (owners.length === 1) return 'grid-cols-1 max-w-2xl mx-auto'
-    if (owners.length === 2) return 'grid-cols-1 lg:grid-cols-2'
-    return 'grid-cols-1 lg:grid-cols-3'
+    if (owners.length === 2) return 'grid-cols-1 lg:grid-cols-2 max-w-5xl mx-auto'
+    if (owners.length === 3) return 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'
+    // Para 4 donos: 2x2 em todos os tamanhos
+    return 'grid-cols-1 md:grid-cols-2 max-w-6xl mx-auto'
   }
 
   if (loading) {
@@ -109,50 +113,53 @@ export function AboutOwners({ className = '' }: AboutOwnersProps) {
         {/* Owners Grid - Responsive based on number */}
         <div className={`grid ${getGridCols()} gap-8 mb-16`}>
           {owners.map((owner, index) => (
-            <Card key={owner.id} className="p-8">
-              <div className="flex flex-col md:flex-row gap-6">
+            <Card key={owner.id} className="p-6 hover:shadow-xl transition-all duration-300">
+              <div className="flex flex-col items-center text-center">
                 {/* Photo */}
-                <div className="flex-shrink-0">
+                <div className="mb-4">
                   {owner.photo_url ? (
-                    <div className="relative w-32 h-32 rounded-2xl overflow-hidden">
+                    <div className="relative w-24 h-24 rounded-2xl overflow-hidden ring-4 ring-background-tertiary">
                       <Image
                         src={owner.photo_url}
                         alt={owner.name}
                         fill
                         className="object-cover"
-                        sizes="128px"
+                        sizes="96px"
                       />
                     </div>
                   ) : (
-                    <div className={`w-32 h-32 rounded-2xl bg-gradient-to-br ${gradientColors[index % 3]} flex items-center justify-center`}>
-                      <Users size={48} className="text-white" />
+                    <div className={`w-24 h-24 rounded-2xl bg-gradient-to-br ${gradientColors[index % 4]} flex items-center justify-center ring-4 ring-background-tertiary`}>
+                      <Users size={36} className="text-white" />
                     </div>
                   )}
                 </div>
                 
                 {/* Info */}
-                <div className="flex-1">
-                  <h3 className="text-2xl font-bold text-text-primary mb-2">
+                <div className="w-full">
+                  <h3 className="text-xl font-bold text-text-primary mb-1">
                     {owner.name}
                   </h3>
-                  <div className="flex flex-wrap items-center gap-2 mb-4">
-                    <Badge variant="success" size="sm">{owner.role}</Badge>
-                  </div>
+                  <Badge variant="success" size="sm" className="mb-3">{owner.role}</Badge>
                   
                   {owner.bio && (
-                    <p className="text-text-secondary mb-4">
+                    <p className="text-text-secondary text-sm mb-4">
                       {owner.bio}
                     </p>
                   )}
                   
                   {owner.achievements && owner.achievements.length > 0 && (
                     <div className="space-y-2">
-                      {owner.achievements.map((achievement, idx) => (
-                        <div key={idx} className="flex items-center gap-2 text-sm text-text-secondary">
-                          <CheckCircle size={16} className={iconColors[index % 3]} />
-                          <span>{achievement}</span>
+                      {owner.achievements.slice(0, 3).map((achievement, idx) => (
+                        <div key={idx} className="flex items-start gap-2 text-xs text-text-secondary">
+                          <CheckCircle size={14} className={`${iconColors[index % 4]} flex-shrink-0 mt-0.5`} />
+                          <span className="text-left">{achievement}</span>
                         </div>
                       ))}
+                      {owner.achievements.length > 3 && (
+                        <p className="text-xs text-text-muted italic">
+                          +{owner.achievements.length - 3} more achievements
+                        </p>
+                      )}
                     </div>
                   )}
                 </div>

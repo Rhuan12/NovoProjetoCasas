@@ -182,13 +182,13 @@ export default function AdminOwnersPage() {
           <div>
             <h1 className="text-3xl font-bold text-text-primary">Gerenciar Donos</h1>
             <p className="text-text-secondary mt-1">
-              Configure as informações dos proprietários da imobiliária (máximo 3)
+              Configure as informações dos proprietários da imobiliária (máximo 4)
             </p>
           </div>
           
           <Button
             onClick={() => handleOpenModal()}
-            disabled={owners.filter(o => o.is_active).length >= 3}
+            disabled={owners.filter(o => o.is_active).length >= 4}
             className="gap-2"
           >
             <Plus size={16} />
@@ -197,12 +197,12 @@ export default function AdminOwnersPage() {
         </div>
 
         {/* Info Alert */}
-        {owners.filter(o => o.is_active).length >= 3 && (
+        {owners.filter(o => o.is_active).length >= 4 && (
           <Card className="p-4 border-warning/20 bg-warning/5">
             <div className="flex items-center gap-3">
               <AlertCircle size={20} className="text-warning" />
               <p className="text-warning text-sm">
-                Limite de 3 donos ativos atingido. Desative um dono para adicionar outro.
+                Limite de 4 donos ativos atingido. Desative um dono para adicionar outro.
               </p>
             </div>
           </Card>
@@ -471,7 +471,7 @@ export default function AdminOwnersPage() {
                       <input
                         type="number"
                         min="1"
-                        max="3"
+                        max="4"
                         value={formData.display_order}
                         onChange={(e) => setFormData(prev => ({ ...prev, display_order: parseInt(e.target.value) }))}
                         className="block w-full px-3 py-2 bg-background-secondary border border-background-tertiary rounded-lg text-text-primary focus:outline-none focus:ring-2 focus:ring-accent-primary"
