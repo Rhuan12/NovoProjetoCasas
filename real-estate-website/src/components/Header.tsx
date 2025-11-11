@@ -53,8 +53,8 @@ export function Header() {
     <>
       <header className={`sticky top-0 z-50 transition-all duration-300 ${
         isScrolled 
-          ? 'bg-background-primary/95 backdrop-blur-sm border-b border-background-tertiary shadow-lg' 
-          : 'bg-transparent'
+          ? 'bg-background-primary/40 backdrop-blur-xl border-b border-white/10 shadow-2xl shadow-black/20' 
+          : 'bg-background-primary/20 backdrop-blur-md border-b border-white/5'
       }`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">

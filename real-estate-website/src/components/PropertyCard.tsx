@@ -42,110 +42,104 @@ export function PropertyCard({
   }
 
   return (
-    <Card className="overflow-hidden group relative border-2 border-accent-primary/20 hover:border-accent-primary transition-all duration-300">
-      {/* Imagem principal */}
-      <div className="relative w-full h-64 overflow-hidden">
-        {property.main_photo_url ? (
-          <Image
-            src={property.main_photo_url}
-            alt={property.title}
-            fill
-            className={`object-cover transition-transform duration-300 group-hover:scale-110 ${isSold ? 'grayscale opacity-70' : ''}`}
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          />
-        ) : (
-          <div className={`w-full h-full bg-background-tertiary flex items-center justify-center ${isSold ? 'grayscale opacity-70' : ''}`}>
-            <span className="text-text-muted">No photo</span>
-          </div>
-        )}
-        
-        {/* Overlay gradient no hover */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-
-        {/* Badge de Preço - Estilo PDF (canto superior esquerdo) */}
-        <div className="absolute top-4 left-4 z-10">
-          <div className="bg-warning text-white px-4 py-2 rounded-lg font-bold text-lg shadow-lg">
-            {formatPrice(property.price)}
-          </div>
-        </div>
-
-        {/* Badge de Status - Canto superior direito */}
-        <div className="absolute top-4 right-4 z-10">
-          {getStatusBadge()}
-        </div>
-
-        {/* Tempo de venda para imóveis vendidos */}
-        {isSold && property.days_to_sell && (
-          <div className="absolute bottom-4 right-4 z-10">
-            <Badge variant="sold" size="sm">
-              Sold in {property.days_to_sell} days
-            </Badge>
-          </div>
-        )}
-      </div>
-
-      {/* Conteúdo do card */}
-      <div className="p-6 bg-background-secondary">
-        {/* Características - Ícones em linha (igual ao PDF) */}
-        <div className="flex items-center gap-4 mb-4 text-text-muted">
-          {property.bedrooms && (
-            <div className="flex items-center gap-1">
-              <BedDouble size={18} />
-              <span className="text-sm font-semibold">{property.bedrooms}</span>
+    <Card className="overflow-hidden group relative hover:shadow-2xl transition-all duration-300 border-0 bg-transparent">
+      {/* Container principal */}
+      <div className="relative rounded-2xl overflow-hidden">
+        {/* Imagem principal - BEM MAIOR */}
+        <div className="relative w-full h-96 overflow-hidden">
+          {property.main_photo_url ? (
+            <Image
+              src={property.main_photo_url}
+              alt={property.title}
+              fill
+              className={`object-cover transition-transform duration-500 group-hover:scale-105 ${isSold ? 'grayscale opacity-70' : ''}`}
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            />
+          ) : (
+            <div className={`w-full h-full bg-background-tertiary flex items-center justify-center ${isSold ? 'grayscale opacity-70' : ''}`}>
+              <span className="text-text-muted">No photo</span>
             </div>
           )}
           
-          {property.bathrooms && (
-            <div className="flex items-center gap-1">
-              <Bath size={18} />
-              <span className="text-sm font-semibold">{property.bathrooms}</span>
-            </div>
-          )}
-          
-          {property.area_sqm && (
-            <div className="flex items-center gap-1">
-              <Maximize size={18} />
-              <span className="text-sm font-semibold">{property.area_sqm}m²</span>
+          {/* Overlay gradient apenas no topo para o badge */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-transparent pointer-events-none"></div>
+
+          {/* Badge de Status - Canto superior direito */}
+          <div className="absolute top-4 right-4 z-10">
+            {getStatusBadge()}
+          </div>
+
+          {/* Tempo de venda para imóveis vendidos */}
+          {isSold && property.days_to_sell && (
+            <div className="absolute top-4 left-4 z-10">
+              <Badge variant="sold" size="sm">
+                Sold in {property.days_to_sell} days
+              </Badge>
             </div>
           )}
         </div>
 
-        {/* Localização */}
-        {(property.neighborhood || property.city) && (
-          <div className="flex items-start gap-2 mb-4">
-            <MapPin size={16} className="text-text-muted mt-0.5 flex-shrink-0" />
-            <p className={`text-sm line-clamp-2 ${isSold ? 'text-sold' : 'text-text-secondary'}`}>
+        {/* RODAPÉ GLASSMORPHISM - Separado da imagem */}
+        <div className="relative bg-background-secondary/80 backdrop-blur-xl border-t border-white/10 p-5">
+          {/* Preço em destaque */}
+          <div className="mb-4">
+            <span className="text-3xl font-bold text-warning">
+              {formatPrice(property.price)}
+            </span>
+          </div>
+
+          {/* Características em linha */}
+          <div className="flex items-center gap-4 mb-4">
+            {property.bedrooms && (
+              <div className="flex items-center gap-2 text-text-primary">
+                <div className="w-10 h-10 rounded-lg bg-background-tertiary/80 backdrop-blur-sm flex items-center justify-center border border-background-tertiary">
+                  <BedDouble size={20} strokeWidth={2.5} className="text-text-secondary" />
+                </div>
+                <span className="text-lg font-bold">{property.bedrooms}</span>
+              </div>
+            )}
+            
+            {property.bathrooms && (
+              <div className="flex items-center gap-2 text-text-primary">
+                <div className="w-10 h-10 rounded-lg bg-background-tertiary/80 backdrop-blur-sm flex items-center justify-center border border-background-tertiary">
+                  <Bath size={20} strokeWidth={2.5} className="text-text-secondary" />
+                </div>
+                <span className="text-lg font-bold">{property.bathrooms}</span>
+              </div>
+            )}
+          </div>
+
+          {/* Localização */}
+          {(property.neighborhood || property.city) && (
+            <p className="text-base text-text-secondary font-medium mb-4 line-clamp-1">
               {property.neighborhood && `${property.neighborhood}, `}
               {property.city}
               {property.state && `, ${property.state}`}
             </p>
-          </div>
-        )}
+          )}
 
-        {/* Botão View Details */}
-        <div className="mt-4">
+          {/* Botão View Details */}
           {!isSold ? (
             <Link href={`/imoveis/${property.id}`} className="block">
-              <Button 
-                className="w-full bg-background-tertiary hover:bg-accent-primary hover:text-white border border-accent-primary/30 text-text-primary font-semibold transition-all duration-300"
-              >
+              <button className="w-full py-3.5 px-4 bg-background-tertiary/60 hover:bg-accent-primary hover:text-white text-text-primary font-semibold rounded-xl transition-all duration-300 border border-background-tertiary backdrop-blur-sm">
                 View Details
-              </Button>
+              </button>
             </Link>
           ) : (
-            <Button 
-              className="w-full" 
-              variant="ghost" 
+            <button 
+              className="w-full py-3.5 px-4 bg-background-tertiary/40 text-text-muted font-semibold rounded-xl cursor-not-allowed border border-background-tertiary"
               disabled
             >
               Property Sold
-            </Button>
+            </button>
           )}
         </div>
+      </div>
 
-        {/* Administrative controls */}
-        {showAdminControls && (
-          <div className="flex gap-2 mt-3 pt-3 border-t border-background-tertiary">
+      {/* Seção administrativa */}
+      {showAdminControls && (
+        <div className="mt-2 p-4 bg-background-secondary/80 backdrop-blur-xl rounded-xl border border-background-tertiary">
+          <div className="flex gap-2">
             <Button
               variant="outline"
               size="sm"
@@ -163,8 +157,8 @@ export function PropertyCard({
               Delete
             </Button>
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </Card>
   )
 }
