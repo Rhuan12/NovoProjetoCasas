@@ -9,9 +9,9 @@ module.exports = {
     extend: {
       colors: {
         background: {
-          primary: '#0a0a0a',    // Background principal
-          secondary: '#1a1a1a',  // Cards e containers
-          tertiary: '#2a2a2a',   // Hover states
+          primary: '#1a2332',    // Azul navy escuro (igual PDF)
+          secondary: '#243447',  // Azul navy médio
+          tertiary: '#2d3f54',   // Azul navy claro (hover)
         },
         text: {
           primary: '#ffffff',    // Texto principal
@@ -19,9 +19,9 @@ module.exports = {
           muted: '#6b7280',      // Texto desabilitado
         },
         accent: {
-          primary: '#3b82f6',    // Azul principal
-          hover: '#2563eb',      // Azul hover
-          light: '#60a5fa',      // Azul claro
+          primary: '#ff9500',    // 🆕 Laranja principal
+          hover: '#e68600',      // 🆕 Laranja hover
+          light: '#ffa726',      // 🆕 Laranja claro
         },
         success: '#10b981',      // Verde para status positivo
         warning: '#f59e0b',      // Amarelo para avisos

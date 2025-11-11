@@ -41,13 +41,11 @@ interface SiteSettings {
 
 export default function Home() {
   const [searchTerm, setSearchTerm] = useState('')
-  // Buscar TODAS as propriedades (sem filtro de status)
   const { properties, loading } = useProperties({})
 
   const [settings, setSettings] = useState<SiteSettings | null>(null)
   const [settingsLoading, setSettingsLoading] = useState(true)
 
-  // Fetch site settings
   useEffect(() => {
     const fetchSettings = async () => {
       try {
@@ -66,11 +64,9 @@ export default function Home() {
     fetchSettings()
   }, [])
   
-  // Filtrar apenas propriedades disponíveis para featured properties
   const availableProperties = properties.filter(p => p.status === 'available')
   const featuredProperties = availableProperties.slice(0, 6)
   
-  // Statistics - agora vai funcionar corretamente
   const availableCount = properties.filter(p => p.status === 'available').length
   const soldCount = properties.filter(p => p.status === 'sold').length
   
@@ -78,211 +74,281 @@ export default function Home() {
     <div className="min-h-screen bg-background-primary">
       <Header />
       
-      {/* Hero Section */}
-      <section className="relative">
-        {/* Background gradient */}
-        <div className="absolute inset-0 bg-gradient-to-br from-accent-primary/10 via-transparent to-accent-light/5"></div>
-        
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-32">
-          <div className="text-center">
-            {/* Credibility badge */}
-            <div className="inline-flex items-center gap-2 bg-success/10 text-success px-4 py-2 rounded-full text-sm font-medium mb-8">
-              <Award size={16} />
-              <span>Real Estate Specialists</span>
-            </div>
-            
-            {/* Main title */}
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-text-primary mb-6 leading-tight">
-              {settings?.company_name || 'McSilva & Wiggit'}
-            </h1>
-            
-            <p className="text-xl md:text-2xl text-text-secondary max-w-4xl mx-auto mb-12 leading-relaxed">
-              We guarantee your approval with just your country of origin identification.
-            </p>
-            
-            {/* Quick search */}
-            <div className="max-w-2xl mx-auto mb-12">
-              <Card className="p-2">
-                <div className="flex gap-2">
-                  <div className="relative flex-1">
-                    <Search size={20} className="absolute left-4 top-1/2 -translate-y-1/2 text-text-muted" />
-                    <input
-                      type="text"
-                      placeholder="Search by city, neighborhood or features..."
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                      className="w-full pl-12 pr-4 py-4 bg-transparent border-none text-text-primary placeholder-text-muted focus:outline-none text-lg"
-                    />
-                  </div>
-                  <Link href={`/imoveis${searchTerm ? `?search=${searchTerm}` : ''}`}>
-                    <Button size="lg" className="px-8">
-                      Search
-                    </Button>
-                  </Link>
-                </div>
-              </Card>
-            </div>
-            
-            {/* Quick statistics */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto">
-              <div className="text-center">
-                <div className="text-3xl md:text-4xl font-bold text-green-500 mb-1">
-                  {availableCount}
-                </div>
-                <div className="text-text-secondary text-sm md:text-base">
-                  Available Properties
-                </div>
-              </div>
-              
-              <div className="text-center">
-                <div className="text-3xl md:text-4xl font-bold text-red-500 mb-1">
-                  {soldCount}
-                </div>
-                <div className="text-text-secondary text-sm md:text-base font-semibold">
-                  Sold Properties
-                </div>
-              </div>
-              
-              <div className="text-center">
-                <div className="text-3xl md:text-4xl font-bold text-accent-primary mb-1">
-                  15
-                </div>
-                <div className="text-text-secondary text-sm md:text-base">
-                  Days Average
-                </div>
-              </div>
-              
-              <div className="text-center">
-                <div className="text-3xl md:text-4xl font-bold text-warning mb-1">
-                  98%
-                </div>
-                <div className="text-text-secondary text-sm md:text-base">
-                  Satisfaction
-                </div>
-              </div>
-            </div>
+      {/* HERO SECTION - IMAGEM FULL COM BORDA DECORATIVA POR CIMA */}
+      <section className="relative min-h-[85vh] flex items-center justify-center overflow-hidden">
+        {/* Background Image com Overlay - PREENCHE TODA A SEÇÃO */}
+        <div className="absolute inset-0 z-0">
+          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-background-primary z-10"></div>
+          <Image
+            src="/hero-house.jpg" 
+            alt="Dream Home"
+            fill
+            className="object-cover"
+            priority
+          />
+        </div>
+
+        {/* Borda Decorativa Laranja - OVERLAY POR CIMA */}
+        <div className="absolute inset-0 z-20 px-4 sm:px-6 lg:px-8 py-12 pointer-events-none">
+          <div className="max-w-7xl mx-auto h-full">
+            <div className="border-4 border-warning/40 rounded-[3rem] h-full"></div>
           </div>
         </div>
-      </section>
 
-      {/* Featured Properties */}
-      <section className="py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <Badge className="mb-4">Unique Opportunities</Badge>
-            <h2 className="text-3xl md:text-4xl font-bold text-text-primary mb-4">
-              Featured Properties
-            </h2>
-            <p className="text-xl text-text-secondary max-w-3xl mx-auto">
+        {/* Content Container - POR CIMA DE TUDO */}
+        <div className="relative z-30 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+          {/* Statistics Badges - Topo */}
+          <div className="flex flex-wrap justify-center gap-4 mb-12">
+            <div className="bg-background-secondary/80 backdrop-blur-sm border border-background-tertiary px-4 py-2 rounded-full">
+              <span className="text-text-primary font-semibold">{availableCount}</span>
+              <span className="text-text-secondary ml-2">Available Properties</span>
+            </div>
+            <div className="bg-background-secondary/80 backdrop-blur-sm border border-background-tertiary px-4 py-2 rounded-full">
+              <span className="text-text-primary font-semibold">{soldCount}</span>
+              <span className="text-text-secondary ml-2">Sold Properties</span>
+            </div>
+            <div className="bg-background-secondary/80 backdrop-blur-sm border border-background-tertiary px-4 py-2 rounded-full">
+              <span className="text-text-primary font-semibold">15</span>
+              <span className="text-text-secondary ml-2">Days Average</span>
+            </div>
+            <div className="bg-background-secondary/80 backdrop-blur-sm border border-background-tertiary px-4 py-2 rounded-full">
+              <span className="text-text-primary font-semibold">98%</span>
+              <span className="text-text-secondary ml-2">Satisfaction</span>
+            </div>
+          </div>
+
+          {/* Main Headline - TODO BRANCO */}
+          <div className="text-center mb-12">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
+              We guarantee<br />
+              your approval<br />
+              with just your country<br />
+              of origin identification.
+            </h1>
+            
+            <p className="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto">
               Imagine being able to buy your own home with just $5,000 down payment.
             </p>
           </div>
 
-          {loading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {Array.from({ length: 6 }).map((_, index) => (
-                <div key={index} className="animate-pulse">
-                  <Card className="overflow-hidden">
-                    <div className="h-64 bg-background-tertiary"></div>
-                    <div className="p-6 space-y-4">
-                      <div className="h-4 bg-background-tertiary rounded w-3/4"></div>
-                      <div className="h-3 bg-background-tertiary rounded w-1/2"></div>
-                      <div className="h-6 bg-background-tertiary rounded w-1/3"></div>
-                    </div>
-                  </Card>
+          {/* Search Bar */}
+          <Card className="max-w-5xl mx-auto p-4 bg-background-secondary/95 backdrop-blur-sm border-accent-primary/20">
+            <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
+              {/* Property Location */}
+              <div className="md:col-span-1">
+                <div className="relative">
+                  <MapPin size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted pointer-events-none" />
+                  <select className="w-full pl-10 pr-3 py-3 bg-background-tertiary border border-background-tertiary rounded-lg text-text-primary focus:outline-none focus:ring-2 focus:ring-accent-primary appearance-none cursor-pointer">
+                    <option>Property Location</option>
+                    <option>Kansas City</option>
+                    <option>Independence</option>
+                    <option>Lee&apos;s Summit</option>
+                  </select>
                 </div>
-              ))}
-            </div>
-          ) : (
-            <>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-                {featuredProperties.map((property) => (
-                  <PropertyCard key={property.id} property={property} />
-                ))}
               </div>
 
-              <div className="text-center">
-                <Link href="/imoveis">
-                  <Button size="lg" variant="outline" className="gap-2">
-                    View All Properties
-                    <ArrowRight size={16} />
+              {/* Property Type */}
+              <div className="md:col-span-1">
+                <div className="relative">
+                  <Building size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted pointer-events-none" />
+                  <select className="w-full pl-10 pr-3 py-3 bg-background-tertiary border border-background-tertiary rounded-lg text-text-primary focus:outline-none focus:ring-2 focus:ring-accent-primary appearance-none cursor-pointer">
+                    <option>Property Type</option>
+                    <option>House</option>
+                    <option>Apartment</option>
+                    <option>Condo</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Listing Status */}
+              <div className="md:col-span-1">
+                <div className="relative">
+                  <TrendingUp size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted pointer-events-none" />
+                  <select className="w-full pl-10 pr-3 py-3 bg-background-tertiary border border-background-tertiary rounded-lg text-text-primary focus:outline-none focus:ring-2 focus:ring-accent-primary appearance-none cursor-pointer">
+                    <option>Listing Status</option>
+                    <option>Available</option>
+                    <option>Sold</option>
+                    <option>Reserved</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Set Value */}
+              <div className="md:col-span-1">
+                <div className="relative">
+                  <DollarSign size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted pointer-events-none" />
+                  <input
+                    type="text"
+                    placeholder="Max Price"
+                    className="w-full pl-10 pr-3 py-3 bg-background-tertiary border border-background-tertiary rounded-lg text-text-primary placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-accent-primary"
+                  />
+                </div>
+              </div>
+
+              {/* Search Button */}
+              <div className="md:col-span-1">
+                <Link href="/imoveis" className="block">
+                  <Button className="w-full h-full bg-accent-primary hover:bg-accent-hover text-white font-semibold flex items-center justify-center gap-2">
+                    <Search size={18} />
+                    Search
                   </Button>
                 </Link>
               </div>
-            </>
-          )}
+            </div>
+          </Card>
         </div>
       </section>
 
-      {/* Testimonials */}
-      <TestimonialsSection />
+      {/* FEATURED PROPERTIES - COM BORDA DECORATIVA */}
+      <section className="py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          {/* Borda decorativa laranja */}
+          <div className="border-4 border-warning/40 rounded-[3rem] p-8 md:p-12">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl md:text-4xl font-bold text-accent-primary mb-4">
+                Featured Properties
+              </h2>
+              <p className="text-xl text-text-secondary max-w-3xl mx-auto">
+                Imagine being able to buy your own home with just $5,000 down payment.
+              </p>
+            </div>
 
+            {loading ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {Array.from({ length: 6 }).map((_, index) => (
+                  <div key={index} className="animate-pulse">
+                    <Card className="overflow-hidden">
+                      <div className="h-64 bg-background-tertiary"></div>
+                      <div className="p-6 space-y-4">
+                        <div className="h-4 bg-background-tertiary rounded w-3/4"></div>
+                        <div className="h-3 bg-background-tertiary rounded w-1/2"></div>
+                        <div className="h-6 bg-background-tertiary rounded w-1/3"></div>
+                      </div>
+                    </Card>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+                  {featuredProperties.map((property) => (
+                    <PropertyCard key={property.id} property={property} />
+                  ))}
+                </div>
+
+                <div className="text-center">
+                  <Link href="/imoveis">
+                    <Button size="lg" variant="outline" className="gap-2">
+                      View All Properties
+                      <ArrowRight size={16} />
+                    </Button>
+                  </Link>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      </section>
+
+      {/* WHO WE ARE */}
       <AboutOwners />
 
-      {/* Final CTA */}
-      <section className="py-20 bg-gradient-to-r from-accent-primary to-accent-light">
+      {/* TESTIMONIALS */}
+      <TestimonialsSection />
+
+      {/* FINAL CTA */}
+      <section className="py-20" style={{ backgroundColor: '#1a2e44' }}>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-            Ready to Find Your Dream Home?
+          <div className="mb-8">
+            <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center mx-auto mb-6">
+              <Building size={40} style={{ color: '#1a2e44' }} />
+            </div>
+          </div>
+
+          <h2 className="text-3xl md:text-4xl font-bold text-warning mb-6">
+            Ready to Find<br />
+            Your Dream Home?
           </h2>
           <p className="text-xl text-white/90 mb-10">
             Contact us now and discover how we can help you achieve the dream of homeownership.
           </p>
-          
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Button 
-              size="lg" 
-              className=""
-              onClick={() => {
-                const phone = settings?.contact_phone?.replace(/\D/g, '') || '18168901804'
-                window.open(`https://wa.me/${phone}`, '_blank')
-              }}
+
+          <div className="inline-flex flex-col sm:flex-row items-center gap-3 border-2 border-white/30 rounded-full p-2">
+            <a
+              href="https://wa.me/18168901804"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-2 bg-warning text-white px-6 py-3 rounded-full font-semibold hover:bg-warning/90 transition-colors w-full sm:w-auto"
             >
-              <MessageCircle size={20} />
-              WhatsApp: {settings?.contact_phone || '+1 (816) 890-1804'}
-            </Button>
-            
-            <Button 
-              size="lg" 
-              variant="outline" 
-              className="border-white text-white hover:bg-white/10 gap-2"
-              onClick={() => {
-                const phone = settings?.contact_phone?.replace(/\D/g, '') || '18168901804'
-                window.open(`tel:+${phone}`, '_self')
-              }}
+              <MessageCircle size={18} />
+              WhatsApp: +1 (816) 890-1804
+            </a>
+            <a
+              href="tel:+18168901804"
+              className="inline-flex items-center justify-center gap-2 bg-warning text-white px-6 py-3 rounded-full font-semibold hover:bg-warning/90 transition-colors w-full sm:w-auto"
             >
-              <Phone size={20} />
+              <Phone size={18} />
               Call Now
-            </Button>
+            </a>
           </div>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-background-secondary border-t border-background-tertiary py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div>
-              <h4 className="font-semibold text-text-primary mb-4">Contact</h4>
-              <div className="space-y-3">
-                <div className="flex items-center gap-2 text-text-secondary">
+      {/* FOOTER - ESTILO PDF */}
+      <footer className="relative py-12 px-4 sm:px-6 lg:px-8 overflow-hidden" style={{ backgroundColor: '#1a2e44' }}>
+        {/* Bordas decorativas arredondadas */}
+        <div className="absolute top-0 left-0 w-48 h-48 border-4 border-white/10 rounded-[3rem] -translate-x-24 -translate-y-24"></div>
+        <div className="absolute bottom-0 right-0 w-64 h-64 border-4 border-white/10 rounded-[3rem] translate-x-32 translate-y-32"></div>
+        
+        <div className="max-w-7xl mx-auto relative z-10">
+          {/* Top section - Inline horizontal */}
+          <div className="flex flex-col md:flex-row items-center justify-between gap-8 mb-12 pb-12 border-b border-white/10">
+            {/* Contact Info Inline */}
+            <div className="flex flex-col md:flex-row items-center gap-6 text-white/90">
+              <div className="text-center md:text-left">
+                <p className="text-sm font-semibold mb-1">Contact</p>
+                <div className="flex items-center gap-2">
                   <Phone size={16} />
-                  <span>{settings?.contact_phone || '+1 (816) 890-1804'}</span>
+                  <span>+1 (816) 890-1804</span>
                 </div>
-                <div className="flex items-center gap-2 text-text-secondary">
-                  <Mail size={16} />
-                  <span>{settings?.contact_email || 'contact@realestate.com'}</span>
+              </div>
+              
+              <div className="hidden md:block w-px h-12 bg-white/20"></div>
+              
+              <div className="flex items-center gap-2">
+                <Mail size={16} />
+                <span>marketingmwhomes@gmail.com</span>
+              </div>
+              
+              <div className="hidden md:block w-px h-12 bg-white/20"></div>
+              
+              <div className="flex items-center gap-2">
+                <MapPin size={16} />
+                <span>800 E 101st Terrace</span>
+              </div>
+            </div>
+
+            {/* Logo */}
+            <div className="text-white">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center">
+                  <Building size={24} className="text-warning" />
                 </div>
-                <div className="flex items-center gap-2 text-text-secondary">
-                  <MapPin size={16} />
-                  <span>{settings?.contact_address || 'Fortaleza, CE'}</span>
+                <div>
+                  <h3 className="text-xl font-bold text-warning">MCSILVA & WIGGIT</h3>
+                  <p className="text-xs text-white/60">Making dreams come true since 2014</p>
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="border-t border-background-tertiary mt-12 pt-8 text-center text-text-muted">
-            <p>&copy; 2024 {settings?.company_name || 'Premium Real Estate'}. All rights reserved.</p>
+          {/* Copyright - Centralizado em caixa */}
+          <div className="max-w-xl mx-auto">
+            <div className="border-2 border-white/20 rounded-2xl px-6 py-4 text-center">
+              <p className="text-white/80 text-sm">
+                © 2024 McSilva & Wiggit. All rights reserved.
+              </p>
+            </div>
           </div>
         </div>
       </footer>
