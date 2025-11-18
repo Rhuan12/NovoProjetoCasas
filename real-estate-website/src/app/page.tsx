@@ -122,12 +122,10 @@ export default function Home() {
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
               We guarantee<br />
               your approval<br />
-              with just your country<br />
-              of origin identification.
             </h1>
             
             <p className="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto">
-              Imagine being able to buy your own home with just $5,000 down payment.
+              with just your country of origin identification.
             </p>
           </div>
 
