@@ -97,6 +97,18 @@ export default function Home() {
 
         {/* Content Container - POR CIMA DE TUDO */}
         <div className="relative z-30 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+          {/* Main Headline - TODO BRANCO */}
+          <div className="text-center mb-12">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
+              We guarantee<br />
+              your approval<br />
+            </h1>
+            
+            <p className="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto">
+              with just your country of origin identification
+            </p>
+          </div>
+
           {/* Statistics Badges - Topo */}
           <div className="flex flex-wrap justify-center gap-4 mb-12">
             <div className="bg-background-secondary/80 backdrop-blur-sm border border-background-tertiary px-4 py-2 rounded-full">
@@ -116,84 +128,6 @@ export default function Home() {
               <span className="text-text-secondary ml-2">Satisfaction</span>
             </div>
           </div>
-
-          {/* Main Headline - TODO BRANCO */}
-          <div className="text-center mb-12">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
-              We guarantee<br />
-              your approval<br />
-            </h1>
-            
-            <p className="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto">
-              with just your country of origin identification
-            </p>
-          </div>
-
-          {/* Search Bar */}
-          <Card className="max-w-5xl mx-auto p-4 bg-background-secondary/95 backdrop-blur-sm border-accent-primary/20">
-            <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
-              {/* Property Location */}
-              <div className="md:col-span-1">
-                <div className="relative">
-                  <MapPin size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted pointer-events-none" />
-                  <select className="w-full pl-10 pr-3 py-3 bg-background-tertiary border border-background-tertiary rounded-lg text-text-primary focus:outline-none focus:ring-2 focus:ring-accent-primary appearance-none cursor-pointer">
-                    <option>Property Location</option>
-                    <option>Kansas City</option>
-                    <option>Independence</option>
-                    <option>Lee&apos;s Summit</option>
-                  </select>
-                </div>
-              </div>
-
-              {/* Property Type */}
-              <div className="md:col-span-1">
-                <div className="relative">
-                  <Building size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted pointer-events-none" />
-                  <select className="w-full pl-10 pr-3 py-3 bg-background-tertiary border border-background-tertiary rounded-lg text-text-primary focus:outline-none focus:ring-2 focus:ring-accent-primary appearance-none cursor-pointer">
-                    <option>Property Type</option>
-                    <option>House</option>
-                    <option>Apartment</option>
-                    <option>Condo</option>
-                  </select>
-                </div>
-              </div>
-
-              {/* Listing Status */}
-              <div className="md:col-span-1">
-                <div className="relative">
-                  <TrendingUp size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted pointer-events-none" />
-                  <select className="w-full pl-10 pr-3 py-3 bg-background-tertiary border border-background-tertiary rounded-lg text-text-primary focus:outline-none focus:ring-2 focus:ring-accent-primary appearance-none cursor-pointer">
-                    <option>Listing Status</option>
-                    <option>Available</option>
-                    <option>Sold</option>
-                    <option>Reserved</option>
-                  </select>
-                </div>
-              </div>
-
-              {/* Set Value */}
-              <div className="md:col-span-1">
-                <div className="relative">
-                  <DollarSign size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted pointer-events-none" />
-                  <input
-                    type="text"
-                    placeholder="Max Price"
-                    className="w-full pl-10 pr-3 py-3 bg-background-tertiary border border-background-tertiary rounded-lg text-text-primary placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-accent-primary"
-                  />
-                </div>
-              </div>
-
-              {/* Search Button */}
-              <div className="md:col-span-1">
-                <Link href="/imoveis" className="block">
-                  <Button className="w-full h-full bg-accent-primary hover:bg-accent-hover text-white font-semibold flex items-center justify-center gap-2">
-                    <Search size={18} />
-                    Search
-                  </Button>
-                </Link>
-              </div>
-            </div>
-          </Card>
         </div>
       </section>
 
