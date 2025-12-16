@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import Image from 'next/image'
 import { Property } from '@/lib/supabase'
 import { Card, Button, Badge } from '@/components/ui/Button'
@@ -53,6 +53,14 @@ export function PhotoUploadInterface({ property, onPhotosUpdate }: PhotoUploadIn
     photo_19: useRef<HTMLInputElement>(null),
     photo_20: useRef<HTMLInputElement>(null)
   }
+
+  useEffect(() => {
+    return () => {
+      Object.values(pendingUploads).forEach(({ preview }) => {
+        URL.revokeObjectURL(preview)
+      })
+    }
+  }, [pendingUploads])
 
   const uploadSlots: UploadSlot[] = [
     {
@@ -176,40 +184,6 @@ export function PhotoUploadInterface({ property, onPhotosUpdate }: PhotoUploadIn
       currentUrl: property.photo_20_url
     }
   ]
-
-  const uploadPhoto = async (photoType: 'main' | 'photo_2' | 'photo_3' | 'photo_4' | 'photo_5' | 'photo_6' | 'photo_7' | 'photo_8' | 'photo_9' | 'photo_10' | 'photo_11' | 'photo_12' | 'photo_13' | 'photo_14' | 'photo_15' | 'photo_16' | 'photo_17' | 'photo_18' | 'photo_19' | 'photo_20', file: File) => {
-    try {
-      setUploading(photoType)
-      setUploadError(null)
-
-      const formData = new FormData()
-      formData.append('file', file)
-      formData.append('propertyId', property.id)
-      formData.append('photoType', photoType)
-
-      const response = await fetch('/api/upload', {
-        method: 'POST',
-        body: formData,
-      })
-
-      if (!response.ok) {
-        const errorData = await response.json()
-        throw new Error(errorData.error || 'Erro no upload')
-      }
-
-      setUploadResults(prev => ({ ...prev, [photoType]: 'success' }))
-      
-      setTimeout(() => {
-        onPhotosUpdate()
-      }, 1000)
-
-    } catch (error) {
-      setUploadResults(prev => ({ ...prev, [photoType]: 'error' }))
-      setUploadError(error instanceof Error ? error.message : 'Erro no upload')
-    } finally {
-      setUploading(null)
-    }
-  }
 
   const handleFileSelect = (photoType: 'main' | 'photo_2' | 'photo_3' | 'photo_4' | 'photo_5' | 'photo_6' | 'photo_7' | 'photo_8' | 'photo_9' | 'photo_10' | 'photo_11' | 'photo_12' | 'photo_13' | 'photo_14' | 'photo_15' | 'photo_16' | 'photo_17' | 'photo_18' | 'photo_19' | 'photo_20', files: FileList | null) => {
     if (!files || files.length === 0) return
@@ -345,6 +319,7 @@ export function PhotoUploadInterface({ property, onPhotosUpdate }: PhotoUploadIn
 
   const completedPhotos = uploadSlots.filter(slot => slot.currentUrl).length
   const totalPhotos = uploadSlots.length
+  const pendingCount = Object.keys(pendingUploads).length
 
   return (
     <div className="space-y-6">
@@ -465,14 +440,27 @@ export function PhotoUploadInterface({ property, onPhotosUpdate }: PhotoUploadIn
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-3">
                   <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
-                    slot.currentUrl 
-                      ? 'bg-success text-white' 
+                    uploadResult === 'success' 
+                      ? 'bg-success text-white'
+                      : uploadResult === 'error'
+                      ? 'bg-danger text-white'
+                      : pendingUploads[slot.type]
+                      ? 'bg-warning text-white'
+                      : slot.currentUrl 
+                      ? 'bg-accent-primary text-white'
                       : 'bg-background-tertiary text-text-muted'
                   }`}>
-                    {slot.priority}
+                    {uploadResult === 'success' ? '✓' : 
+                     uploadResult === 'error' ? '✗' : 
+                     slot.priority}
                   </div>
                   <div>
                     <h3 className="font-semibold text-text-primary">{slot.label}</h3>
+                    {pendingUploads[slot.type] && (
+                      <p className="text-xs text-warning mt-0.5">
+                        📎 Nova foto selecionada
+                      </p>
+                    )}
                     <p className="text-sm text-text-muted">
                       {slot.type === 'main' && 'Imagem principal que aparece nas listagens'}
                       {slot.type === 'photo_2' && 'Segunda imagem para detalhes'}
@@ -606,10 +594,10 @@ export function PhotoUploadInterface({ property, onPhotosUpdate }: PhotoUploadIn
                     variant="outline"
                     className="w-full mt-3"
                     onClick={() => fileInputRefs[slot.type].current?.click()}
-                    disabled={isUploading}
+                    disabled={isUploadingAll}
                   >
                     <Upload size={16} className="mr-2" />
-                    Selecionar Arquivo
+                    {pendingUploads[slot.type] ? 'Trocar Seleção' : 'Selecionar Arquivo'}
                   </Button>
 
                   {/* Hidden File Input */}
@@ -635,7 +623,8 @@ export function PhotoUploadInterface({ property, onPhotosUpdate }: PhotoUploadIn
         <div className="flex items-center justify-between">
           <div>
             <h3 className="font-semibold text-text-primary mb-1">
-              Status do Upload: {completedPhotos}/20 fotos enviadas
+              Status: {completedPhotos}/20 fotos enviadas
+              {pendingCount > 0 && ` • ${pendingCount} pendente(s)`}
             </h3>
             <p className="text-text-secondary text-sm">
               {completedPhotos === 0 && 'Envie a primeira foto para começar'}
