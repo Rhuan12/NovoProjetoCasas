@@ -19,10 +19,17 @@ interface UploadSlot {
   currentUrl: string | null
 }
 
+interface PendingUpload {
+  file: File
+  preview: string
+}
+
 export function PhotoUploadInterface({ property, onPhotosUpdate }: PhotoUploadInterfaceProps) {
   const [uploading, setUploading] = useState<string | null>(null)
   const [uploadResults, setUploadResults] = useState<Record<string, 'success' | 'error'>>({})
   const [uploadError, setUploadError] = useState<string | null>(null)
+  const [pendingUploads, setPendingUploads] = useState<Record<string, PendingUpload>>({})
+  const [isUploadingAll, setIsUploadingAll] = useState(false)
   
   const fileInputRefs = {
     main: useRef<HTMLInputElement>(null),
@@ -221,7 +228,16 @@ export function PhotoUploadInterface({ property, onPhotosUpdate }: PhotoUploadIn
       return
     }
 
-    uploadPhoto(photoType, file)
+    // Criar preview da imagem
+    const preview = URL.createObjectURL(file)
+    
+    // Adicionar à lista de uploads pendentes
+    setPendingUploads(prev => ({
+      ...prev,
+      [photoType]: { file, preview }
+    }))
+    
+    setUploadError(null)
   }
 
   const handleDrop = (e: React.DragEvent, photoType: 'main' | 'photo_2' | 'photo_3' | 'photo_4' | 'photo_5' | 'photo_6' | 'photo_7' | 'photo_8' | 'photo_9' | 'photo_10' | 'photo_11' | 'photo_12' | 'photo_13' | 'photo_14' | 'photo_15' | 'photo_16' | 'photo_17' | 'photo_18' | 'photo_19' | 'photo_20') => {
@@ -231,6 +247,78 @@ export function PhotoUploadInterface({ property, onPhotosUpdate }: PhotoUploadIn
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault()
+  }
+
+  const removePendingUpload = (photoType: string) => {
+    setPendingUploads(prev => {
+      const newPending = { ...prev }
+      // Liberar o preview da memória
+      if (newPending[photoType]) {
+        URL.revokeObjectURL(newPending[photoType].preview)
+      }
+      delete newPending[photoType]
+      return newPending
+    })
+  }
+
+  const uploadAllPhotos = async () => {
+    const photosToUpload = Object.entries(pendingUploads)
+    
+    if (photosToUpload.length === 0) {
+      setUploadError('Nenhuma foto selecionada para upload.')
+      return
+    }
+
+    setIsUploadingAll(true)
+    setUploadError(null)
+    
+    let successCount = 0
+    let errorCount = 0
+
+    for (const [photoType, { file }] of photosToUpload) {
+      try {
+        setUploading(photoType)
+        
+        const formData = new FormData()
+        formData.append('file', file)
+        formData.append('propertyId', property.id)
+        formData.append('photoType', photoType)
+
+        const response = await fetch('/api/upload', {
+          method: 'POST',
+          body: formData,
+        })
+
+        if (!response.ok) {
+          const errorData = await response.json()
+          throw new Error(errorData.error || 'Erro no upload')
+        }
+
+        setUploadResults(prev => ({ ...prev, [photoType]: 'success' }))
+        successCount++
+        
+        // Limpar preview da memória
+        URL.revokeObjectURL(pendingUploads[photoType].preview)
+        
+      } catch (error) {
+        setUploadResults(prev => ({ ...prev, [photoType]: 'error' }))
+        errorCount++
+        console.error(`Erro ao fazer upload de ${photoType}:`, error)
+      } finally {
+        setUploading(null)
+      }
+    }
+
+    setIsUploadingAll(false)
+    setPendingUploads({})
+    
+    if (errorCount === 0) {
+      setTimeout(() => {
+        onPhotosUpdate()
+      }, 1500)
+    } else {
+      setUploadError(`Upload concluído com ${successCount} sucesso(s) e ${errorCount} erro(s).`)
+    }
   }
 
   const getStatusBadge = () => {
@@ -332,6 +420,40 @@ export function PhotoUploadInterface({ property, onPhotosUpdate }: PhotoUploadIn
         </Card>
       )}
 
+      {/* Botão de Upload de Todas as Fotos */}
+      {Object.keys(pendingUploads).length > 0 && (
+        <Card className="p-6 bg-accent-primary/5 border-accent-primary/20">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="font-semibold text-text-primary mb-1">
+                {Object.keys(pendingUploads).length} foto(s) selecionada(s)
+              </h3>
+              <p className="text-text-secondary text-sm">
+                Clique no botão para fazer upload de todas as fotos
+              </p>
+            </div>
+            
+            <Button
+              onClick={uploadAllPhotos}
+              disabled={isUploadingAll}
+              className="gap-2"
+            >
+              {isUploadingAll ? (
+                <>
+                  <RefreshCw size={16} className="animate-spin" />
+                  Fazendo Upload...
+                </>
+              ) : (
+                <>
+                  <Upload size={16} />
+                  Fazer Upload de Todas
+                </>
+              )}
+            </Button>
+          </div>
+        </Card>
+      )}
+
       {/* Upload Slots */}
       <div className="grid grid-cols-1 gap-6">
         {uploadSlots.map((slot) => {
@@ -387,8 +509,40 @@ export function PhotoUploadInterface({ property, onPhotosUpdate }: PhotoUploadIn
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Current Photo */}
                 <div>
-                  <h4 className="text-sm font-medium text-text-primary mb-3">Foto Atual</h4>
-                  {slot.currentUrl ? (
+                  <h4 className="text-sm font-medium text-text-primary mb-3">
+                    {pendingUploads[slot.type] ? 'Preview da Nova Foto' : 'Foto Atual'}
+                  </h4>
+                  
+                  {pendingUploads[slot.type] ? (
+                    <div className="relative aspect-video rounded-lg overflow-hidden bg-background-tertiary">
+                      <Image
+                        src={pendingUploads[slot.type].preview}
+                        alt={`Preview ${slot.label}`}
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 768px) 100vw, 50vw"
+                      />
+                      <div className="absolute top-2 right-2">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="bg-white/90 hover:bg-white"
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            removePendingUpload(slot.type)
+                          }}
+                        >
+                          <AlertCircle size={14} className="mr-1" />
+                          Remover
+                        </Button>
+                      </div>
+                      <div className="absolute bottom-2 left-2">
+                        <Badge className="bg-warning text-white">
+                          Aguardando upload
+                        </Badge>
+                      </div>
+                    </div>
+                  ) : slot.currentUrl ? (
                     <div className="relative aspect-video rounded-lg overflow-hidden bg-background-tertiary">
                       <Image
                         src={slot.currentUrl}
