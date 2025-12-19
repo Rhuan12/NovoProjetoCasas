@@ -21,14 +21,19 @@ export default function ImoveisPage() {
     status: 'available' // Default: show only available properties
   })
 
+  // Buscar propriedades filtradas para o grid
   const { properties, loading, error } = useProperties(filters)
 
-  // Quick statistics
-  const availableCount = properties.filter(p => p.status === 'available').length
-  const soldCount = properties.filter(p => p.status === 'sold').length
+  // Buscar TODAS as propriedades (sem filtros) para os indicadores
+  const { properties: allProperties } = useProperties({})
+
+  // Quick statistics - usando TODAS as propriedades
+  const availableCount = allProperties.filter(p => p.status === 'available').length
+  const soldCount = allProperties.filter(p => p.status === 'sold').length
+  const reservedCount = allProperties.filter(p => p.status === 'reserved').length
   const averageDaysToSell = soldCount > 0 
     ? Math.round(
-        properties
+        allProperties
           .filter(p => p.status === 'sold' && p.days_to_sell)
           .reduce((acc, p) => acc + (p.days_to_sell || 0), 0) / soldCount
       )
@@ -88,7 +93,7 @@ export default function ImoveisPage() {
           <Badge 
             variant={filters.status === 'reserved' ? 'warning' : 'default'}
           >
-            {properties.filter(p => p.status === 'reserved').length} Reserved
+            {reservedCount} Reserved
           </Badge>
         </div>
 
