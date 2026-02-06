@@ -26,6 +26,7 @@ import {
 import Link from 'next/link'
 import Image from 'next/image'
 import { TestimonialsSection } from '@/components/TestimonialsSection'
+import { FeaturedCarousel } from '@/components/FeaturedCarousel'
 
 interface SiteSettings {
   owner_name: string
@@ -131,12 +132,12 @@ export default function Home() {
         </div>
       </section>
 
-      {/* FEATURED PROPERTIES - COM BORDA DECORATIVA */}
+      {/* FEATURED PROPERTIES - CARROSSEL */}
       <section className="py-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-2xl mx-auto">
           {/* Borda decorativa laranja */}
           <div className="border-4 border-warning/40 rounded-[3rem] p-8 md:p-12">
-            <div className="text-center mb-16">
+            <div className="text-center mb-10">
               <h2 className="text-3xl md:text-4xl font-bold text-accent-primary mb-4">
                 Featured Properties
               </h2>
@@ -145,38 +146,18 @@ export default function Home() {
               </p>
             </div>
 
-            {loading ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {Array.from({ length: 6 }).map((_, index) => (
-                  <div key={index} className="animate-pulse">
-                    <Card className="overflow-hidden">
-                      <div className="h-64 bg-background-tertiary"></div>
-                      <div className="p-6 space-y-4">
-                        <div className="h-4 bg-background-tertiary rounded w-3/4"></div>
-                        <div className="h-3 bg-background-tertiary rounded w-1/2"></div>
-                        <div className="h-6 bg-background-tertiary rounded w-1/3"></div>
-                      </div>
-                    </Card>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-                  {featuredProperties.map((property) => (
-                    <PropertyCard key={property.id} property={property} />
-                  ))}
-                </div>
+            <FeaturedCarousel properties={featuredProperties} loading={loading} />
 
-                <div className="text-center">
-                  <Link href="/imoveis">
-                    <Button size="lg" variant="outline" className="gap-2">
-                      View All Properties
-                      <ArrowRight size={16} />
-                    </Button>
-                  </Link>
-                </div>
-              </>
+            {/* Botão "Ver todos" — só aparece se houver imóveis */}
+            {!loading && featuredProperties.length > 0 && (
+              <div className="text-center mt-8">
+                <Link href="/imoveis">
+                  <Button size="lg" variant="outline" className="gap-2">
+                    View All Properties
+                    <ArrowRight size={16} />
+                  </Button>
+                </Link>
+              </div>
             )}
           </div>
         </div>
@@ -189,11 +170,11 @@ export default function Home() {
       <TestimonialsSection />
 
       {/* FINAL CTA */}
-      <section className="py-20" style={{ backgroundColor: '#1a2e44' }}>
+      <section className="py-20" style={{ backgroundColor: '#000000' }}>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="mb-8">
             <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center mx-auto mb-6">
-              <Building size={40} style={{ color: '#1a2e44' }} />
+              <Building size={40} style={{ color: '#000000' }} />
             </div>
           </div>
 
@@ -227,7 +208,7 @@ export default function Home() {
       </section>
 
       {/* FOOTER - ESTILO PDF MELHORADO */}
-      <footer className="relative py-16 px-4 sm:px-6 lg:px-8 overflow-hidden" style={{ backgroundColor: '#1a2e44' }}>
+      <footer className="relative py-16 px-4 sm:px-6 lg:px-8 overflow-hidden" style={{ backgroundColor: '#000000' }}>
         {/* Bordas decorativas arredondadas */}
         <div className="absolute top-0 left-0 w-48 h-48 border-4 border-white/10 rounded-[3rem] -translate-x-24 -translate-y-24"></div>
         <div className="absolute bottom-0 right-0 w-64 h-64 border-4 border-white/10 rounded-[3rem] translate-x-32 translate-y-32"></div>

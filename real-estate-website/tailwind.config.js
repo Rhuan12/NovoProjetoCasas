@@ -9,9 +9,9 @@ module.exports = {
     extend: {
       colors: {
         background: {
-          primary: '#1a2332',    // Azul navy escuro (igual PDF)
-          secondary: '#243447',  // Azul navy médio
-          tertiary: '#2d3f54',   // Azul navy claro (hover)
+          primary: '#000000',    // Preto principal
+          secondary: '#111111',  // Preto médio
+          tertiary: '#1a1a1a',   // Preto claro (hover)
         },
         text: {
           primary: '#ffffff',    // Texto principal
