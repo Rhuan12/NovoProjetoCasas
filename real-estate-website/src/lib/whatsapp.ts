@@ -8,7 +8,7 @@
 export const WHATSAPP_CONFIG = {
   // Número no formato internacional (código país + DDD + número)
   // Sem espaços, hífens, parênteses ou outros caracteres
-  number: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '5585991288998',
+  number: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '18168901804',
   
   // Mensagem padrão se não for especificada
   defaultMessage: 'Olá! Vim através do site e gostaria de mais informações.',
