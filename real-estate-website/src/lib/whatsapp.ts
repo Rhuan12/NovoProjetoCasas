@@ -3,7 +3,7 @@
 /**
  * Configuração do WhatsApp
  * ⚠️ IMPORTANTE: Adicione no .env.local:
- * NEXT_PUBLIC_WHATSAPP_NUMBER=5585991288998
+ * NEXT_PUBLIC_WHATSAPP_NUMBER=18168901804
  */
 export const WHATSAPP_CONFIG = {
   // Número no formato internacional (código país + DDD + número)
