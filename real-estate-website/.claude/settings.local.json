@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep -n \"accent-primary\\\\|accent-hover\\\\|accent-light\\\\|#ff9500\\\\|#e68600\\\\|#ffa726\" /c/Users/User/Documents/Projetos-Trabalhos/NovoProjetoCasas/real-estate-website/src/app/admin/imoveis/[id]/editar/page.tsx)"
+    ]
+  }
+}

@@ -19,12 +19,12 @@ module.exports = {
           muted: '#6b7280',      // Texto desabilitado
         },
         accent: {
-          primary: '#ff9500',    // 🆕 Laranja principal
-          hover: '#e68600',      // 🆕 Laranja hover
-          light: '#ffa726',      // 🆕 Laranja claro
+          primary: '#f7cb00',    // Amarelo principal
+          hover: '#d4ae00',      // Amarelo hover (mais escuro)
+          light: '#f9d633',      // Amarelo claro
         },
         success: '#10b981',      // Verde para status positivo
-        warning: '#f59e0b',      // Amarelo para avisos
+        warning: '#f7cb00',      // Amarelo para avisos
         danger: '#ef4444',       // Vermelho para erros
         sold: '#6b7280',         // Cinza para imóveis vendidos
       },

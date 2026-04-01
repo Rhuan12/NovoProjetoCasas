@@ -18,9 +18,10 @@ interface Owner {
 
 interface AboutOwnersProps {
   className?: string
+  showHeader?: boolean
 }
 
-export function AboutOwners({ className = '' }: AboutOwnersProps) {
+export function AboutOwners({ className = '', showHeader = true }: AboutOwnersProps) {
   const [owners, setOwners] = useState<Owner[]>([])
   const [loading, setLoading] = useState(true)
 
@@ -77,14 +78,16 @@ export function AboutOwners({ className = '' }: AboutOwnersProps) {
     <section className={`py-20 bg-background-primary ${className}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-accent-primary mb-4">
-            Who We Are
-          </h2>
-          <p className="text-xl text-text-secondary max-w-3xl mx-auto">
-            A story of dedication, professionalism and commitment to making dreams come true.
-          </p>
-        </div>
+        {showHeader && (
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-accent-primary mb-4">
+              Who We Are
+            </h2>
+            <p className="text-xl text-text-secondary max-w-3xl mx-auto">
+              A story of dedication, professionalism and commitment to making dreams come true.
+            </p>
+          </div>
+        )}
 
         {/* Owners Grid - ESTILO PDF COM FUNDO LARANJA */}
         <div className={`grid ${getGridCols()} gap-8 mb-16`}>

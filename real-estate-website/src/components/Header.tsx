@@ -5,13 +5,13 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { Button } from '@/components/ui/Button'
-import { 
-  Menu, 
-  X, 
-  Phone, 
+import {
+  Menu,
+  X,
+  Phone,
   MessageCircle,
   Home,
-  Search
+  Users
 } from 'lucide-react'
 
 export function Header() {
@@ -36,11 +36,11 @@ export function Header() {
       icon: Home,
       description: 'Homepage'
     },
-    { 
-      href: '/imoveis', 
-      label: 'Properties', 
-      icon: Search,
-      description: 'View all properties'
+    {
+      href: '/who-we-are',
+      label: 'Who we are',
+      icon: Users,
+      description: 'Meet our team'
     }
   ]
 
