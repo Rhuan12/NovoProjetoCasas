@@ -106,7 +106,7 @@ export function AboutOwners({ className = '', showHeader = true }: AboutOwnersPr
                 {/* Photo - Grande e centralizada */}
                 <div className="mb-6">
                   {owner.photo_url ? (
-                    <div className="relative w-40 h-40 rounded-2xl overflow-hidden ring-4 ring-white shadow-xl">
+                    <div className="relative w-40 h-40 rounded-2xl overflow-hidden ring-4 ring-black shadow-xl">
                       <Image
                         src={owner.photo_url}
                         alt={owner.name}
@@ -116,8 +116,8 @@ export function AboutOwners({ className = '', showHeader = true }: AboutOwnersPr
                       />
                     </div>
                   ) : (
-                    <div className="w-40 h-40 rounded-2xl bg-white/20 flex items-center justify-center ring-4 ring-white shadow-xl">
-                      <span className="text-6xl text-white font-bold">
+                    <div className="w-40 h-40 rounded-2xl bg-white/20 flex items-center justify-center ring-4 ring-black shadow-xl">
+                      <span className="text-6xl text-black font-bold">
                         {owner.name.charAt(0)}
                       </span>
                     </div>
@@ -126,7 +126,7 @@ export function AboutOwners({ className = '', showHeader = true }: AboutOwnersPr
                 
                 {/* Name & Role */}
                 <div className="mb-4">
-                  <h3 className="text-2xl font-bold text-white mb-2">
+                  <h3 className="text-2xl font-bold text-black mb-2">
                     {owner.name}
                   </h3>
                   <div className="inline-block bg-white/90 px-4 py-1 rounded-full">
@@ -138,7 +138,7 @@ export function AboutOwners({ className = '', showHeader = true }: AboutOwnersPr
                 
                 {/* Bio */}
                 {owner.bio && (
-                  <p className="text-white/90 text-sm leading-relaxed max-w-md">
+                  <p className="text-black/80 text-sm leading-relaxed max-w-md">
                     {owner.bio}
                   </p>
                 )}
