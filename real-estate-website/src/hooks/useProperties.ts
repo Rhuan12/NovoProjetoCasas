@@ -68,33 +68,33 @@ export function useProperty(id: string) {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  useEffect(() => {
+  const fetchProperty = async () => {
     if (!id) return
 
-    const fetchProperty = async () => {
-      try {
-        setLoading(true)
-        setError(null)
+    try {
+      setLoading(true)
+      setError(null)
 
-        const response = await fetch(`/api/properties/${id}`)
-        
-        if (!response.ok) {
-          throw new Error('Property not found')
-        }
+      const response = await fetch(`/api/properties/${id}`)
 
-        const data = await response.json()
-        setProperty(data.property)
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Unknown error')
-      } finally {
-        setLoading(false)
+      if (!response.ok) {
+        throw new Error('Property not found')
       }
-    }
 
+      const data = await response.json()
+      setProperty(data.property)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Unknown error')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
     fetchProperty()
   }, [id])
 
-  return { property, loading, error }
+  return { property, loading, error, refetch: fetchProperty }
 }
 
 // Hook for creating/updating properties

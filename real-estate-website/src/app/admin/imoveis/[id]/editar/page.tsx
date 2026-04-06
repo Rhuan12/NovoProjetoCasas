@@ -18,7 +18,7 @@ interface EditPropertyPageProps {
 
 export default function EditPropertyPage({ params }: EditPropertyPageProps) {
   const router = useRouter()
-  const { property, loading: propertyLoading, error: propertyError } = useProperty(params.id)
+  const { property, loading: propertyLoading, error: propertyError, refetch: refetchProperty } = useProperty(params.id)
   const { updateProperty, deleteProperty, loading: mutationLoading, error: mutationError } = usePropertyMutations()
   const [activeTab, setActiveTab] = useState<'info' | 'photos'>('info')
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
@@ -212,8 +212,7 @@ export default function EditPropertyPage({ params }: EditPropertyPageProps) {
           <PropertyPhotosManager
             property={property}
             onPhotosUpdate={() => {
-              // Atualizar a propriedade após upload de fotos
-              window.location.reload()
+              refetchProperty()
             }}
           />
         )}
