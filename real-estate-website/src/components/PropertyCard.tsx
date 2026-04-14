@@ -83,7 +83,7 @@ export function PropertyCard({
           {/* Preço em destaque */}
           <div className="mb-4">
             <span className="text-3xl font-bold text-warning">
-              {isFilled ? 'Filled' : formatPrice(property.price)}
+              {isFilled ? 'Filled' : `$${formatPrice(property.price)}`}
             </span>
           </div>
 

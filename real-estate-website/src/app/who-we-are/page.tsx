@@ -12,25 +12,22 @@ export default function WhoWeArePage() {
       <Header />
 
       {/* HERO */}
-      <section className="bg-accent-primary px-4 py-16">
-        <div className="max-w-7xl mx-auto">
-          <div className="border-4 border-black/30 rounded-[3rem] py-14 px-6 flex flex-col items-center text-center gap-4">
-            <Image
-              src="/logo-cara.png"
-              alt="McSilva & Wiggit"
-              width={180}
-              height={180}
-              className="mx-auto"
-              priority
-            />
-            <h1 className="text-3xl md:text-5xl font-bold text-black leading-tight">
-              Who We Are
-            </h1>
-            <p className="text-base md:text-lg text-black/70 max-w-xl">
-              A story of dedication, professionalism and commitment to making dreams come true.
-            </p>
-          </div>
-        </div>
+      <section className="bg-background-primary px-4 py-16 flex flex-col items-center text-center gap-6">
+        <Image
+          src="/logo-cara.png"
+          alt="McSilva & Wiggit"
+          width={200}
+          height={200}
+          className="mx-auto"
+          priority
+          unoptimized
+        />
+        <h1 className="text-3xl md:text-5xl font-bold text-accent-primary leading-tight">
+          Who We Are
+        </h1>
+        <p className="text-base md:text-lg text-accent-primary/80 max-w-xl">
+          A story of dedication, professionalism and commitment to making dreams come true.
+        </p>
       </section>
 
       {/* OWNERS — sem cabeçalho duplicado */}
@@ -49,7 +46,7 @@ export default function WhoWeArePage() {
             Ready to Find<br />Your Dream Home?
           </h2>
           <p className="text-xl text-white/90 mb-10">
-            Contact us now and discover how we can help you achieve the dream of homeownership.
+            Contact us now and discover how we can help you to find your next residence!
           </p>
           <div className="inline-flex flex-col sm:flex-row items-center gap-3 border-2 border-white/30 rounded-full p-2">
             <a
