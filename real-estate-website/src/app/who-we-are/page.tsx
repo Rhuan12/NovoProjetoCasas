@@ -25,7 +25,7 @@ export default function WhoWeArePage() {
         <h1 className="text-3xl md:text-5xl font-bold text-accent-primary leading-tight">
           Who We Are
         </h1>
-        <p className="text-base md:text-lg text-accent-primary/80 max-w-xl">
+        <p className="text-base md:text-lg text-primary/80 max-w-xl">
           A story of dedication, professionalism and commitment to making dreams come true.
         </p>
       </section>
