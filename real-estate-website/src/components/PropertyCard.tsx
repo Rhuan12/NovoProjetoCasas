@@ -17,14 +17,13 @@ export function PropertyCard({
   onEdit,
   onDelete 
 }: PropertyCardProps) {
-  const isSold = property.status === 'sold'
-  
+  const isFilled = property.status === 'filled'
+
   const formatPrice = (price: number | null) => {
     if (!price) return 'Price upon request'
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: 0
+    return new Intl.NumberFormat('pt-BR', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
     }).format(price)
   }
 
@@ -32,8 +31,8 @@ export function PropertyCard({
     switch (property.status) {
       case 'available':
         return <Badge variant="success">Available</Badge>
-      case 'sold':
-        return <Badge variant="sold">Sold</Badge>
+      case 'filled':
+        return <Badge variant="filled">Filled</Badge>
       case 'reserved':
         return <Badge variant="warning">Reserved</Badge>
       default:
@@ -52,11 +51,11 @@ export function PropertyCard({
               src={property.main_photo_url}
               alt={property.title}
               fill
-              className={`object-cover transition-transform duration-500 group-hover:scale-105 ${isSold ? 'grayscale opacity-70' : ''}`}
+              className={`object-cover transition-transform duration-500 group-hover:scale-105 ${isFilled ? 'grayscale opacity-70' : ''}`}
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />
           ) : (
-            <div className={`w-full h-full bg-background-tertiary flex items-center justify-center ${isSold ? 'grayscale opacity-70' : ''}`}>
+            <div className={`w-full h-full bg-background-tertiary flex items-center justify-center ${isFilled ? 'grayscale opacity-70' : ''}`}>
               <span className="text-text-muted">No photo</span>
             </div>
           )}
@@ -69,11 +68,11 @@ export function PropertyCard({
             {getStatusBadge()}
           </div>
 
-          {/* Tempo de venda para imóveis vendidos */}
-          {isSold && property.days_to_sell && (
+          {/* Tempo de venda para imóveis preenchidos */}
+          {isFilled && property.days_to_sell && (
             <div className="absolute top-4 left-4 z-10">
-              <Badge variant="sold" size="sm">
-                Sold in {property.days_to_sell} days
+              <Badge variant="filled" size="sm">
+                Filled in {property.days_to_sell} days
               </Badge>
             </div>
           )}
@@ -84,7 +83,7 @@ export function PropertyCard({
           {/* Preço em destaque */}
           <div className="mb-4">
             <span className="text-3xl font-bold text-warning">
-              {formatPrice(property.price)}
+              {isFilled ? 'Filled' : formatPrice(property.price)}
             </span>
           </div>
 
@@ -119,18 +118,18 @@ export function PropertyCard({
           )}
 
           {/* Botão View Details */}
-          {!isSold ? (
+          {!isFilled ? (
             <Link href={`/imoveis/${property.id}`} className="block">
               <button className="w-full py-3.5 px-4 bg-background-tertiary/60 hover:bg-accent-primary hover:text-white text-text-primary font-semibold rounded-xl transition-all duration-300 border border-background-tertiary backdrop-blur-sm">
                 View Details
               </button>
             </Link>
           ) : (
-            <button 
+            <button
               className="w-full py-3.5 px-4 bg-background-tertiary/40 text-text-muted font-semibold rounded-xl cursor-not-allowed border border-background-tertiary"
               disabled
             >
-              Property Sold
+              Filled
             </button>
           )}
         </div>

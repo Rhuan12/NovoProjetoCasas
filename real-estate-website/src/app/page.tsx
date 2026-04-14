@@ -10,7 +10,7 @@ import { Phone, Mail, MapPin, MessageCircle, Building, ArrowUp, PhoneCall } from
 import Image from 'next/image'
 
 interface FilterState {
-  status?: 'available' | 'sold' | 'reserved'
+  status?: 'available' | 'filled' | 'reserved'
   bedrooms?: number
   bathrooms?: number
   maxPrice?: number
@@ -29,13 +29,13 @@ export default function Home() {
   const contactRef = useRef<HTMLElement>(null)
 
   const availableCount = allProperties.filter(p => p.status === 'available').length
-  const soldCount = allProperties.filter(p => p.status === 'sold').length
+  const filledCount = allProperties.filter(p => p.status === 'filled').length
   const reservedCount = allProperties.filter(p => p.status === 'reserved').length
-  const averageDaysToSell = soldCount > 0
+  const averageDaysToSell = filledCount > 0
     ? Math.round(
         allProperties
-          .filter(p => p.status === 'sold' && p.days_to_sell)
-          .reduce((acc, p) => acc + (p.days_to_sell || 0), 0) / soldCount
+          .filter(p => p.status === 'filled' && p.days_to_sell)
+          .reduce((acc, p) => acc + (p.days_to_sell || 0), 0) / filledCount
       )
     : 0
 
@@ -91,8 +91,8 @@ export default function Home() {
                 <div className="text-sm text-text-muted">Available</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-success">{soldCount}</div>
-                <div className="text-sm text-text-muted">Sold</div>
+                <div className="text-2xl font-bold text-success">{filledCount}</div>
+                <div className="text-sm text-text-muted">Filled</div>
               </div>
               {averageDaysToSell > 0 && (
                 <div className="text-center">
@@ -108,8 +108,8 @@ export default function Home() {
           <Badge variant={filters.status === 'available' ? 'success' : 'default'}>
             {availableCount} Available
           </Badge>
-          <Badge variant={filters.status === 'sold' ? 'sold' : 'default'}>
-            {soldCount} Sold
+          <Badge variant={filters.status === 'filled' ? 'filled' : 'default'}>
+            {filledCount} Filled
           </Badge>
           <Badge variant={filters.status === 'reserved' ? 'warning' : 'default'}>
             {reservedCount} Reserved

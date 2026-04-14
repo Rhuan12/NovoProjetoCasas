@@ -299,8 +299,8 @@ export function PhotoUploadInterface({ property, onPhotosUpdate }: PhotoUploadIn
     switch (property.status) {
       case 'available':
         return <Badge variant="success">Disponível</Badge>
-      case 'sold':
-        return <Badge variant="sold">Vendido</Badge>
+      case 'filled':
+        return <Badge variant="filled">Filled</Badge>
       case 'reserved':
         return <Badge variant="warning">Reservado</Badge>
       default:
@@ -310,10 +310,9 @@ export function PhotoUploadInterface({ property, onPhotosUpdate }: PhotoUploadIn
 
   const formatPrice = (price: number | null) => {
     if (!price) return 'Sob consulta'
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: 0
+    return new Intl.NumberFormat('pt-BR', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
     }).format(price)
   }
 

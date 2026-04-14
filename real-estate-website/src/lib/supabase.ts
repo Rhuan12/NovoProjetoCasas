@@ -26,7 +26,7 @@ export type Tables = {
       neighborhood: string | null
       city: string | null
       state: string | null
-      status: 'available' | 'sold' | 'reserved'
+      status: 'available' | 'filled' | 'reserved'
       sold_date: string | null
       days_to_sell: number | null
       main_photo_url: string | null
@@ -65,7 +65,7 @@ export type Tables = {
       neighborhood?: string | null
       city?: string | null
       state?: string | null
-      status?: 'available' | 'sold' | 'reserved'
+      status?: 'available' | 'filled' | 'reserved'
       sold_date?: string | null
       days_to_sell?: number | null
       main_photo_url?: string | null
@@ -102,7 +102,7 @@ export type Tables = {
       neighborhood?: string | null
       city?: string | null
       state?: string | null
-      status?: 'available' | 'sold' | 'reserved'
+      status?: 'available' | 'filled' | 'reserved'
       sold_date?: string | null
       days_to_sell?: number | null
       main_photo_url?: string | null

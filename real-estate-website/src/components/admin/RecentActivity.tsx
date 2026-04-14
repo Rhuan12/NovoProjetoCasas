@@ -126,14 +126,14 @@ export function RecentActivity({ activities, loading }: RecentActivityProps) {
                       <Badge 
                         variant={
                           activity.status === 'new' ? 'warning' :
-                          activity.status === 'sold' ? 'success' :
+                          activity.status === 'filled' ? 'filled' :
                           activity.status === 'available' ? 'success' :
                           'default'
                         }
                         size="sm"
                       >
                         {activity.status === 'new' ? 'Novo' :
-                         activity.status === 'sold' ? 'Vendido' :
+                         activity.status === 'filled' ? 'Filled' :
                          activity.status === 'available' ? 'Disponível' :
                          activity.status}
                       </Badge>

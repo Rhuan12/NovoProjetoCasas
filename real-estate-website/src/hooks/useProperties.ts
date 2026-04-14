@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { Property } from '@/lib/supabase'
 
 interface UsePropertiesOptions {
-  status?: 'available' | 'sold' | 'reserved'
+  status?: 'available' | 'filled' | 'reserved'
   bedrooms?: number
   bathrooms?: number
   maxPrice?: number

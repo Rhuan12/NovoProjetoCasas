@@ -36,7 +36,7 @@ export function PropertyImageGallery({ property }: PropertyImageGalleryProps) {
     property.photo_20_url
   ].filter(Boolean) as string[]
 
-  const isSold = property.status === 'sold'
+  const isFilled = property.status === 'filled'
 
   // ✨ CARREGAR TODAS AS IMAGENS ASSIM QUE O COMPONENTE MONTA
   useEffect(() => {
@@ -73,18 +73,18 @@ export function PropertyImageGallery({ property }: PropertyImageGalleryProps) {
             alt={`${property.title} - Photo ${selectedImage + 1}`}
             fill
             className={`object-cover transition-all duration-300 ${
-              isSold ? 'filter-sold' : ''
+              isFilled ? 'filter-filled' : ''
             }`}
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 70vw"
             priority
             unoptimized // ✨ DESATIVA otimização do Next.js para carregar mais rápido
           />
           
-          {/* Overlay for sold properties */}
-          {isSold && (
+          {/* Overlay for filled properties */}
+          {isFilled && (
             <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
-              <div className="bg-sold/90 text-white px-4 py-2 rounded-lg font-semibold">
-                SOLD
+              <div className="bg-filled/90 text-white px-4 py-2 rounded-lg font-semibold">
+                FILLED
               </div>
             </div>
           )}
@@ -147,7 +147,7 @@ export function PropertyImageGallery({ property }: PropertyImageGalleryProps) {
                   src={image}
                   alt={`${property.title} - Thumbnail ${index + 1}`}
                   fill
-                  className={`object-cover ${isSold ? 'filter-sold' : ''}`}
+                  className={`object-cover ${isFilled ? 'filter-filled' : ''}`}
                   sizes="80px"
                   unoptimized
                 />
@@ -167,7 +167,7 @@ export function PropertyImageGallery({ property }: PropertyImageGalleryProps) {
                 src={images[selectedImage]}
                 alt={`${property.title} - Photo ${selectedImage + 1}`}
                 fill
-                className={`object-contain ${isSold ? 'filter-sold' : ''}`}
+                className={`object-contain ${isFilled ? 'filter-filled' : ''}`}
                 sizes="100vw"
                 priority
                 unoptimized

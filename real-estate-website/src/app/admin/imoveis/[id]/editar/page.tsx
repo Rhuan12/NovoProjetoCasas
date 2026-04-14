@@ -49,8 +49,8 @@ export default function EditPropertyPage({ params }: EditPropertyPageProps) {
     switch (property.status) {
       case 'available':
         return <Badge variant="success">Disponível</Badge>
-      case 'sold':
-        return <Badge variant="sold">Vendido</Badge>
+      case 'filled':
+        return <Badge variant="filled">Filled</Badge>
       case 'reserved':
         return <Badge variant="warning">Reservado</Badge>
       default:

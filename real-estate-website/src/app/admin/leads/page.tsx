@@ -143,7 +143,7 @@ export default function AdminLeadsPage() {
       case 'interested':
         return <Badge variant="success">Interessado</Badge>
       case 'closed':
-        return <Badge variant="sold">Fechado</Badge>
+        return <Badge variant="filled">Fechado</Badge>
     }
   }
 
@@ -165,10 +165,9 @@ export default function AdminLeadsPage() {
 
   const formatPrice = (price: number | null) => {
     if (!price) return 'Não informado'
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: 0
+    return new Intl.NumberFormat('pt-BR', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
     }).format(price)
   }
 

@@ -26,7 +26,7 @@ module.exports = {
         success: '#10b981',      // Verde para status positivo
         warning: '#f7cb00',      // Amarelo para avisos
         danger: '#ef4444',       // Vermelho para erros
-        sold: '#6b7280',         // Cinza para imóveis vendidos
+        filled: '#6b7280',       // Cinza para imóveis preenchidos
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],

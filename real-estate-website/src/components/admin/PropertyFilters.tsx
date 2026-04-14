@@ -105,7 +105,7 @@ export function AdminPropertyFilters({
           >
             <option value="">Todos os Status</option>
             <option value="available">Disponíveis</option>
-            <option value="sold">Vendidos</option>
+            <option value="filled">Filled</option>
             <option value="reserved">Reservados</option>
           </select>
         </div>

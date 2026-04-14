@@ -22,7 +22,7 @@ interface PropertiesTableProps {
   properties: Property[]
   loading: boolean
   error: string | null
-  onStatusUpdate: (id: string, status: 'available' | 'sold' | 'reserved') => Promise<void>
+  onStatusUpdate: (id: string, status: 'available' | 'filled' | 'reserved') => Promise<void>
   onDelete: (id: string) => Promise<void>
 }
 
@@ -142,10 +142,9 @@ export function PropertiesTable({
 
   const formatPrice = (price: number | null) => {
     if (!price) return 'Sob consulta'
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: 0
+    return new Intl.NumberFormat('pt-BR', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
     }).format(price)
   }
 
@@ -157,8 +156,8 @@ export function PropertiesTable({
     switch (status) {
       case 'available':
         return <Badge variant="success">Disponível</Badge>
-      case 'sold':
-        return <Badge variant="sold">Vendido</Badge>
+      case 'filled':
+        return <Badge variant="filled">Filled</Badge>
       case 'reserved':
         return <Badge variant="warning">Reservado</Badge>
       default:
@@ -166,7 +165,7 @@ export function PropertiesTable({
     }
   }
 
-  const handleStatusUpdate = async (id: string, status: 'available' | 'sold' | 'reserved') => {
+  const handleStatusUpdate = async (id: string, status: 'available' | 'filled' | 'reserved') => {
     try {
       setActionLoading(id)
       await onStatusUpdate(id, status)
@@ -272,14 +271,14 @@ export function PropertiesTable({
             </button>
           )}
 
-          {property.status !== 'sold' && (
+          {property.status !== 'filled' && (
             <button
-              onClick={() => handleStatusUpdate(property.id, 'sold')}
+              onClick={() => handleStatusUpdate(property.id, 'filled')}
               className="w-full flex items-center gap-3 px-4 py-3 text-sm text-text-primary hover:bg-background-tertiary transition-colors text-left"
               disabled={actionLoading === property.id}
             >
               <CheckCircle size={16} />
-              Marcar como Vendido
+              Marcar como Filled
             </button>
           )}
 
@@ -386,7 +385,7 @@ export function PropertiesTable({
                         width={64}
                         height={64}
                         className={`w-full h-full object-cover ${
-                          property.status === 'sold' ? 'filter-sold' : ''
+                          property.status === 'filled' ? 'filter-filled' : ''
                         }`}
                       />
                     ) : (
@@ -398,7 +397,7 @@ export function PropertiesTable({
                   
                   <div className="min-w-0 flex-1">
                     <h3 className={`font-semibold truncate ${
-                      property.status === 'sold' ? 'text-sold' : 'text-text-primary'
+                      property.status === 'filled' ? 'text-filled' : 'text-text-primary'
                     }`}>
                       {property.title}
                     </h3>
@@ -422,13 +421,13 @@ export function PropertiesTable({
                 {/* Preço */}
                 <div className="lg:col-span-2">
                   <p className={`font-semibold ${
-                    property.status === 'sold' ? 'text-sold' : 'text-text-primary'
+                    property.status === 'filled' ? 'text-filled' : 'text-text-primary'
                   }`}>
                     {formatPrice(property.price)}
                   </p>
-                  {property.status === 'sold' && property.days_to_sell && (
+                  {property.status === 'filled' && property.days_to_sell && (
                     <p className="text-xs text-success">
-                      Vendido em {property.days_to_sell} dias
+                      Filled in {property.days_to_sell} days
                     </p>
                   )}
                 </div>

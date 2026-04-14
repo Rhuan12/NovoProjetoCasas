@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { Property } from '@/lib/supabase'
 
 interface AdminPropertiesFilters {
-  status?: 'available' | 'sold' | 'reserved' | ''
+  status?: 'available' | 'filled' | 'reserved' | ''
   city?: string
   minPrice?: number
   maxPrice?: number
@@ -67,7 +67,7 @@ export function useAdminProperties(filters: AdminPropertiesFilters = {}) {
     filters.search
   ])
 
-  const updatePropertyStatus = async (id: string, status: 'available' | 'sold' | 'reserved') => {
+  const updatePropertyStatus = async (id: string, status: 'available' | 'filled' | 'reserved') => {
     try {
       const response = await fetch(`/api/properties/${id}`, {
         method: 'PUT',
@@ -83,8 +83,8 @@ export function useAdminProperties(filters: AdminPropertiesFilters = {}) {
       }
 
       // Atualizar localmente
-      setProperties(prev => 
-        prev.map(prop => 
+      setProperties(prev =>
+        prev.map(prop =>
           prop.id === id ? { ...prop, status } : prop
         )
       )

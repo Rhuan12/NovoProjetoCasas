@@ -15,7 +15,7 @@ export function PropertyFilters({ onFiltersChange, loading = false }: PropertyFi
     bedrooms: '',
     bathrooms: '',
     maxPrice: '',
-    status: 'available' as 'available' | 'sold' | 'reserved' | ''
+    status: 'available' as 'available' | 'filled' | 'reserved' | ''
   })
 
   const handleFilterChange = (key: string, value: string) => {
@@ -110,7 +110,7 @@ export function PropertyFilters({ onFiltersChange, loading = false }: PropertyFi
         >
           <option value="available">Available</option>
           <option value="">All Status</option>
-          <option value="sold">Sold</option>
+          <option value="filled">Filled</option>
           <option value="reserved">Reserved</option>
         </select>
       </div>

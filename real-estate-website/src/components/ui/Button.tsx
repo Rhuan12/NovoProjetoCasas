@@ -159,7 +159,7 @@ Card.displayName = 'Card'
 
 interface BadgeProps {
   children: React.ReactNode
-  variant?: 'default' | 'success' | 'warning' | 'danger' | 'sold'
+  variant?: 'default' | 'success' | 'warning' | 'danger' | 'filled'
   size?: 'sm' | 'md'
   className?: string
 }
@@ -171,7 +171,7 @@ export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
       success: 'bg-success/20 text-success',
       warning: 'bg-warning/20 text-warning',
       danger: 'bg-danger/20 text-danger',
-      sold: 'bg-sold/20 text-sold'
+      filled: 'bg-filled/20 text-filled'
     }
     
     const sizes = {

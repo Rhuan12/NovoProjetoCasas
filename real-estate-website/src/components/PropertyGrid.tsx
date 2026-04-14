@@ -97,12 +97,12 @@ export function PropertyGrid({ properties, loading, error }: PropertyGridProps) 
         ))}
       </div>
 
-      {/* Separation between available and sold */}
-      {properties.some(p => p.status === 'sold') && properties.some(p => p.status !== 'sold') && (
+      {/* Separation between available and filled */}
+      {properties.some(p => p.status === 'filled') && properties.some(p => p.status !== 'filled') && (
         <div className="border-t border-background-tertiary pt-8 mt-8">
           <h3 className="text-lg font-semibold text-text-secondary mb-4 flex items-center gap-2">
-            <div className="w-2 h-2 bg-sold rounded-full"></div>
-            Sold Properties
+            <div className="w-2 h-2 bg-filled rounded-full"></div>
+            Filled Properties
           </h3>
           <p className="text-sm text-text-muted mb-6">
             View our sales history and average time to sell.

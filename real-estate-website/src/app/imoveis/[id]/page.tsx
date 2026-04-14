@@ -78,15 +78,14 @@ export default function PropertyPage({ params }: PropertyPageProps) {
     )
   }
 
-  const isSold = property.status === 'sold'
+  const isFilled = property.status === 'filled'
   const isReserved = property.status === 'reserved'
 
   const formatPrice = (price: number | null) => {
     if (!price) return 'Price upon request'
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: 0
+    return new Intl.NumberFormat('pt-BR', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
     }).format(price)
   }
 
@@ -94,11 +93,11 @@ export default function PropertyPage({ params }: PropertyPageProps) {
     switch (property.status) {
       case 'available':
         return { badge: <Badge variant="success">Available</Badge>, canContact: true }
-      case 'sold':
-        return { 
-          badge: <Badge variant="sold">Sold</Badge>, 
+      case 'filled':
+        return {
+          badge: <Badge variant="filled">Filled</Badge>,
           canContact: false,
-          extraInfo: property.days_to_sell ? `Sold in ${property.days_to_sell} days` : 'Sold'
+          extraInfo: property.days_to_sell ? `Filled in ${property.days_to_sell} days` : 'Filled'
         }
       case 'reserved':
         return { badge: <Badge variant="warning">Reserved</Badge>, canContact: false }
@@ -172,7 +171,7 @@ export default function PropertyPage({ params }: PropertyPageProps) {
               <div>
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex-1 min-w-0">
-                    <h1 className={`text-3xl font-bold mb-2 ${isSold ? 'text-sold' : 'text-text-primary'}`}>
+                    <h1 className={`text-3xl font-bold mb-2 ${isFilled ? 'text-filled' : 'text-text-primary'}`}>
                       {property.title}
                     </h1>
                     
@@ -198,7 +197,7 @@ export default function PropertyPage({ params }: PropertyPageProps) {
                 </div>
 
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                  <div className={`text-3xl sm:text-4xl font-bold ${isSold ? 'text-sold' : 'text-text-primary'}`}>
+                  <div className={`text-3xl sm:text-4xl font-bold ${isFilled ? 'text-filled' : 'text-text-primary'}`}>
                     {formatPrice(property.price)}
                   </div>
                   
@@ -276,7 +275,7 @@ export default function PropertyPage({ params }: PropertyPageProps) {
             <Card className={`p-6 ${!showContactForm ? 'lg:sticky lg:top-24' : ''}`}>
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-semibold text-text-primary">
-                  {isSold ? 'Property Sold' : 'Interested in this property?'}
+                  {isFilled ? 'Property Filled' : 'Interested in this property?'}
                 </h3>
                 
                 {/* Close button (mobile) */}
@@ -292,10 +291,10 @@ export default function PropertyPage({ params }: PropertyPageProps) {
                 )}
               </div>
               
-              {isSold ? (
+              {isFilled ? (
                 <div className="text-center py-4">
                   <p className="text-text-secondary mb-4">
-                    This property has been sold, but we have other similar options.
+                    This property has been filled, but we have other similar options.
                   </p>
                   <Button className="w-full" onClick={handleQuickWhatsApp}>
                     <MessageCircle size={16} className="mr-2" />

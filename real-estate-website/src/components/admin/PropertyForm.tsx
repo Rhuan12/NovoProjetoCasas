@@ -31,7 +31,7 @@ export function PropertyForm({
     neighborhood: '',
     city: '',
     state: '',
-    status: 'available' as 'available' | 'sold' | 'reserved'
+    status: 'available' as 'available' | 'filled' | 'reserved'
   })
 
   const [formErrors, setFormErrors] = useState<Record<string, string>>({})
@@ -50,7 +50,7 @@ export function PropertyForm({
         neighborhood: property.neighborhood || '',
         city: property.city || '',
         state: property.state || '',
-        status: property.status || 'available'
+        status: (property.status || 'available') as 'available' | 'filled' | 'reserved'
       })
     }
   }, [property])
@@ -163,7 +163,7 @@ export function PropertyForm({
             >
               <option value="available">Disponível</option>
               <option value="reserved">Reservado</option>
-              <option value="sold">Vendido</option>
+              <option value="filled">Filled</option>
             </select>
           </div>
 

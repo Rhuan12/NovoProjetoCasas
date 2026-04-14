@@ -22,20 +22,19 @@ export default function AdminPropertiesPage() {
   // Estatísticas rápidas
   const totalProperties = properties.length
   const availableProperties = properties.filter(p => p.status === 'available').length
-  const soldProperties = properties.filter(p => p.status === 'sold').length
+  const soldProperties = properties.filter(p => p.status === 'filled').length
   const totalValue = properties
     .filter(p => p.status === 'available')
     .reduce((sum, p) => sum + (p.price || 0), 0)
 
   const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: 0
+    return new Intl.NumberFormat('pt-BR', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
     }).format(value)
   }
 
-  const handleStatusUpdate = async (id: string, status: 'available' | 'sold' | 'reserved') => {
+  const handleStatusUpdate = async (id: string, status: 'available' | 'filled' | 'reserved') => {
     try {
       await updatePropertyStatus(id, status)
       // Refetch para atualizar estatísticas

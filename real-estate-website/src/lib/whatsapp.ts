@@ -51,11 +51,9 @@ export interface UserData {
 export function formatPrice(price: number | null | undefined): string {
   if (!price) return 'Consultar'
   
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0
+  return new Intl.NumberFormat('pt-BR', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
   }).format(price)
 }
 

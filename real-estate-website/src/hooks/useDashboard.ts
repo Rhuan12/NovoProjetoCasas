@@ -67,7 +67,7 @@ export function useDashboardStats() {
       // Calcular estatísticas das propriedades
       const totalProperties = properties.length
       const availableProperties = properties.filter((p: Property) => p.status === 'available').length
-      const soldProperties = properties.filter((p: Property) => p.status === 'sold').length
+      const soldProperties = properties.filter((p: Property) => p.status === 'filled').length
       const reservedProperties = properties.filter((p: Property) => p.status === 'reserved').length
 
       // Calcular valor total e vendido
@@ -76,12 +76,12 @@ export function useDashboardStats() {
         .reduce((sum: number, p: Property) => sum + (p.price || 0), 0)
       
       const soldValue = properties
-        .filter((p: Property) => p.status === 'sold')
+        .filter((p: Property) => p.status === 'filled')
         .reduce((sum: number, p: Property) => sum + (p.price || 0), 0)
 
       // Calcular tempo médio de venda
       const soldWithDays = properties.filter((p: Property) => 
-        p.status === 'sold' && p.days_to_sell
+        p.status === 'filled' && p.days_to_sell
       )
       const averageDaysToSell = soldWithDays.length > 0
         ? Math.round(
@@ -170,14 +170,14 @@ export function useRecentActivity() {
       properties
         .slice(0, 5)
         .forEach((property: Property) => {
-          if (property.status === 'sold') {
+          if (property.status === 'filled') {
             recentActivities.push({
               id: property.id,
               type: 'sale',
               title: `Venda concluída: ${property.title}`,
               description: `Imóvel vendido em ${property.days_to_sell || 'N/A'} dias`,
               timestamp: property.sold_date || property.updated_at,
-              status: 'sold'
+              status: 'filled'
             })
           } else {
             recentActivities.push({
