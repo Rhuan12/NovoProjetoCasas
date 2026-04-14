@@ -60,6 +60,7 @@ export default function Home() {
           height={380}
           className="mx-auto"
           priority
+          unoptimized
         />
       </section>
 
