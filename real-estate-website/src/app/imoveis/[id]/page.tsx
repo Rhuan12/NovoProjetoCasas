@@ -198,7 +198,7 @@ export default function PropertyPage({ params }: PropertyPageProps) {
 
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                   <div className={`text-3xl sm:text-4xl font-bold ${isFilled ? 'text-filled' : 'text-text-primary'}`}>
-                    {formatPrice(property.price)}
+                    {property.price ? `$${formatPrice(property.price)}` : formatPrice(property.price)}
                   </div>
                   
                   {statusInfo.extraInfo && (
