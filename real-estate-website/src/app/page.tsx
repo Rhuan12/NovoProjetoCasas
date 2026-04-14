@@ -51,28 +51,16 @@ export default function Home() {
     <div className="min-h-screen bg-background-primary">
       <Header />
 
-      {/* HERO - fundo amarelo com logo e tagline */}
-      <section className="bg-accent-primary px-4 py-12">
-        <div className="max-w-7xl mx-auto">
-          <div className="border-4 border-black/30 rounded-[3rem] py-12 px-6 flex flex-col items-center text-center">
-            <div className="mb-6">
-              <Image
-                src="/logo-cara.png"
-                alt="McSilva & Wiggit"
-                width={220}
-                height={220}
-                className="mx-auto"
-                priority
-              />
-            </div>
-            <h1 className="text-3xl md:text-5xl font-bold text-black leading-tight mb-3">
-              We guarantee your approval
-            </h1>
-            <p className="text-base md:text-lg text-black/70">
-              with just your country of origin identification
-            </p>
-          </div>
-        </div>
+      {/* HERO - fundo preto com logo em destaque */}
+      <section className="bg-background-primary flex items-center justify-center py-20 px-4">
+        <Image
+          src="/logo-cara.png"
+          alt="McSilva & Wiggit"
+          width={380}
+          height={380}
+          className="mx-auto"
+          priority
+        />
       </section>
 
       {/* PROPERTIES SECTION */}
@@ -135,7 +123,7 @@ export default function Home() {
             Ready to Find<br />Your Dream Home?
           </h2>
           <p className="text-xl text-white/90 mb-10">
-            Contact us now and discover how we can help you achieve the dream of homeownership.
+            Contact us now and discover how we can help you to find your next residence!
           </p>
           <div className="inline-flex flex-col sm:flex-row items-center gap-3 border-2 border-white/30 rounded-full p-2">
             <a
