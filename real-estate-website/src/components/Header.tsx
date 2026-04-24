@@ -59,23 +59,15 @@ export function Header() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
             {/* Logo - ✨ AUMENTADO */}
-            <Link href="/" className="flex items-center gap-3 group">
-              <div className="relative w-16 h-16 md:w-20 md:h-20 group-hover:scale-105 transition-transform">
+            <Link href="/" className="flex items-center group">
+              <div className="relative w-36 h-16 md:w-44 md:h-20 group-hover:scale-105 transition-transform">
                 <Image
-                  src="/logo.png"
+                  src="/logo-header.png"
                   alt="McSilva & Wiggit Logo"
                   fill
                   className="object-contain"
                   priority
                 />
-              </div>
-              <div className="hidden sm:block">
-                <span className="text-xl font-bold text-gradient">
-                  McSilva & Wiggit
-                </span>
-                <div className="text-xs text-text-muted">
-                  Making dreams come true since 2014
-                </div>
               </div>
             </Link>
 
