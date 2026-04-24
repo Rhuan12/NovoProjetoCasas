@@ -130,7 +130,7 @@ export function AboutOwners({ className = '', showHeader = true }: AboutOwnersPr
                     {owner.name}
                   </h3>
                   <div className="inline-block bg-white/90 px-4 py-1 rounded-full">
-                    <span className="text-sm font-semibold text-warning">
+                    <span className="text-sm font-semibold text-black">
                       {owner.role}
                     </span>
                   </div>

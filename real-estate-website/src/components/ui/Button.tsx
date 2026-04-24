@@ -168,15 +168,15 @@ export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
   ({ children, variant = 'default', size = 'md', className }, ref) => {
     const variants = {
       default: 'bg-background-tertiary text-text-primary',
-      success: 'bg-success/20 text-success',
+      success: 'bg-warning text-black',
       warning: 'bg-warning/20 text-warning',
       danger: 'bg-danger/20 text-danger',
-      filled: 'bg-filled/20 text-filled'
+      filled: 'bg-black text-red-500 border border-red-500/30'
     }
-    
+
     const sizes = {
       sm: 'px-2 py-1 text-xs',
-      md: 'px-2.5 py-1 text-sm'
+      md: 'px-4 py-2 text-sm font-bold uppercase tracking-wide'
     }
 
     return (
