@@ -41,13 +41,17 @@ export function AboutOwners({ className = '', showHeader = true }: AboutOwnersPr
     }
   }
 
+  // Limit to 6 owners max
+  const displayedOwners = owners.slice(0, 6)
+
   // Determine grid layout based on number of owners
-  const getGridCols = () => {
-    if (owners.length === 1) return 'grid-cols-1 max-w-2xl mx-auto'
-    if (owners.length === 2) return 'grid-cols-1 lg:grid-cols-2 max-w-5xl mx-auto'
-    if (owners.length === 3) return 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'
-    // Para 4 donos: 2x2
-    return 'grid-cols-1 md:grid-cols-2 max-w-6xl mx-auto'
+  const getGridCols = (count: number) => {
+    if (count === 1) return 'grid-cols-1 max-w-2xl mx-auto'
+    if (count === 2) return 'grid-cols-1 lg:grid-cols-2 max-w-5xl mx-auto'
+    if (count === 3) return 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 max-w-5xl mx-auto'
+    if (count === 4) return 'grid-cols-1 sm:grid-cols-2 max-w-5xl mx-auto'
+    // 5 or 6 owners: 3×2 grid on desktop
+    return 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 max-w-6xl mx-auto'
   }
 
   if (loading) {
@@ -90,8 +94,8 @@ export function AboutOwners({ className = '', showHeader = true }: AboutOwnersPr
         )}
 
         {/* Owners Grid - ESTILO PDF COM FUNDO LARANJA */}
-        <div className={`grid ${getGridCols()} gap-8 mb-16`}>
-          {owners.map((owner, index) => (
+        <div className={`grid ${getGridCols(displayedOwners.length)} gap-8 mb-16`}>
+          {displayedOwners.map((owner) => (
             <div 
               key={owner.id} 
               className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-warning to-warning/80 p-8 hover:shadow-2xl transition-all duration-300 group"
