@@ -4,7 +4,7 @@ import { useState, useRef } from 'react'
 import Image from 'next/image'
 import { Property } from '@/lib/supabase'
 import { Card, Button } from '@/components/ui/Button'
-import { Upload, X, Camera, AlertCircle, CheckCircle } from 'lucide-react'
+import { Upload, X, Camera, AlertCircle, CheckCircle, Plus } from 'lucide-react'
 
 type PhotoType =
   | 'main' | 'photo_2' | 'photo_3' | 'photo_4' | 'photo_5'
@@ -30,7 +30,13 @@ const PHOTO_LABELS: Record<PhotoType, string> = {
 }
 
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp']
-const MAX_SIZE = 10 * 1024 * 1024
+const MAX_SIZE = 10 * 1024 * 1024 // 10MB
+
+interface PendingPhoto {
+  id: string
+  file: File
+  previewUrl: string
+}
 
 interface PropertyPhotosManagerProps {
   property: Property
@@ -48,43 +54,71 @@ const getInitialUrls = (p: Property): Record<PhotoType, string | null> => ({
 })
 
 export function PropertyPhotosManager({ property, onPhotosUpdate }: PropertyPhotosManagerProps) {
-  // Local URLs — updated optimistically after each upload (no refetch needed)
   const [photoUrls, setPhotoUrls] = useState<Record<PhotoType, string | null>>(
     () => getInitialUrls(property)
   )
-  // Multiple concurrent uploads tracked as a Set
+  const [pendingPhotos, setPendingPhotos] = useState<PendingPhoto[]>([])
   const [uploadingSlots, setUploadingSlots] = useState<Set<PhotoType>>(new Set())
-  // Per-slot error messages
   const [slotErrors, setSlotErrors] = useState<Partial<Record<PhotoType, string>>>({})
-  // Bulk upload feedback
-  const [bulkSuccess, setBulkSuccess] = useState<number>(0)
+  const [stagingError, setStagingError] = useState<string | null>(null)
+  const [uploadDone, setUploadDone] = useState<number>(0)
 
-  const fileInputRefs = useRef<Partial<Record<PhotoType, HTMLInputElement | null>>>({})
-  const bulkInputRef = useRef<HTMLInputElement>(null)
+  const stagingInputRef = useRef<HTMLInputElement>(null)
+  const replaceInputRefs = useRef<Partial<Record<PhotoType, HTMLInputElement | null>>>({})
 
-  const setSlotUploading = (type: PhotoType, value: boolean) => {
+  // ─── Helpers ─────────────────────────────────────────────────────────────
+
+  const setSlotUploading = (type: PhotoType, value: boolean) =>
     setUploadingSlots(prev => {
       const next = new Set(prev)
       value ? next.add(type) : next.delete(type)
       return next
     })
+
+  const addToPending = (files: FileList | File[]) => {
+    setStagingError(null)
+    const valid: PendingPhoto[] = []
+    const skipped: string[] = []
+
+    Array.from(files).forEach(file => {
+      if (!ALLOWED_TYPES.includes(file.type)) {
+        skipped.push(`${file.name} (tipo inválido)`)
+        return
+      }
+      if (file.size > MAX_SIZE) {
+        skipped.push(`${file.name} (muito grande)`)
+        return
+      }
+      valid.push({
+        id: `${Date.now()}_${Math.random().toString(36).slice(2)}`,
+        file,
+        previewUrl: URL.createObjectURL(file),
+      })
+    })
+
+    if (skipped.length) setStagingError(`Ignorados: ${skipped.join(', ')}`)
+    if (valid.length) setPendingPhotos(prev => [...prev, ...valid])
   }
 
-  const clearSlotError = (type: PhotoType) =>
-    setSlotErrors(prev => { const n = { ...prev }; delete n[type]; return n })
+  const removePending = (id: string) => {
+    setPendingPhotos(prev => {
+      const photo = prev.find(p => p.id === id)
+      if (photo) URL.revokeObjectURL(photo.previewUrl)
+      return prev.filter(p => p.id !== id)
+    })
+  }
+
+  const clearPending = () => {
+    pendingPhotos.forEach(p => URL.revokeObjectURL(p.previewUrl))
+    setPendingPhotos([])
+    setStagingError(null)
+  }
+
+  // ─── Upload (single slot) ────────────────────────────────────────────────
 
   const uploadPhoto = async (photoType: PhotoType, file: File): Promise<boolean> => {
-    if (!ALLOWED_TYPES.includes(file.type)) {
-      setSlotErrors(prev => ({ ...prev, [photoType]: 'Tipo inválido. Use JPEG, PNG ou WebP.' }))
-      return false
-    }
-    if (file.size > MAX_SIZE) {
-      setSlotErrors(prev => ({ ...prev, [photoType]: 'Arquivo muito grande. Máximo 10MB.' }))
-      return false
-    }
-
     setSlotUploading(photoType, true)
-    clearSlotError(photoType)
+    setSlotErrors(prev => { const n = { ...prev }; delete n[photoType]; return n })
 
     try {
       const formData = new FormData()
@@ -92,19 +126,15 @@ export function PropertyPhotosManager({ property, onPhotosUpdate }: PropertyPhot
       formData.append('propertyId', property.id)
       formData.append('photoType', photoType)
 
-      const response = await fetch('/api/upload', { method: 'POST', body: formData })
-
-      if (!response.ok) {
-        const err = await response.json()
+      const res = await fetch('/api/upload', { method: 'POST', body: formData })
+      if (!res.ok) {
+        const err = await res.json()
         throw new Error(err.error || 'Erro no upload')
       }
 
-      const data = await response.json()
-
-      // ✅ Update local state immediately — no page reload or refetch needed
+      const data = await res.json()
       setPhotoUrls(prev => ({ ...prev, [photoType]: data.url }))
-      // Notify parent in background (updates photo counter in tab)
-      onPhotosUpdate()
+      onPhotosUpdate() // silent background sync
       return true
     } catch (error) {
       setSlotErrors(prev => ({
@@ -117,45 +147,62 @@ export function PropertyPhotosManager({ property, onPhotosUpdate }: PropertyPhot
     }
   }
 
-  const handleBulkUpload = async (files: FileList) => {
-    const emptySlots = PHOTO_TYPES.filter(type => !photoUrls[type])
-    const toUpload = Array.from(files).slice(0, emptySlots.length)
-    if (toUpload.length === 0) return
+  // ─── Confirm upload (staging → slots) ───────────────────────────────────
 
-    // All selected photos upload in parallel
-    const results = await Promise.all(toUpload.map((file, i) => uploadPhoto(emptySlots[i], file)))
+  const confirmUpload = async () => {
+    if (pendingPhotos.length === 0) return
+
+    const emptySlots = PHOTO_TYPES.filter(type => !photoUrls[type])
+    const toUpload = pendingPhotos.slice(0, emptySlots.length)
+
+    // Clear staging queue immediately so user sees it's been accepted
+    clearPending()
+
+    // Upload all in parallel
+    const results = await Promise.all(
+      toUpload.map((photo, i) => uploadPhoto(emptySlots[i], photo.file))
+    )
+
     const count = results.filter(Boolean).length
     if (count > 0) {
-      setBulkSuccess(count)
-      setTimeout(() => setBulkSuccess(0), 3000)
+      setUploadDone(count)
+      setTimeout(() => setUploadDone(0), 3000)
     }
   }
 
+  // ─── Remove existing photo ───────────────────────────────────────────────
+
   const removePhoto = async (photoType: PhotoType) => {
     setSlotUploading(photoType, true)
-    clearSlotError(photoType)
     try {
       const field = photoType === 'main' ? 'main_photo_url' : `${photoType}_url`
-      const response = await fetch(`/api/properties/${property.id}`, {
+      const res = await fetch(`/api/properties/${property.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ [field]: null }),
       })
-      if (!response.ok) throw new Error('Erro ao remover foto')
+      if (!res.ok) throw new Error('Erro ao remover foto')
       setPhotoUrls(prev => ({ ...prev, [photoType]: null }))
       onPhotosUpdate()
-    } catch (error) {
+    } catch {
       setSlotErrors(prev => ({ ...prev, [photoType]: 'Erro ao remover foto' }))
     } finally {
       setSlotUploading(photoType, false)
     }
   }
 
+  // ─── Computed ────────────────────────────────────────────────────────────
+
   const uploadedCount = Object.values(photoUrls).filter(Boolean).length
   const emptySlots = PHOTO_TYPES.filter(type => !photoUrls[type])
+  const willUpload = Math.min(pendingPhotos.length, emptySlots.length)
+  const isUploading = uploadingSlots.size > 0
+
+  // ─── Render ──────────────────────────────────────────────────────────────
 
   return (
     <div className="space-y-6">
+
       {/* Header */}
       <Card className="p-6">
         <h3 className="text-lg font-semibold text-text-primary mb-2 flex items-center gap-2">
@@ -163,59 +210,142 @@ export function PropertyPhotosManager({ property, onPhotosUpdate }: PropertyPhot
           Gerenciamento de Fotos
         </h3>
         <p className="text-text-secondary text-sm">
-          Adicione até 20 fotos para este imóvel. A primeira será a foto principal nas listagens.
+          Selecione as fotos, revise a fila e confirme o envio de uma vez.
+          Máximo 20 fotos por imóvel.
         </p>
       </Card>
 
-      {/* Bulk Upload Zone */}
+      {/* ── Staging Area ── */}
       {emptySlots.length > 0 && (
-        <Card className="p-6">
-          <h4 className="font-semibold text-text-primary mb-3 flex items-center gap-2">
+        <Card className="p-6 space-y-4">
+          <h4 className="font-semibold text-text-primary flex items-center gap-2">
             <Upload size={18} className="text-accent-primary" />
-            Upload em massa
+            Adicionar fotos
+            {pendingPhotos.length > 0 && (
+              <span className="ml-auto text-sm font-normal text-text-muted">
+                {pendingPhotos.length} na fila · {emptySlots.length} slot{emptySlots.length !== 1 ? 's' : ''} disponível{emptySlots.length !== 1 ? 'is' : ''}
+              </span>
+            )}
           </h4>
+
+          {/* Dropzone */}
           <div
-            className="border-2 border-dashed border-accent-primary/40 rounded-xl p-8 flex flex-col items-center gap-3 hover:border-accent-primary hover:bg-accent-primary/5 transition-colors cursor-pointer group"
-            onClick={() => bulkInputRef.current?.click()}
-            onDrop={(e) => { e.preventDefault(); if (e.dataTransfer.files.length) handleBulkUpload(e.dataTransfer.files) }}
+            className="border-2 border-dashed border-background-tertiary rounded-xl p-8 flex flex-col items-center gap-3 hover:border-accent-primary/60 hover:bg-accent-primary/5 transition-colors cursor-pointer group"
+            onClick={() => stagingInputRef.current?.click()}
+            onDrop={(e) => { e.preventDefault(); if (e.dataTransfer.files.length) addToPending(e.dataTransfer.files) }}
             onDragOver={(e) => e.preventDefault()}
           >
-            <div className="w-14 h-14 bg-accent-primary/10 rounded-2xl flex items-center justify-center group-hover:bg-accent-primary/20 transition-colors">
-              <Upload size={28} className="text-accent-primary" />
+            <div className="w-12 h-12 bg-background-tertiary rounded-xl flex items-center justify-center group-hover:bg-accent-primary/10 transition-colors">
+              <Plus size={26} className="text-text-muted group-hover:text-accent-primary transition-colors" />
             </div>
             <div className="text-center">
-              <p className="text-text-primary font-medium">Selecione várias fotos de uma vez</p>
-              <p className="text-text-muted text-sm mt-1">
-                Preenche automaticamente os {emptySlots.length} slot{emptySlots.length !== 1 ? 's' : ''} vazio{emptySlots.length !== 1 ? 's' : ''} · Uploads em paralelo
+              <p className="text-text-primary font-medium text-sm">
+                Clique para selecionar ou arraste fotos aqui
+              </p>
+              <p className="text-text-muted text-xs mt-1">
+                Selecione quantas quiser — JPEG, PNG ou WebP, máx. 10MB cada
               </p>
             </div>
-            <Button size="sm" variant="outline" className="pointer-events-none">
-              <Upload size={14} className="mr-2" />
-              Escolher arquivos
-            </Button>
           </div>
           <input
-            ref={bulkInputRef}
+            ref={stagingInputRef}
             type="file"
             accept="image/jpeg,image/png,image/webp"
             multiple
             className="hidden"
-            onChange={(e) => { if (e.target.files?.length) handleBulkUpload(e.target.files); e.target.value = '' }}
+            onChange={(e) => { if (e.target.files?.length) addToPending(e.target.files); e.target.value = '' }}
           />
-          {bulkSuccess > 0 && (
-            <div className="mt-3 flex items-center gap-2 text-success text-sm">
+
+          {/* Staging error */}
+          {stagingError && (
+            <div className="flex items-start gap-2 text-warning text-sm">
+              <AlertCircle size={15} className="flex-shrink-0 mt-0.5" />
+              {stagingError}
+            </div>
+          )}
+
+          {/* Pending previews */}
+          {pendingPhotos.length > 0 && (
+            <div className="space-y-3">
+              <p className="text-xs font-semibold text-text-muted uppercase tracking-widest">
+                Aguardando confirmação
+              </p>
+              <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3">
+                {pendingPhotos.map((photo, index) => (
+                  <div key={photo.id} className="relative group aspect-square rounded-lg overflow-hidden bg-background-tertiary">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={photo.previewUrl}
+                      alt={`Foto ${index + 1}`}
+                      className="w-full h-full object-cover"
+                    />
+                    {/* Slot assignment hint */}
+                    <div className="absolute bottom-0 left-0 right-0 bg-black/60 px-1 py-0.5 text-center">
+                      <span className="text-white text-[10px] font-medium">
+                        {emptySlots[index] ? PHOTO_LABELS[emptySlots[index]] : '—'}
+                      </span>
+                    </div>
+                    {/* Remove */}
+                    <button
+                      type="button"
+                      onClick={() => removePending(photo.id)}
+                      className="absolute top-1 right-1 w-5 h-5 bg-black/70 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-danger/80"
+                    >
+                      <X size={11} className="text-white" />
+                    </button>
+                    {/* Overflow indicator */}
+                    {index >= emptySlots.length && (
+                      <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
+                        <span className="text-white text-xs font-medium text-center px-1">Sem slot</span>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+
+              {/* Warning if more photos than slots */}
+              {pendingPhotos.length > emptySlots.length && (
+                <p className="text-warning text-xs flex items-center gap-1.5">
+                  <AlertCircle size={13} />
+                  Apenas {emptySlots.length} de {pendingPhotos.length} foto{pendingPhotos.length !== 1 ? 's' : ''} serão enviadas (sem slots suficientes)
+                </p>
+              )}
+
+              {/* Action buttons */}
+              <div className="flex items-center gap-3 pt-1">
+                <Button
+                  className="flex-1 gap-2"
+                  onClick={confirmUpload}
+                  disabled={isUploading || willUpload === 0}
+                  loading={isUploading}
+                >
+                  <CheckCircle size={16} />
+                  {isUploading
+                    ? 'Enviando...'
+                    : `Confirmar envio (${willUpload} foto${willUpload !== 1 ? 's' : ''})`}
+                </Button>
+                <Button variant="outline" onClick={clearPending} disabled={isUploading}>
+                  Limpar fila
+                </Button>
+              </div>
+            </div>
+          )}
+
+          {/* Success feedback */}
+          {uploadDone > 0 && (
+            <div className="flex items-center gap-2 text-success text-sm">
               <CheckCircle size={16} />
-              {bulkSuccess} foto{bulkSuccess !== 1 ? 's' : ''} enviada{bulkSuccess !== 1 ? 's' : ''} com sucesso!
+              {uploadDone} foto{uploadDone !== 1 ? 's' : ''} enviada{uploadDone !== 1 ? 's' : ''} com sucesso!
             </div>
           )}
         </Card>
       )}
 
-      {/* Photo Slots Grid */}
+      {/* ── Photo Slots Grid ── */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {PHOTO_TYPES.map((type) => {
           const currentUrl = photoUrls[type]
-          const isUploading = uploadingSlots.has(type)
+          const isSlotUploading = uploadingSlots.has(type)
           const error = slotErrors[type]
 
           return (
@@ -227,6 +357,7 @@ export function PropertyPhotosManager({ property, onPhotosUpdate }: PropertyPhot
 
               <div className="relative mb-3">
                 {currentUrl ? (
+                  // Existing photo — hover to replace or remove
                   <div className="relative group">
                     <div className="aspect-video relative rounded-lg overflow-hidden bg-background-tertiary">
                       <Image
@@ -238,41 +369,59 @@ export function PropertyPhotosManager({ property, onPhotosUpdate }: PropertyPhot
                       />
                     </div>
                     <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center gap-2">
-                      <Button size="sm" onClick={() => fileInputRefs.current[type]?.click()} disabled={isUploading}>
+                      <Button
+                        size="sm"
+                        onClick={() => replaceInputRefs.current[type]?.click()}
+                        disabled={isSlotUploading}
+                      >
                         <Upload size={14} className="mr-1" />
                         Trocar
                       </Button>
-                      <Button size="sm" variant="outline" onClick={() => removePhoto(type)} disabled={isUploading} className="text-danger hover:bg-danger/10">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => removePhoto(type)}
+                        disabled={isSlotUploading}
+                        className="text-danger hover:bg-danger/10"
+                      >
                         <X size={14} className="mr-1" />
                         Remover
                       </Button>
                     </div>
-                    {isUploading && (
+                    {isSlotUploading && (
                       <div className="absolute inset-0 bg-black/50 rounded-lg flex items-center justify-center">
                         <div className="animate-spin rounded-full h-8 w-8 border-2 border-white border-t-transparent" />
                       </div>
                     )}
+                    {/* Hidden input for direct replace */}
+                    <input
+                      ref={(el) => { replaceInputRefs.current[type] = el }}
+                      type="file"
+                      accept="image/jpeg,image/png,image/webp"
+                      className="hidden"
+                      onChange={(e) => {
+                        const f = e.target.files?.[0]
+                        if (f) uploadPhoto(type, f)
+                        e.target.value = ''
+                      }}
+                    />
                   </div>
                 ) : (
-                  <div
-                    className={`aspect-video border-2 border-dashed rounded-lg flex flex-col items-center justify-center transition-colors cursor-pointer ${
-                      isUploading
-                        ? 'border-accent-primary bg-accent-primary/5'
-                        : 'border-background-tertiary hover:border-accent-primary hover:bg-accent-primary/5'
-                    }`}
-                    onDrop={(e) => { e.preventDefault(); const f = e.dataTransfer.files[0]; if (f) uploadPhoto(type, f) }}
-                    onDragOver={(e) => e.preventDefault()}
-                    onClick={() => fileInputRefs.current[type]?.click()}
-                  >
-                    {isUploading ? (
+                  // Empty slot — shows loading if part of a bulk upload
+                  <div className={`aspect-video border-2 border-dashed rounded-lg flex flex-col items-center justify-center ${
+                    isSlotUploading
+                      ? 'border-accent-primary bg-accent-primary/5'
+                      : 'border-background-tertiary'
+                  }`}>
+                    {isSlotUploading ? (
                       <div className="text-center">
                         <div className="animate-spin rounded-full h-8 w-8 border-2 border-accent-primary border-t-transparent mx-auto mb-2" />
                         <p className="text-sm text-accent-primary">Enviando...</p>
                       </div>
                     ) : (
                       <div className="text-center px-2">
-                        <Upload size={24} className="mx-auto text-text-muted mb-1" />
-                        <p className="text-text-primary text-xs font-medium">Clique ou arraste</p>
+                        <Upload size={22} className="mx-auto text-text-muted mb-1" />
+                        <p className="text-xs text-text-muted">Vazio</p>
                       </div>
                     )}
                   </div>
@@ -285,29 +434,6 @@ export function PropertyPhotosManager({ property, onPhotosUpdate }: PropertyPhot
                   <p className="text-danger text-xs leading-tight">{error}</p>
                 </div>
               )}
-
-              <Button
-                variant="outline"
-                size="sm"
-                className="w-full"
-                onClick={() => fileInputRefs.current[type]?.click()}
-                disabled={isUploading}
-              >
-                <Upload size={14} className="mr-2" />
-                {currentUrl ? 'Trocar Foto' : 'Adicionar Foto'}
-              </Button>
-
-              <input
-                ref={(el) => { fileInputRefs.current[type] = el }}
-                type="file"
-                accept="image/jpeg,image/png,image/webp"
-                className="hidden"
-                onChange={(e) => {
-                  const f = e.target.files?.[0]
-                  if (f) uploadPhoto(type, f)
-                  e.target.value = ''
-                }}
-              />
             </Card>
           )
         })}
@@ -317,12 +443,10 @@ export function PropertyPhotosManager({ property, onPhotosUpdate }: PropertyPhot
       <Card className="p-4">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-text-primary font-medium">
-              {uploadedCount}/20 fotos enviadas
-            </p>
+            <p className="text-text-primary font-medium">{uploadedCount}/20 fotos enviadas</p>
             <p className="text-text-secondary text-sm">
               {uploadedCount === 0 && 'Nenhuma foto enviada ainda'}
-              {uploadedCount > 0 && uploadedCount < 20 && `${20 - uploadedCount} slot${20 - uploadedCount > 1 ? 's' : ''} disponível${20 - uploadedCount > 1 ? 'is' : ''}`}
+              {uploadedCount > 0 && uploadedCount < 20 && `${emptySlots.length} slot${emptySlots.length !== 1 ? 's' : ''} disponível${emptySlots.length !== 1 ? 'is' : ''}`}
               {uploadedCount === 20 && 'Todas as fotos foram enviadas! ✅'}
             </p>
           </div>
