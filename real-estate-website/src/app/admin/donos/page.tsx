@@ -182,13 +182,13 @@ export default function AdminOwnersPage() {
           <div>
             <h1 className="text-3xl font-bold text-text-primary">Gerenciar Donos</h1>
             <p className="text-text-secondary mt-1">
-              Configure as informações dos proprietários da imobiliária (máximo 4)
+              Configure as informações dos proprietários da imobiliária (máximo 6)
             </p>
           </div>
-          
+
           <Button
             onClick={() => handleOpenModal()}
-            disabled={owners.filter(o => o.is_active).length >= 4}
+            disabled={owners.filter(o => o.is_active).length >= 6}
             className="gap-2"
           >
             <Plus size={16} />
@@ -197,12 +197,12 @@ export default function AdminOwnersPage() {
         </div>
 
         {/* Info Alert */}
-        {owners.filter(o => o.is_active).length >= 4 && (
+        {owners.filter(o => o.is_active).length >= 6 && (
           <Card className="p-4 border-warning/20 bg-warning/5">
             <div className="flex items-center gap-3">
               <AlertCircle size={20} className="text-warning" />
               <p className="text-warning text-sm">
-                Limite de 4 donos ativos atingido. Desative um dono para adicionar outro.
+                Limite de 6 donos ativos atingido. Desative um dono para adicionar outro.
               </p>
             </div>
           </Card>
