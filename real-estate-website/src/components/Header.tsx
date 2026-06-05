@@ -11,7 +11,8 @@ import {
   Phone,
   MessageCircle,
   Home,
-  Users
+  Users,
+  Wrench,
 } from 'lucide-react'
 
 export function Header() {
@@ -41,7 +42,13 @@ export function Header() {
       label: 'Who we are',
       icon: Users,
       description: 'Meet our team'
-    }
+    },
+    {
+      href: '/resident-portal',
+      label: 'Resident Portal',
+      icon: Wrench,
+      description: 'Maintenance requests'
+    },
   ]
 
   const isActive = (href: string) => {

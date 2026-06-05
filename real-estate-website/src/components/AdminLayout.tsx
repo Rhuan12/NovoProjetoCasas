@@ -5,19 +5,20 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Button } from '@/components/ui/Button'
 import { useAuth } from '@/hooks/useAuth'
-import { 
-  Home, 
-  Building, 
-  Users as UsersIcon, 
-  Camera, 
-  Settings, 
-  Menu, 
+import {
+  Home,
+  Building,
+  Users as UsersIcon,
+  Camera,
+  Settings,
+  Menu,
   X,
   LogOut,
   BarChart3,
   Plus,
   MessageSquare,
-  User
+  User,
+  Wrench,
 } from 'lucide-react'
 
 interface AdminLayoutProps {
@@ -42,11 +43,17 @@ export function AdminLayout({ children }: AdminLayoutProps) {
       icon: Building,
       description: 'Gerenciar propriedades'
     },
-    { 
-      href: '/admin/leads', 
-      label: 'Leads', 
+    {
+      href: '/admin/leads',
+      label: 'Leads',
       icon: UsersIcon,
       description: 'Interessados'
+    },
+    {
+      href: '/admin/maintenance',
+      label: 'Manutenção',
+      icon: Wrench,
+      description: 'Portal do residente',
     },
     { 
       href: '/admin/fotos', 

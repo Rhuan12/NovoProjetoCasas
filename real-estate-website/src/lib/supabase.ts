@@ -232,6 +232,44 @@ export type Tables = {
       created_by?: string | null
     }
   }
+  maintenance_requests: {
+    Row: {
+      id: string
+      phone_number: string
+      property_address: string
+      maintenance_category: 'electrical' | 'plumbing' | 'hvac' | 'general'
+      priority_level: 'emergency' | 'high' | 'medium' | 'slow'
+      description: string
+      preferred_visit_time: 'morning' | 'afternoon' | 'evening' | 'anytime'
+      photos: string[]
+      status: 'pending' | 'in_progress' | 'completed'
+      created_at: string
+      updated_at: string
+    }
+    Insert: {
+      id?: string
+      phone_number: string
+      property_address: string
+      maintenance_category: 'electrical' | 'plumbing' | 'hvac' | 'general'
+      priority_level: 'emergency' | 'high' | 'medium' | 'slow'
+      description: string
+      preferred_visit_time: 'morning' | 'afternoon' | 'evening' | 'anytime'
+      photos?: string[]
+      status?: 'pending' | 'in_progress' | 'completed'
+    }
+    Update: {
+      id?: string
+      phone_number?: string
+      property_address?: string
+      maintenance_category?: 'electrical' | 'plumbing' | 'hvac' | 'general'
+      priority_level?: 'emergency' | 'high' | 'medium' | 'slow'
+      description?: string
+      preferred_visit_time?: 'morning' | 'afternoon' | 'evening' | 'anytime'
+      photos?: string[]
+      status?: 'pending' | 'in_progress' | 'completed'
+      updated_at?: string
+    }
+  }
 }
 
 // Tipos de conveniência
@@ -243,3 +281,6 @@ export type Profile = Tables['profiles']['Row']
 export type Owner = Tables['owners']['Row']
 export type OwnerInsert = Tables['owners']['Insert']
 export type OwnerUpdate = Tables['owners']['Update']
+export type MaintenanceRequest = Tables['maintenance_requests']['Row']
+export type MaintenanceRequestInsert = Tables['maintenance_requests']['Insert']
+export type MaintenanceRequestUpdate = Tables['maintenance_requests']['Update']
