@@ -212,7 +212,7 @@ export default function EditPropertyPage({ params }: EditPropertyPageProps) {
           <PropertyPhotosManager
             property={property}
             onPhotosUpdate={() => {
-              refetchProperty()
+              refetchProperty(true) // silent: updates data without triggering loading skeleton
             }}
           />
         )}

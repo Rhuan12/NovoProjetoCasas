@@ -68,11 +68,13 @@ export function useProperty(id: string) {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  const fetchProperty = async () => {
+  // silent = true: background refetch — does NOT trigger loading state
+  // (avoids unmounting child components that depend on this data)
+  const fetchProperty = async (silent = false) => {
     if (!id) return
 
     try {
-      setLoading(true)
+      if (!silent) setLoading(true)
       setError(null)
 
       const response = await fetch(`/api/properties/${id}`)
@@ -86,12 +88,13 @@ export function useProperty(id: string) {
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Unknown error')
     } finally {
-      setLoading(false)
+      if (!silent) setLoading(false)
     }
   }
 
   useEffect(() => {
     fetchProperty()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id])
 
   return { property, loading, error, refetch: fetchProperty }
