@@ -7,7 +7,9 @@
       "Bash(npx --no-install tsc --noEmit)",
       "Bash(node_modules\\\\.bin\\\\tsc --noEmit)",
       "Bash(./node_modules/.bin/tsc --noEmit)",
-      "Bash(npm run *)"
+      "Bash(npm run *)",
+      "Bash(python -c ' *)",
+      "Bash(pip install *)"
     ]
   }
 }

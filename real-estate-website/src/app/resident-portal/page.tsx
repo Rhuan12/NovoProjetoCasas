@@ -409,6 +409,15 @@ export default function ResidentPortalPage() {
             </p>
           </div>
 
+          {/* Privacy disclosure */}
+          <p className="text-xs text-text-muted text-center leading-relaxed">
+            By submitting this form, you agree to our{' '}
+            <Link href="/privacy-policy" className="text-accent-primary hover:underline font-medium">
+              Privacy Policy
+            </Link>
+            . We use your information solely to process and respond to your maintenance request.
+          </p>
+
           <Button type="submit" className="w-full" size="lg" loading={loading} disabled={loading}>
             {loading ? 'Submitting...' : 'Submit Maintenance Request'}
           </Button>

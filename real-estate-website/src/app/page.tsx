@@ -8,6 +8,7 @@ import { PropertyGrid } from '@/components/PropertyGrid'
 import { Badge } from '@/components/ui/Button'
 import { Phone, Mail, MapPin, MessageCircle, Building, ArrowUp, PhoneCall } from 'lucide-react'
 import Image from 'next/image'
+import Link from 'next/link'
 
 interface FilterState {
   status?: 'available' | 'filled' | 'reserved'
@@ -191,8 +192,13 @@ export default function Home() {
           <div className="max-w-2xl mx-auto">
             <div className="border-2 border-white/20 rounded-2xl px-8 py-5 text-center backdrop-blur-sm bg-white/5">
               <p className="text-white/90 text-sm font-medium">
-                © 2024 McSilva & Wiggit. All rights reserved.
+                © 2025 McSilva & Wiggit. All rights reserved.
               </p>
+              <div className="mt-2 flex items-center justify-center gap-1 text-white/40 text-xs">
+                <Link href="/privacy-policy" className="hover:text-white/80 transition-colors underline underline-offset-2">
+                  Privacy Policy
+                </Link>
+              </div>
             </div>
           </div>
         </div>
