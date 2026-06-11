@@ -171,7 +171,7 @@ export type Tables = {
   profiles: {
     Row: {
       id: string
-      role: 'admin' | 'photographer' | 'viewer'
+      role: 'admin' | 'photographer' | 'viewer' | 'manager'
       full_name: string | null
       avatar_url: string | null
       created_at: string
@@ -179,13 +179,13 @@ export type Tables = {
     }
     Insert: {
       id: string
-      role?: 'admin' | 'photographer' | 'viewer'
+      role?: 'admin' | 'photographer' | 'viewer' | 'manager'
       full_name?: string | null
       avatar_url?: string | null
     }
     Update: {
       id?: string
-      role?: 'admin' | 'photographer' | 'viewer'
+      role?: 'admin' | 'photographer' | 'viewer' | 'manager'
       full_name?: string | null
       avatar_url?: string | null
       updated_at?: string

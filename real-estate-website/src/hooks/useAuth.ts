@@ -5,7 +5,7 @@ import type { User } from '@supabase/supabase-js'
 
 interface Profile {
   id: string
-  role: 'admin' | 'photographer' | 'viewer'
+  role: 'admin' | 'photographer' | 'viewer' | 'manager'
   full_name: string | null
   avatar_url: string | null
 }
@@ -90,6 +90,7 @@ export function useAuth() {
 
   const isAdmin = profile?.role === 'admin'
   const isPhotographer = profile?.role === 'photographer'
+  const isManager = profile?.role === 'manager'
   const canManageProperties = isAdmin || isPhotographer
 
   return {
@@ -100,6 +101,7 @@ export function useAuth() {
     signOut,
     isAdmin,
     isPhotographer,
+    isManager,
     canManageProperties,
   }
 }

@@ -52,11 +52,21 @@ export async function requireAdmin() {
 
 export async function requirePhotographer() {
   const user = await requireAuth()
-  
+
   if (!['admin', 'photographer'].includes(user.profile?.role || '')) {
     redirect('/')
   }
-  
+
+  return user
+}
+
+export async function requireMaintenanceAccess() {
+  const user = await requireAuth()
+
+  if (!['admin', 'manager'].includes(user.profile?.role || '')) {
+    redirect('/maintenance-manager/login')
+  }
+
   return user
 }
 
