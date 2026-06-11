@@ -9,7 +9,8 @@
       "Bash(./node_modules/.bin/tsc --noEmit)",
       "Bash(npm run *)",
       "Bash(python -c ' *)",
-      "Bash(pip install *)"
+      "Bash(pip install *)",
+      "PowerShell(New-Item -ItemType Directory -Force \"C:\\\\Users\\\\rhuan\\\\Documents\\\\Projetos-Trabalhos\\\\NovoProjetoCasas\\\\real-estate-website\\\\src\\\\app\\\\maintenance-manager\\\\login\")"
     ]
   }
 }
