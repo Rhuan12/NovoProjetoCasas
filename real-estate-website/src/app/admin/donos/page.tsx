@@ -471,7 +471,7 @@ export default function AdminOwnersPage() {
                       <input
                         type="number"
                         min="1"
-                        max="4"
+                        max="7"
                         value={formData.display_order}
                         onChange={(e) => setFormData(prev => ({ ...prev, display_order: parseInt(e.target.value) }))}
                         className="block w-full px-3 py-2 bg-background-secondary border border-background-tertiary rounded-lg text-text-primary focus:outline-none focus:ring-2 focus:ring-accent-primary"
