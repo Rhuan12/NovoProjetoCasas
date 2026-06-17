@@ -53,15 +53,15 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Nome e cargo são obrigatórios' }, { status: 400 })
     }
 
-    // Verificar limite de 6 donos ativos
+    // Verificar limite de 7 donos ativos
     const { data: activeOwners } = await supabase
       .from('owners')
       .select('id')
       .eq('is_active', true)
 
-    if (activeOwners && activeOwners.length >= 6) {
+    if (activeOwners && activeOwners.length >= 7) {
       return NextResponse.json(
-        { error: 'Máximo de 6 donos ativos permitido. Desative um dono antes de adicionar outro.' },
+        { error: 'Máximo de 7 donos ativos permitido. Desative um dono antes de adicionar outro.' },
         { status: 400 }
       )
     }

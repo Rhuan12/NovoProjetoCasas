@@ -68,9 +68,9 @@ export async function PUT(
           .select('id')
           .eq('is_active', true)
 
-        if (activeOwners && activeOwners.length >= 6) {
+        if (activeOwners && activeOwners.length >= 7) {
           return NextResponse.json(
-            { error: 'Máximo de 6 donos ativos permitido' },
+            { error: 'Máximo de 7 donos ativos permitido' },
             { status: 400 }
           )
         }

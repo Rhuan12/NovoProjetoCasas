@@ -42,7 +42,7 @@ export function AboutOwners({ className = '', showHeader = true }: AboutOwnersPr
   }
 
   // Limit to 6 owners max
-  const displayedOwners = owners.slice(0, 6)
+  const displayedOwners = owners.slice(0, 7)
 
   // Determine grid layout based on number of owners
   const getGridCols = (count: number) => {
